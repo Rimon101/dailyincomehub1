@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/register/register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <style>
+        .iti {
+            width: 100%;
+            display: block;
+        }
+
+        .iti__flag {
+            background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png");
+        }
+
+        @media (min-resolution: 2x) {
+            .iti__flag {
+                background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png");
+            }
+        }
+
+        #phone {
+            width: 100%;
+            padding-top: 14px;
+            padding-bottom: 14px;
+            padding-right: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <div class="logo-icon">🌻</div>
+            <h2>Universalmovies</h2>
+            <p>Create your account</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="main-wrapper">
+                <div class="header">
+                    <a href="/pages/login/index.html" class="back-btn">&lsaquo;</a>
+                    <h1>Register</h1>
+                </div>
+
+                <div class="page-content">
+                    <div class="form-container">
+                        <h2 style="margin-bottom: 24px; color: #e91e63; font-size: 24px;">Create Account</h2>
+                        <div class="error-msg" id="errorMsg"></div>
+                        <div class="success-msg" id="successMsg"></div>
+
+                        <div id="registerForm">
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Full
+                                    Name</label>
+                                <input type="text" id="fullName" placeholder="Enter full name"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Email
+                                    Address</label>
+                                <input type="email" id="email" placeholder="Enter email"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Username</label>
+                                <input type="text" id="username" placeholder="Choose username"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Phone
+                                    number &amp; Country*</label>
+                                <input type="tel" id="phone">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Password</label>
+                                <input type="password" id="password" placeholder="Create password"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Confirm
+                                    Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm password"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label
+                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Referral
+                                    Code</label>
+                                <input type="text" id="referralCode" placeholder="Enter referral code (optional)"
+                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
+                            </div>
+                            <button class="auth-submit" onclick="handleRegister(event)"
+                                style="width: 100%; padding: 15px; border: none; border-radius: 30px; background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;">Register</button>
+                            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
+                                Already have an account? <a href="/pages/login/index.html"
+                                    style="color: #e91e63; text-decoration: none; font-weight: 600;">Login here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="/userdata.js?v=2"></script>
+    <script src="/pages/register/register.js?v=2"></script>
+    <script>
+        // Initialize intl-tel-input inline to ensure it runs
+        document.addEventListener('DOMContentLoaded', function () {
+            var phoneInputField = document.querySelector("#phone");
+            if (phoneInputField && window.intlTelInput) {
+                window.phoneInput = window.intlTelInput(phoneInputField, {
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                    separateDialCode: true,
+                    initialCountry: "auto",
+                    geoIpLookup: function (success, failure) {
+                        fetch("https://ipapi.co/json")
+                            .then(function (res) { return res.json(); })
+                            .then(function (data) { success(data.country_code); })
+                            .catch(function () { success("us"); });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

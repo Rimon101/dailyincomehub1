@@ -1,0 +1,145 @@
+/* home page specific styles */
+
+.banner-section {
+    padding: 0 16px;
+    margin-bottom: 24px;
+    overflow: hidden; /* Prevent horizontal scroll */
+}
+
+.home-banner {
+    width: 100%;
+    max-width: 100%; /* Ensure it never expands beyond container */
+    height: auto;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.home-banner:active {
+    transform: scale(0.98);
+}
+
+.trust-icons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px;
+    margin-bottom: 24px;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.trust-icon {
+    width: 120px;
+    height: 60px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.trust-icon:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .trust-icon {
+        width: 100px;
+        height: 50px;
+    }
+    .trust-icons-container {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .trust-icon {
+        width: 80px;
+        height: 40px;
+    }
+    .trust-icons-container {
+        gap: 12px;
+    }
+}
+
+/* ===== Upcoming Movies Section ===== */
+.upcoming-movies-section {
+    margin: 0 0 90px 0;
+    background: #111;
+    border-radius: 16px;
+    overflow: hidden;
+    padding-bottom: 16px;
+}
+
+.um-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px 10px;
+    background: #1a1a1a;
+}
+
+.um-dot {
+    width: 10px;
+    height: 10px;
+    background: #e91e63;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.um-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+.um-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 14px 16px 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.um-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.um-card {
+    flex: 0 0 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.um-poster {
+    width: 140px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+
+.um-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #e91e63;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 0;
+    border-radius: 20px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.um-btn:active {
+    background: #c2185b;
+    transform: scale(0.97);
+}

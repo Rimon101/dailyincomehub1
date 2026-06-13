@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="sitePageTitle">Recharge - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/recharge/recharge.css">
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <a href="/" class="back-btn">&lsaquo;</a>
+            <h1>Recharge</h1>
+        </div>
+
+        <div class="page-content">
+            <div class="balance-card">
+                <div class="label">Current Balance</div>
+                <div class="amount" id="currentBalance">$0.00</div>
+            </div>
+
+            <div class="form-container">
+                <div class="form-group">
+                    <label>Preferred Payment Method</label>
+                    <select id="paymentMethod" onchange="updateWalletInfo()">
+                        <option>Loading wallets...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="qr-container">
+                <div class="section-title">Scan QR Code to Pay</div>
+                <div class="qr-image" id="qrWrapper">
+                    <img id="qrImage" src="/images/usdt_qr.jpg" alt="Scan to Pay">
+                </div>
+                <div class="copy-hint" id="walletLabel">USDT (TRC20) Address</div>
+                <div class="wallet-display" id="walletAddr">TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS</div>
+                <button class="copy-btn-inner" onclick="copyAddress()">Copy Address</button>
+                <div class="info-box" style="margin-top: 20px;">
+                    <p style="font-size: 13px; color: #666; line-height: 1.5;">
+                        1. Open your wallet and scan the QR code or copy the address above.<br>
+                        2. Send the USDT (TRC20) amount you wish to recharge.<br>
+                        3. After successful payment, please contact customer service with your transaction ID.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title" style="margin-bottom: 8px;">Recharge Details</div>
+                <div class="detail-row"><span class="label">Processing Fee</span><span class="value">0%</span></div>
+                <div class="detail-row"><span class="label">Processing Time</span><span class="value">Instant</span>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <p><strong>Note:</strong> Recharge processing time usually takes 5-30 minutes. If your balance is not
+                    updated after 1 hour, please contact customer service.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js"></script>
+    <script src="/pages/recharge/recharge.js?v=2"></script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="sitePageTitle">My Team - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/team/team.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <a href="/pages/profile/index.html" class="back-btn">&lsaquo;</a>
+            <h1>My Team</h1>
+        </div>
+
+        <div class="page-content">
+            <div class="team-stats">
+                <div class="stat-box">
+                    <span class="label">Total Members</span>
+                    <span class="value" id="totalMembers">0</span>
+                </div>
+            </div>
+
+            <div class="section-title">Team members</div>
+            <div id="teamList" class="team-list">
+                <div class="loading-msg">Loading team members...</div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+            </a>
+            <a href="/pages/tasks/index.html" class="nav-item">
+                <span class="nav-icon">📋</span><span class="nav-label">Order</span>
+            </a>
+            <a href="/pages/trust/index.html" class="nav-item">
+                <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/pages/service/index.html" class="nav-item">
+                <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
+            </a>
+            <a href="/pages/profile/index.html" class="nav-item active">
+                <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js"></script>
+    <script src="/pages/team/team.js"></script>
+</body>
+</html>

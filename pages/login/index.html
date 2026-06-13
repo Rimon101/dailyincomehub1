@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/login/login.css">
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <a href="/" class="back-btn">&lsaquo;</a>
+            <h1>Login</h1>
+        </div>
+
+        <div class="page-content">
+            <div class="form-container">
+                <h2 style="margin-bottom: 24px; color: #e91e63; font-size: 24px;">Welcome back!</h2>
+
+                <div id="loginForm">
+                    <div class="form-group" style="margin-bottom: 18px;">
+                        <label
+                            style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Username</label>
+                        <input type="text" id="username" placeholder="Enter username"
+                            style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label
+                            style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Password</label>
+                        <input type="password" id="password" placeholder="Enter password"
+                            style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px;">
+                    </div>
+                    <div class="error-msg" id="errorMsg" style="margin-bottom: 16px;"></div>
+                    <button class="auth-submit" onclick="handleLogin(event)"
+                        style="width: 100%; padding: 15px; border: none; border-radius: 30px; background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;">Login</button>
+                    <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
+                        Don't have an account? <a href="/pages/register/index.html"
+                            style="color: #e91e63; text-decoration: none; font-weight: 600;">Register now</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js"></script>
+    <script src="/pages/login/login.js"></script>
+</body>
+
+</html>

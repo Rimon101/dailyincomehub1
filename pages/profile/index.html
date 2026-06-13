@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="sitePageTitle">Profile - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=2">
+    <link rel="stylesheet" href="/pages/profile/profile.css?v=3">
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="profile-header">
+            <div class="profile-pic-container" id="profilePicContainer">
+                <div class="logo-icon" id="defaultPic">👤</div>
+                <img id="profilePicPreview" src="" alt="Profile Picture" style="display: none;">
+                <div class="edit-overlay">Edit</div>
+                <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+            </div>
+            <h2 id="displayUsername">Loading...</h2>
+            <p id="displayEmail" style="opacity: 0.8; font-size: 14px;">loading...</p>
+        </div>
+
+        <!-- Custom Profile Balance Card -->
+        <div class="custom-profile-section">
+            <div class="cp-title"><span class="yellow-bar"></span>Profile</div>
+            <div class="cp-card">
+                <div class="cp-bg-pattern"></div>
+                <div class="cp-usdt">USDT</div>
+                <div class="cp-invite">
+                    <span>Invitation Code</span>
+                    <div class="cp-invite-code">
+                        <span id="cpInviteCode">------</span>
+                        <span class="cp-copy-icon" onclick="copyInviteCode()">Copy</span>
+                    </div>
+                </div>
+                <div class="cp-balance" id="cpBalance">$0.0000</div>
+                
+                <div class="cp-divider"></div>
+                
+                <div class="cp-actions">
+                    <a href="/pages/recharge/index.html" class="cp-action-btn cp-recharge">Recharge</a>
+                    <div class="cp-vertical-divider"></div>
+                    <a href="/pages/withdrawal/index.html" class="cp-action-btn cp-withdraw">Withdraw</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="edit-profile.html" class="menu-item">
+                <span class="menu-icon">👤</span>
+                <span class="menu-label">My Profile</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/team/index.html" class="menu-item">
+                <span class="menu-icon">👥</span>
+                <span class="menu-label">My Team</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/bind-wallet/index.html" class="menu-item" id="bindWalletMenuBtn" style="display: none;">
+                <span class="menu-icon">🔗</span>
+                <span class="menu-label">Bind Wallet</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="withdraw-management.html" class="menu-item" id="withdrawManagementBtn" style="display: none;">
+                <span class="menu-icon">💳</span>
+                <span class="menu-label">Withdraw Management</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/history/index.html" class="menu-item">
+                <span class="menu-icon">📜</span>
+                <span class="menu-label">Transaction History</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/change-password/index.html" class="menu-item">
+                <span class="menu-icon">🔒</span>
+                <span class="menu-label">Change Password</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/language/index.html" class="menu-item">
+                <span class="menu-icon">🌐</span>
+                <span class="menu-label">Language</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+            <a href="/pages/service/index.html" class="menu-item">
+                <span class="menu-icon">🎧</span>
+                <span class="menu-label">Customer Service</span>
+                <span class="menu-chevron">&rsaquo;</span>
+            </a>
+        </div>
+
+        <div id="authStatusBtn" class="logout-btn" onclick="handleAuthAction()">Log Out</div>
+
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+            </a>
+            <a href="/pages/tasks/index.html" class="nav-item">
+                <span class="nav-icon">📋</span><span class="nav-label">Order</span>
+            </a>
+            <a href="/pages/trust/index.html" class="nav-item">
+                <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/pages/service/index.html" class="nav-item">
+                <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
+            </a>
+            <a href="/pages/profile/index.html" class="nav-item active">
+                <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js?v=2"></script>
+    <script src="/pages/profile/profile.js?v=5"></script>
+</body>
+
+</html>

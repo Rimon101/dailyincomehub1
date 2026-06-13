@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="sitePageTitle">Withdrawal - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <link rel="stylesheet" href="/pages/withdrawal/withdrawal.css?v=3">
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="back-btn">&lsaquo;</a>
+        <h1>Withdrawal</h1>
+    </div>
+
+
+    <div class="page-content">
+        <div class="balance-card">
+            <div class="label">Available Balance</div>
+            <div class="amount">$0.00</div>
+        </div>
+
+
+
+        <div class="form-container">
+            <div class="form-group">
+                <label>Withdrawal Amount (USD)</label>
+                <div style="display:flex;align-items:center;border:1.5px solid #e91e63;border-radius:8px;overflow:hidden;background:#fff;">
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100" step="0.01"
+                        style="flex:1;border:none;outline:none;padding:12px 14px;font-size:15px;background:transparent;">
+                    <button type="button" onclick="withdrawAll()"
+                        style="background:#1a1a2e;color:#fff;font-size:12px;font-weight:700;padding:0 14px;height:100%;border:none;cursor:pointer;white-space:nowrap;border-left:1px solid #e0e0e0;min-height:46px;">
+                        Withdraw All
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Wallet Address / Account Number</label>
+                <input type="text" id="walletAddress" placeholder="Enter your wallet address or account number" readonly
+                    style="background-color: #f5f5f5; color: #888; cursor: not-allowed;">
+                <div class="input-note">Configured in Profile Settings</div>
+            </div>
+            <div class="form-group">
+                <label>Withdraw Password</label>
+                <input type="password" id="securityPassword" placeholder="Enter withdraw password">
+            </div>
+            <button class="submit-btn withdraw" onclick="submitWithdrawal()">Submit</button>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js?v=3"></script>
+    <script src="/pages/withdrawal/withdrawal.js?v=4"></script>
+</body>
+
+</html>

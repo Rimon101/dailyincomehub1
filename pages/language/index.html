@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <link rel="stylesheet" href="/pages/language/language.css?v=3">
+</head>
+<body>
+    <div class="language-mgmt-container">
+        <div class="header">
+            <a href="/pages/profile/index.html" class="back-btn">&lsaquo;</a>
+            <h1>Language</h1>
+        </div>
+
+        <div class="language-list">
+            <!-- Language Buttons -->
+            <button class="lang-item" onclick="changeLanguage('az')">
+                <span class="lang-flag">🇦🇿</span>
+                <span class="lang-name">Azərbaycan</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('ar')">
+                <span class="lang-flag">🇦🇪</span>
+                <span class="lang-name">Arabice</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('en')">
+                <span class="lang-flag">🇺🇸</span>
+                <span class="lang-name">English US</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('en')">
+                <span class="lang-flag">🇬🇧</span>
+                <span class="lang-name">English UK</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('fr')">
+                <span class="lang-flag">🇫🇷</span>
+                <span class="lang-name">French</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('de')">
+                <span class="lang-flag">🇩🇪</span>
+                <span class="lang-name">Garmany</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('hi')">
+                <span class="lang-flag">🇮🇳</span>
+                <span class="lang-name">Hindi</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('it')">
+                <span class="lang-flag">🇮🇹</span>
+                <span class="lang-name">Italy</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('nl')">
+                <span class="lang-flag">🇳🇱</span>
+                <span class="lang-name">Nederland</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('tr')">
+                <span class="lang-flag">🇹🇷</span>
+                <span class="lang-name">Türkiye</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('th')">
+                <span class="lang-flag">🇹🇭</span>
+                <span class="lang-name">Thailand</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('es')">
+                <span class="lang-flag">🇪🇸</span>
+                <span class="lang-name">Spanish</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('ru')">
+                <span class="lang-flag">🇷🇺</span>
+                <span class="lang-name">Russia</span>
+            </button>
+            <button class="lang-item" onclick="changeLanguage('uz')">
+                <span class="lang-flag">🇺🇿</span>
+                <span class="lang-name">Uzbekistan</span>
+            </button>
+        </div>
+
+        <!-- Hidden Google Translate Element -->
+        <div id="google_translate_element" style="display: none;"></div>
+    </div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="/pages/language/language.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bind Wallet Address - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <link rel="stylesheet" href="/pages/bind-wallet/bind-wallet.css?v=3">
+</head>
+
+<body>
+    <div class="bind-wallet-container">
+        <div class="header">
+            <a href="/pages/profile/index.html" class="back-btn">&lsaquo;</a>
+            <h1 id="headerTitle">Submit Address(TRC20)</h1>
+        </div>
+
+        <div class="form-group">
+            <label>Real Name</label>
+            <input type="text" id="realName" placeholder="Enter real name">
+        </div>
+
+        <div class="form-group">
+            <label>Phone number &amp; Country<span style="color:red">*</span></label>
+            <div class="phone-input-container">
+                <select id="countryCodeSelect" class="country-select">
+                    <!-- Populated by JS -->
+                </select>
+                <input type="text" id="phoneNumber" placeholder="Enter phone number">
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label>Wallet Type</label>
+            <input type="text" id="walletType" value="trc20" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Wallet Address</label>
+            <input type="text" id="walletAddress" placeholder="Enter TRC20 address">
+        </div>
+
+        <div class="form-group">
+            <label>Fund Password <span style="color:red">*</span></label>
+            <input type="password" id="withdrawPassword" placeholder="Set a 6-digit withdrawal password">
+        </div>
+
+        <button id="submitBtn" class="bind-btn">Bind Wallet</button>
+        <p class="status-msg" id="statusMsg" style="display: none;">Your wallet represents where you receive payouts.
+        </p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js?v=3"></script>
+    <script src="/pages/bind-wallet/bind-wallet.js?v=3"></script>
+</body>
+
+</html>

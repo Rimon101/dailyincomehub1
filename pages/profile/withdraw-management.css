@@ -1,0 +1,24 @@
+body { background: #f8f9fa; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+
+.withdraw-mgmt-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+.header { display: flex; align-items: center; margin-bottom: 30px; }
+.header h1 { font-size: 18px; font-weight: 700; margin: 0; flex: 1; text-align: center; color: #111; }
+.back-btn { font-size: 32px; color: #333; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+
+.mgmt-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 25px; border: 1px solid #f0f0f0; }
+.mgmt-header { background: linear-gradient(135deg, #111 0%, #333 100%); padding: 20px; display: flex; align-items: center; color: #fff; }
+.mgmt-icon { font-size: 24px; margin-right: 12px; }
+.mgmt-title { font-size: 16px; font-weight: 600; }
+
+.mgmt-body { padding: 20px; }
+.info-group { margin-bottom: 20px; }
+.info-group:last-child { margin-bottom: 0; }
+.info-group label { display: block; font-size: 13px; color: #999; margin-bottom: 6px; font-weight: 500; }
+.info-value { font-size: 15px; color: #111; font-weight: 600; padding: 12px; background: #f9fafb; border-radius: 10px; border: 1px solid #f0f4f8; word-break: break-all; }
+.address-field { color: #e91e63; font-family: monospace; letter-spacing: 0.5px; }
+
+.alert-box { background: #fff5f5; border: 1px solid #fed7d7; border-radius: 12px; padding: 15px; display: flex; gap: 12px; align-items: flex-start; }
+.alert-icon { font-size: 18px; }
+.alert-box p { margin: 0; font-size: 13px; line-height: 1.5; color: #c53030; }
+.alert-box a { color: #e91e63; font-weight: 600; text-decoration: none; }

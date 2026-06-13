@@ -1,0 +1,24 @@
+.service-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+}
+
+.service-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.contact-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+    color: #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 20px;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/balance/balance.css">
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="back-btn">&lsaquo;</a>
+        <h1>Balance</h1>
+    </div>
+
+    <div class="page-content">
+        <div class="balance-card">
+            <div class="label">Total Balance</div>
+            <div class="amount">$0.00</div>
+        </div>
+
+        <div class="balance-actions">
+            <a href="/pages/recharge/index.html" class="btn-recharge">Recharge</a>
+            <a href="/pages/withdrawal/index.html" class="btn-withdraw">Withdrawal</a>
+        </div>
+
+        <div class="section-title">Recent Transactions</div>
+        <div class="transaction-list" id="transactionList">
+            <div class="transaction-item" style="justify-content:center;color:#bbb;font-size:14px;padding:24px;">No
+                transactions yet</div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js"></script>
+    <script src="/pages/balance/balance.js"></script>
+</body>
+
+</html>

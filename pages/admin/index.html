@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Universalmovies</title>
+    <link rel="stylesheet" href="/pages/admin/admin.css">
+</head>
+
+<body>
+    <!-- Verification Overlay -->
+    <div id="adminLoginOverlay">
+        <div class="login-box">
+            <h2 id="verifyTitle">Verifying Access...</h2>
+            <div id="loader" style="margin: 20px 0;">
+                <p>Checking administrative privileges...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>SC Admin</h2>
+        </div>
+        <div class="nav-items">
+            <div class="nav-item active" onclick="switchTab('users')">User Management</div>
+            <div class="nav-item" onclick="switchTab('financials')">Financials</div>
+            <div class="nav-item" onclick="switchTab('tasks')">Task Configs</div>
+            <div class="nav-item" onclick="switchTab('settings')">System Settings</div>
+            <div class="nav-item" onclick="switchTab('withdraw-details')">Withdraw Details</div>
+            <div class="nav-item" onclick="switchTab('wallets')">Wallet Management</div>
+            <div class="nav-item" onclick="switchTab('cashgap')">Cash Gap</div>
+        </div>
+        <div style="padding: 20px;">
+            <button class="btn btn-outline" style="width: 100%" onclick="logoutAdmin()">Exit Admin</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- 1. Users Tab -->
+        <div id="users-tab" class="content-section active">
+            <div class="section-header">
+                <h2>User Management</h2>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Balance</th>
+                            <th>Honor Pts</th>
+                            <th>VIP</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody"><!-- Populated by JS --></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Financials Tab -->
+        <div id="financials-tab" class="content-section">
+            <div class="section-header">
+                <h2>Financials &amp; Requests</h2>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div class="card" style="flex: 1;">
+                    <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Recharge
+                        Requests</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rechargeTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center;">No pending recharges</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card" style="flex: 1;">
+                    <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Withdrawal
+                        Requests</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center;">No pending withdrawals</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Tasks Tab -->
+        <div id="tasks-tab" class="content-section">
+            <div class="section-header">
+                <h2>Task Configurations</h2>
+            </div>
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Global Task Settings
+                </h3>
+                <div style="padding: 24px;">
+                    <div class="form-group">
+                        <label>Default Commission Percentage (%)</label>
+                        <input type="number" id="globalCommission" step="0.1" value="2.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Global Task Status</label>
+                        <select id="globalTaskStatus">
+                            <option value="open">All Tasks Open</option>
+                            <option value="closed">All Tasks Closed (Require Customer Service)</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="saveTaskSettings()">Save Task Settings</button>
+                    <span id="taskSettingsMsg" style="color: green; margin-left: 10px; display: none;">Saved!</span>
+                </div>
+            </div>
+            <div class="card">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border);">
+                    <h3 style="font-size: 16px; margin: 0;">User Specific Task Override</h3>
+                </div>
+                <div style="padding: 24px;">
+                    <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">Manually lock a specific
+                        user out of tasks.</p>
+                    <div style="display: flex; gap: 12px; align-items: flex-end;">
+                        <div class="form-group" style="margin-bottom: 0; flex: 1;"><label>Username</label><input
+                                type="text" id="overrideUsername" placeholder="e.g. john"></div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 1;"><label>Custom Commission
+                                (%)</label><input type="number" id="overrideCommission"
+                                placeholder="Leave empty for default" step="0.1"></div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                            <label>Task Status</label>
+                            <select id="overrideTaskStatus">
+                                <option value="closed">Closed (Locked)</option>
+                                <option value="open">Open (Unlocked)</option>
+                            </select>
+                        </div>
+                        <button class="btn" onclick="saveUserTaskOverride()">Apply Override</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Settings Tab -->
+        <div id="settings-tab" class="content-section">
+            <div class="section-header">
+                <h2>System Settings</h2>
+            </div>
+            <div class="card">
+                <div style="padding: 24px; max-width: 600px;">
+                    <div class="form-group"><label>Website Name</label><input type="text" id="settingSiteName"
+                            placeholder="e.g. Universalmovies" value="Universalmovies"></div>
+                    <div class="form-group"><label>Customer Service WhatsApp / Chat Link</label><input type="url"
+                            id="settingCsLink" placeholder="https://wa.me/..." value="#"></div>
+                    <div class="form-group"><label>Base Currency Symbol</label><input type="text" id="settingCurrency"
+                            placeholder="$" value="$" style="width: 100px;"></div>
+                    <button class="btn" onclick="saveSystemSettings()" style="margin-top: 12px;">Save System
+                        Settings</button>
+                    <span id="sysSettingsMsg" style="color: green; margin-left: 10px; display: none;">Settings
+                        Saved!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Withdraw Details Tab -->
+        <div id="withdraw-details-tab" class="content-section">
+            <div class="section-header">
+                <h2>Withdraw Details of Customer</h2>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Wallet Type</th>
+                            <th>Wallet Address</th>
+                            <th>Withdraw Password</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawDetailsTableBody"><!-- Populated by JS --></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. Wallet Management Tab -->
+        <div id="wallets-tab" class="content-section">
+            <div class="section-header">
+                <h2>Wallet Management</h2>
+            </div>
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Add New Wallet</h3>
+                <div style="padding: 24px;">
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                            <label>Wallet Name</label>
+                            <input type="text" id="newWalletName" placeholder="e.g. USDT (TRC20)">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 250px;">
+                            <label>Wallet Address</label>
+                            <input type="text" id="newWalletAddress" placeholder="e.g. TH1bpx...">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 250px;">
+                            <label>QR Code Image URL</label>
+                            <input type="text" id="newWalletQR" placeholder="e.g. /images/usdt_qr.jpg or https://...">
+                        </div>
+                        <button class="btn" onclick="addNewWallet()" style="height: 40px;">Add Wallet</button>
+                    </div>
+                    <p style="font-size: 12px; color: #888; margin-top: 12px;">QR image can be a local path (e.g. /images/qr.jpg) or a full URL.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Active Wallets</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>QR Code</th>
+                            <th>Visible</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="walletsTableBody">
+                        <tr><td colspan="5" style="text-align:center;">Loading wallets...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 7. Cash Gap Tab -->
+        <div id="cashgap-tab" class="content-section">
+            <div class="section-header">
+                <h2>Cash Gap Management</h2>
+            </div>
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Set Cash Gaps for a User</h3>
+                <div style="padding: 24px;">
+                    <div class="form-group" style="max-width: 300px;">
+                        <label>Username</label>
+                        <input type="text" id="cashGapUsername" placeholder="e.g. john">
+                    </div>
+                    <div id="cashGapRows">
+                        <div class="cash-gap-row" style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                                <label>Task Number (1-25)</label>
+                                <input type="number" class="cg-task-num" min="1" max="25" step="1" placeholder="e.g. 2">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                                <label>Amount ($)</label>
+                                <input type="number" class="cg-amount" min="1" step="1" placeholder="e.g. 100">
+                            </div>
+                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 18px; color: #c62828; border-color: #c62828; height: 40px;" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 8px;">
+                        <button class="btn btn-outline" style="padding: 8px 16px; font-size: 13px;" onclick="addCashGapRow()">+ Add Another</button>
+                        <button class="btn" style="padding: 8px 20px;" onclick="saveCashGaps()">Save Cash Gaps</button>
+                    </div>
+                    <p style="font-size: 12px; color: #888; margin-top: 12px;">This will merge with existing cash gaps. If a task number already exists, its amount will be updated.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">All Users with Cash Gaps</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Task #</th>
+                            <th>Amount ($)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cashGapOverviewBody">
+                        <tr><td colspan="4" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="editUserModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit User: <span id="editUserTitle"></span></h3><button class="close-btn"
+                    onclick="closeEditModal()">&times;</button>
+            </div>
+            <input type="hidden" id="editUsername">
+            <div class="form-group"><label>Balance ($)</label><input type="number" id="editBalance" step="0.01"></div>
+            <div class="form-group"><label>Honor Points</label><input type="number" id="editHonorPoints"></div>
+            <div class="form-group"><label>VIP Level</label><input type="number" id="editVipLevel" min="0" max="10">
+            </div>
+            <div class="form-group"><label>Today Earn ($)</label><input type="number" id="editEarnToday" step="0.01">
+            </div>
+            <div class="form-group"><label>Yesterday Earn ($)</label><input type="number" id="editEarnYesterday"
+                    step="0.01"></div>
+            <div class="form-group"><label>Cash Gap ($)</label><input type="number" id="editCashGap" step="10"
+                    placeholder="Optional gap amount"></div>
+            <div class="form-group"><label>Cash Gap in Task Number</label><input type="number" id="editCashGapTaskNum"
+                    min="1" max="25" step="1" placeholder="Task Number Here"></div>
+            <div class="form-group"><label>Reset Password (Leave blank to keep current)</label><input type="text"
+                    id="editPassword" placeholder="New password"></div>
+            <div class="form-group"><label>Account Status</label>
+                <select id="editStatus">
+                    <option value="active">Active</option>
+                    <option value="frozen">Frozen (Cannot login)</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+                <button class="btn" onclick="saveUserEdits()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="rechargeUserModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Manual Recharge: <span id="rechargeUserTitle"></span></h3><button class="close-btn"
+                    onclick="closeRechargeModal()">&times;</button>
+            </div>
+            <input type="hidden" id="rechargeUserId">
+            <div class="form-group" style="padding: 10px 0;">
+                <label>Recharge Amount ($)</label>
+                <input type="number" id="manualRechargeAmount" step="0.01" placeholder="e.g. 50.00">
+                <p style="font-size: 12px; color: #888; margin-top: 8px;">Amount will be added to balance and logged as
+                    'Manual Recharge'.</p>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-outline" onclick="closeRechargeModal()">Cancel</button>
+                <button class="btn" onclick="submitManualRecharge()">Confirm Recharge</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js"></script>
+    <script src="../../admin.js"></script>
+</body>
+
+</html>

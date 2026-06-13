@@ -1,0 +1,59 @@
+.team-stats {
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+    border-radius: 15px;
+    padding: 24px;
+    color: #fff;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(233,30,99,0.2);
+}
+.team-stats .label { font-size: 13px; opacity: 0.9; margin-bottom: 8px; display: block; }
+.team-stats .value { font-size: 32px; font-weight: 800; }
+
+.team-list {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.team-member {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f2f2f2;
+}
+.team-member:last-child { border-bottom: none; }
+
+.member-avatar {
+    width: 44px; height: 44px;
+    background: #fdf2f8;
+    color: #e91e63;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-right: 14px;
+    border: 1px solid #fce4ec;
+}
+
+.member-info { flex: 1; }
+.member-name { font-size: 15px; font-weight: 600; color: #333; }
+.member-date { font-size: 12px; color: #999; margin-top: 2px; }
+
+.member-vip {
+    font-size: 10px;
+    font-weight: 700;
+    background: #f7d24a;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.loading-msg, .empty-msg {
+    padding: 40px 20px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw Management - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <link rel="stylesheet" href="/pages/profile/withdraw-management.css?v=3">
+</head>
+<body>
+    <div class="withdraw-mgmt-container">
+        <div class="header">
+            <a href="/pages/profile/index.html" class="back-btn">&lsaquo;</a>
+            <h1>Withdraw Management</h1>
+        </div>
+
+        <div class="mgmt-card">
+            <div class="mgmt-header">
+                <span class="mgmt-icon">💳</span>
+                <span class="mgmt-title">Binded Wallet</span>
+            </div>
+            
+            <div class="mgmt-body">
+                <div class="info-group">
+                    <label>Wallet Type</label>
+                    <div class="info-value" id="dispWalletType">TRC20</div>
+                </div>
+                
+                <div class="info-group">
+                    <label>Wallet Address</label>
+                    <div class="info-value address-field" id="dispWalletAddress">Loading...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Real Name</label>
+                    <div class="info-value" id="dispRealName">Loading...</div>
+                </div>
+
+                <div class="info-group">
+                    <label>Phone Number</label>
+                    <div class="info-value" id="dispPhone">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-box">
+            <span class="alert-icon">ℹ️</span>
+            <p>To protect your account security, binded wallet information cannot be changed by yourself. If you need to update it, please contact <a href="/pages/service/index.html">Customer Service</a>.</p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js?v=3"></script>
+    <script src="/pages/profile/withdraw-management.js?v=3"></script>
+</body>
+</html>

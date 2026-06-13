@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - Universalmovies</title>
+    <link rel="stylesheet" href="/styles.css?v=2">
+    <link rel="stylesheet" href="/pages/tasks/tasks.css?v=5">
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="back-btn">&lsaquo;</a>
+        <h1>Order Acquisition</h1>
+    </div>
+
+    <div class="page-content">
+        <!-- New Order Acquisition Card -->
+        <div class="order-card">
+            <div class="oc-top">
+                <div class="oc-col">
+                    <span class="oc-label">Completed Today</span>
+                    <span class="oc-val" id="taskCountVal">0</span>
+                </div>
+                <div class="oc-col">
+                    <span class="oc-label">Available Today</span>
+                    <span class="oc-val" id="taskAvailVal">25</span>
+                </div>
+                <div class="oc-col">
+                    <span class="oc-label">Available assets</span>
+                    <span class="oc-val" id="totalTxAmount">0.00</span>
+                </div>
+            </div>
+
+            <div class="oc-mid">
+                <h4 class="oc-section-title">Commissions</h4>
+                <div class="oc-row">
+                    <div class="oc-col">
+                        <span class="oc-label">Yesterday</span>
+                        <span class="oc-val" id="yesterdayCommission">0.00</span>
+                    </div>
+                    <div class="oc-col">
+                        <span class="oc-label">Today</span>
+                        <span class="oc-val" id="todayCommission">0.00</span>
+                    </div>
+                    <div class="oc-col">
+                        <span class="oc-label">Total</span>
+                        <span class="oc-val" id="totalCommission">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="oc-bottom">
+                <!-- Removed oc-b-header -->
+                <div style="text-align:center; margin-bottom:12px;">
+                    <span id="commRateDisplay" style="
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: #e91e63;
+                        background: rgba(233,30,99,0.08);
+                        border: 1px solid rgba(233,30,99,0.25);
+                        border-radius: 20px;
+                        padding: 6px 16px;
+                    ">Loading...</span>
+                </div>
+                <div class="oc-b-buttons">
+                    <button class="oc-btn primary" id="startTaskBtn" onclick="startAutoTask()">Automatic order</button>
+                    <button class="oc-btn secondary" onclick="showGradeInfo()">Grade Area Unlock</button>
+                </div>
+                <button class="oc-btn-outline" onclick="window.location.href='/pages/history/index.html?type=order'">
+                    <span class="oc-icon">⏰</span> Order Record
+                </button>
+            </div>
+        </div>
+
+        <div class="grade-modal" id="gradeModal">
+            <span class="close-btn" onclick="closeGradeInfo()">&times;</span>
+            <h3 class="gm-title">Grade Unlock Levels</h3>
+            <div class="gm-list">
+                <div class="gm-item gold">
+                    <div class="gm-level">Gold Level-1</div>
+                    <div class="gm-range">$20 - $499</div>
+                </div>
+                <div class="gm-item silver">
+                    <div class="gm-level">Silver Level-2</div>
+                    <div class="gm-range">$500 - $2000</div>
+                </div>
+                <div class="gm-item premium">
+                    <div class="gm-level">Premium Level-3</div>
+                    <div class="gm-range">$2000 - $5000</div>
+                </div>
+            </div>
+            <p class="gm-note">Contact customer service to upgrade your level.</p>
+        </div>
+
+        <div class="order-explanation">
+            <h3>Explanation</h3>
+            <div class="oe-box">
+                <p>1. The order profit during your task depends on your balance. The higher the balance, higher the
+                    profit</p>
+                <p>2. Each user can complete 25 orders per day, Profit depends on the order of the day, not fixed</p>
+                <p>3. Higher levels will have higher returns. If you want to upgrade the level, please click 'Grade Area
+                    Unlock' Complete payment to upgrade</p>
+            </div>
+        </div>
+
+        <div class="task-complete-msg" id="completeMsg">✓ Task completed successfully!</div>
+
+        <div class="ad-container" id="timerBox" style="display: none; flex-direction: column;">
+            <span class="close-btn" onclick="closeWidget()">&times;</span>
+            <div class="countdown" id="countdown" style="font-size: 64px; font-weight: 700; color: #e91e63;">3</div>
+            <div class="timer-label" id="timerLabel" style="font-size: 16px; color: #888; margin-top: 8px;">Searching
+                for high-yield task...</div>
+        </div>
+
+        <div class="task-presentation" id="taskPresentation">
+            <span class="close-btn" onclick="closeWidget()">&times;</span>
+            <h3 class="tp-title">Payment Details</h3>
+
+            <!-- Order metadata -->
+            <div class="tp-meta">
+                <div class="tp-meta-row">
+                    <span class="tp-meta-label">Match time</span>
+                    <span class="tp-meta-value" id="taskMatchTime">—</span>
+                </div>
+                <div class="tp-meta-row">
+                    <span class="tp-meta-label">Order Number</span>
+                    <span class="tp-meta-value tp-order-num" id="taskOrderNumber">—</span>
+                </div>
+            </div>
+
+            <!-- Product list -->
+            <div class="tp-products" id="taskProductList">
+                <!-- Product items will be injected by JS -->
+            </div>
+
+            <!-- Financial summary -->
+            <div class="tp-summary">
+                <div class="tp-summary-row">
+                    <span class="tp-summary-label">Total Order Amount</span>
+                    <span class="tp-summary-value" id="taskTotalAmount">$0.00</span>
+                </div>
+                <div class="tp-summary-row">
+                    <span class="tp-summary-label"><span class="diamond-icon"></span> commission</span>
+                    <span class="tp-summary-value tp-highlight" id="taskCommissionAmount">$0.00</span>
+                </div>
+                <div class="tp-summary-row">
+                    <span class="tp-summary-label">expected return</span>
+                    <span class="tp-summary-value" id="taskExpectedReturn">$0.00</span>
+                </div>
+                <div class="tp-summary-row">
+                    <span class="tp-summary-label">Cash gap between task</span>
+                    <span class="tp-summary-value" id="taskCashGap">$0.00</span>
+                </div>
+            </div>
+
+            <button class="btn-confirm-task" id="confirmTaskBtn" onclick="confirmTask()">Submit Order</button>
+        </div>
+
+        <div class="ad-container" id="successBox" style="display:none; flex-direction: column;">
+            <span class="close-btn" onclick="closeWidget()">&times;</span>
+            <div class="success-icon" style="display:block; font-size:64px;">✅</div>
+            <div class="success-text"
+                style="display:block; font-size:24px; font-weight:700; color:#4CAF50; margin-top:12px;">Success</div>
+            <div class="redirect-label" style="display:block; font-size:13px; color:#999; margin-top:8px;">Next order
+                ready in
+                <span id="countdown2">3</span>s...
+            </div>
+        </div>
+
+        <div class="ad-container" id="adSpace" style="display:none; padding: 10px;">
+            <img id="adImage" src="" alt="Ad Space"
+                style="max-width: 100%; max-height: 260px; border-radius: 12px; object-fit: contain;">
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="/" class="nav-item">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+        </a>
+        <a href="/pages/tasks/index.html" class="nav-item active">
+            <span class="nav-icon">📋</span><span class="nav-label">Order</span>
+        </a>
+        <a href="/pages/trust/index.html" class="nav-item">
+            <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
+        </a>
+        <a href="/pages/service/index.html" class="nav-item">
+            <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
+        </a>
+        <a href="/pages/profile/index.html" class="nav-item">
+            <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
+        </a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="/userdata.js?v=2"></script>
+    <script src="/pages/tasks/tasks.js?v=8"></script>
+</body>
+
+</html>
