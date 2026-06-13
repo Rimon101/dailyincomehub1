@@ -15,14 +15,26 @@ service cloud.firestore {
       // Allow any user to see their own data, or an Admin to see all
       allow get: if request.auth != null && (request.auth.uid == userId || isAdmin());
       
-      // Allow PUBLIC username check (needed for registration check before login)
-      allow list: if true; 
-      
+      // Allow list queries for:
+      // 1. Unauthenticated username/invite code checks (must limit results to 1)
+      // 2. Authenticated users listing their own referrals (referredBy / inviteCode)
+      // 3. Admin panel lists
+      allow list: if 
+        (request.query.limit != null && request.query.limit <= 1) ||
+        (request.auth != null && (
+          resource.data.referredBy == request.auth.uid || 
+          resource.data.referralCodeEntered == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.inviteCode ||
+          isAdmin()
+        ));
       // Allow creation during registration
       allow create: if request.auth != null && request.auth.uid == userId;
       
-      // Allow updates to personal profile or Admin full control
-      allow update: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      // Allow updates to personal profile or Admin full control, preventing normal users from modifying sensitive admin-only fields
+      allow update: if request.auth != null && (
+        (request.auth.uid == userId && 
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isAdmin', 'vipLevel', 'username', 'email', 'createdAt', 'referredBy', 'referralCodeEntered', 'firstRechargeDone'])) || 
+        isAdmin()
+      );
     }
 
     // Rules for Withdrawals and Recharges

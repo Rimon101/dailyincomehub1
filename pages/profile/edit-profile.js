@@ -25,9 +25,7 @@ document.getElementById('profilePicContainer').addEventListener('click', () => {
 document.getElementById('profilePicInput').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
-        const reader = new FileReader();
-        reader.onload = async function (e) {
-            const base64 = e.target.result;
+        compressImage(file, 128, 128, 0.7).then(async (base64) => {
             document.getElementById('defaultPic').style.display = 'none';
             document.getElementById('profilePicPreview').src = base64;
             document.getElementById('profilePicPreview').style.display = 'block';
@@ -37,10 +35,45 @@ document.getElementById('profilePicInput').addEventListener('change', function (
             } catch (err) {
                 showCustomAlert('Error updating photo: ' + err.message);
             }
-        };
-        reader.readAsDataURL(file);
+        }).catch(err => {
+            showCustomAlert('Error processing image: ' + err.message);
+        });
     }
 });
+
+function compressImage(file, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = error => reject(error);
+        };
+        img.onerror = error => reject(error);
+    });
+}
 
 async function handleUpdate(e) {
     e.preventDefault();

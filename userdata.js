@@ -26,6 +26,15 @@ window.generateInviteCode = function() {
     return code;
 }
 
+// Hashes a string using SHA-256 (returns a 64-character hex string)
+window.hashPassword = async function (password) {
+    if (!password) return '';
+    const msgBuffer = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
 // ===== Firebase Data Handlers ===== //
 
 // Gets basic UID and metadata from local cache (prevents flickering)
@@ -60,7 +69,15 @@ function listenUserData(callback) {
 
         unsubsribeUserData = db.collection('users').doc(user.uid).onSnapshot(doc => {
             if (doc.exists) {
-                callback(doc.data());
+                const data = doc.data();
+                if (data.isFrozen === true) {
+                    auth.signOut().then(() => {
+                        localStorage.removeItem('loggedInUser');
+                        window.location.href = '/login?error=frozen';
+                    });
+                    return;
+                }
+                callback(data);
             }
         }, (error) => {
             console.error("Error listening to user data:", error);
@@ -106,6 +123,17 @@ async function incrementUserData(field, amount) {
     }
 }
 
+// HTML escaping utility to prevent XSS
+function escapeHTML(str) {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Global Custom Alert Function (Animated Overlay)
 window.showCustomAlert = function (message, callback) {
     if (document.querySelector('.custom-alert-overlay')) {
@@ -124,7 +152,7 @@ window.showCustomAlert = function (message, callback) {
 
     const msg = document.createElement('div');
     msg.className = 'custom-alert-message';
-    msg.innerHTML = message.replace(/\n/g, '<br>');
+    msg.innerHTML = escapeHTML(message).replace(/\n/g, '<br>');
 
     const btn = document.createElement('button');
     btn.className = 'custom-alert-btn';
@@ -171,7 +199,7 @@ window.showCustomConfirm = function (message, onConfirm) {
 
     const msg = document.createElement('div');
     msg.className = 'custom-alert-message';
-    msg.innerHTML = message.replace(/\n/g, '<br>');
+    msg.innerHTML = escapeHTML(message).replace(/\n/g, '<br>');
 
     const btnContainer = document.createElement('div');
     btnContainer.style.display = 'flex';
@@ -215,6 +243,15 @@ window.showCustomConfirm = function (message, onConfirm) {
 // --- Start of Telegram Support Button ---
 if (!window.location.pathname.includes('admin')) {
     (function () {
+        var csLink = 'https://t.me/Universalmoviess22';
+        db.collection('globalConfig').doc('system').onSnapshot(doc => {
+            if (doc.exists && doc.data().csLink) {
+                csLink = doc.data().csLink;
+                const contactBtn = document.querySelector('.contact-btn');
+                if (contactBtn) contactBtn.href = csLink;
+            }
+        });
+
         var btn = document.createElement('div');
         btn.id = 'draggable-chat-btn';
         btn.innerHTML = '💬';
@@ -290,14 +327,14 @@ if (!window.location.pathname.includes('admin')) {
 
         document.addEventListener('mouseup', function () {
             if (dragging && !moved) {
-                window.open('https://t.me/Universalmoviess22', '_blank');
+                window.open(csLink, '_blank');
             }
             stopDrag();
         });
 
         document.addEventListener('touchend', function () {
             if (dragging && !moved) {
-                window.open('https://t.me/Universalmoviess22', '_blank');
+                window.open(csLink, '_blank');
             }
             stopDrag();
         });

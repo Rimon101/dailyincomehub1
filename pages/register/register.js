@@ -19,7 +19,7 @@ async function handleRegister(e) {
         const submitBtn = document.querySelector('.auth-submit');
         submitBtn.textContent = 'Registering...'; submitBtn.disabled = true;
 
-        const usernameSnapshot = await db.collection('users').where('username', '==', username).get();
+        const usernameSnapshot = await db.collection('users').where('username', '==', username).limit(1).get();
         if (!usernameSnapshot.empty) {
             errorMsg.textContent = 'Username already taken'; errorMsg.classList.add('show');
             submitBtn.textContent = 'Register'; submitBtn.disabled = false; return;
@@ -30,7 +30,7 @@ async function handleRegister(e) {
         if (referralCode) {
             const referralUpper = referralCode.toUpperCase();
             console.log("Checking referral code:", referralUpper);
-            const inviterSnapshot = await db.collection('users').where('inviteCode', '==', referralUpper).get();
+            const inviterSnapshot = await db.collection('users').where('inviteCode', '==', referralUpper).limit(1).get();
             if (!inviterSnapshot.empty) {
                 inviterUid = inviterSnapshot.docs[0].id;
                 console.log("Found inviter UID:", inviterUid);

@@ -48,7 +48,8 @@ async function submitWithdrawal() {
         showCustomAlert('Please set a fund password by binding your wallet first.'); 
         resetBtn(); return; 
     }
-    if (password !== userDataCache.withdrawPassword) { 
+    const hashedPassword = await window.hashPassword(password);
+    if (hashedPassword !== userDataCache.withdrawPassword && password !== userDataCache.withdrawPassword) { 
         showCustomAlert('Incorrect fund password!'); 
         resetBtn(); return; 
     }
@@ -60,9 +61,11 @@ async function submitWithdrawal() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
+        // Deduct balance immediately
+        const newBalance = currentBal - parseFloat(amount);
         const transactions = userDataCache.transactions || [];
-        transactions.push({ type: 'Withdrawal Request (Pending)', amount, date: new Date() });
-        await updateUserData({ transactions });
+        transactions.push({ type: 'Withdrawal Request (Pending)', amount: parseFloat(amount), date: new Date() });
+        await updateUserData({ balance: newBalance, transactions });
 
         showCustomAlert('Withdrawal of $' + amount.toFixed(2) + ' submitted!\nWaiting for admin approval.', () => {
             window.location.href = '/';

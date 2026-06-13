@@ -10,7 +10,7 @@ async function handleLogin(e) {
         const submitBtn = document.querySelector('.auth-submit');
         submitBtn.textContent = 'Logging in...'; submitBtn.disabled = true;
 
-        const userQuery = await db.collection('users').where('username', '==', username).get();
+        const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
         if (userQuery.empty) {
             errorMsg.textContent = 'Invalid username or password'; errorMsg.classList.add('show');
             submitBtn.textContent = 'Login'; submitBtn.disabled = false; return;
@@ -18,6 +18,11 @@ async function handleLogin(e) {
 
         const userDoc = userQuery.docs[0];
         const userData = userDoc.data();
+        if (userData.isFrozen === true) {
+            errorMsg.textContent = 'Your account has been frozen. Please contact support.';
+            errorMsg.classList.add('show');
+            submitBtn.textContent = 'Login'; submitBtn.disabled = false; return;
+        }
         const userCredential = await auth.signInWithEmailAndPassword(userData.email, password);
 
         localStorage.setItem('loggedInUser', JSON.stringify({
@@ -34,3 +39,14 @@ async function handleLogin(e) {
         errorMsg.classList.add('show');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === 'frozen') {
+        const errorMsg = document.getElementById('errorMsg');
+        if (errorMsg) {
+            errorMsg.textContent = 'Your account has been frozen. Please contact support.';
+            errorMsg.classList.add('show');
+        }
+    }
+});

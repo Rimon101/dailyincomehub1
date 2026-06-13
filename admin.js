@@ -379,8 +379,6 @@ async function handleRequest(type, reqId, newStatus, username, amount) {
                         updateData.honorPoints = newPoints;
                         updateData.firstRechargeDone = true;
                     }
-                } else if (type === 'withdrawals') {
-                    updateData.balance = Math.max(0, currentBalance - parseFloat(amount));
                 }
 
                 // Append to transactions array
@@ -392,6 +390,23 @@ async function handleRequest(type, reqId, newStatus, username, amount) {
 
                 // Execute User Cloud Update
                 await db.collection('users').doc(userDoc.id).update(updateData);
+            } else if (newStatus === 'Rejected') {
+                if (type === 'withdrawals') {
+                    // Refund the user balance if withdrawal is rejected
+                    const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
+                    if (!userQuery.empty) {
+                        const userDoc = userQuery.docs[0];
+                        const userData = userDoc.data();
+                        let currentBalance = parseFloat(userData.balance || 0);
+
+                        const txs = userData.transactions || [];
+                        txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: new Date() });
+                        await db.collection('users').doc(userDoc.id).update({
+                            balance: currentBalance + parseFloat(amount),
+                            transactions: txs
+                        });
+                    }
+                }
             }
 
             renderFinancials();

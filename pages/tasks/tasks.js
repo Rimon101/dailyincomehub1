@@ -207,7 +207,7 @@ function showRandomTask(taskConfig) {
         name: movie.name,
         price: parseFloat((orderAmount * portions[i]).toFixed(2)),
         qty: Math.floor(Math.random() * 3),
-        img: `../../images/${movie.img}`
+        img: `/images/${movie.img}`
     }));
 
     // Build product list HTML
@@ -271,22 +271,29 @@ async function confirmTask() {
             return;
         }
 
-        await incrementUserData('tasksCompleted', 1);
-        await incrementUserData('balance', currentEarned);
-        await incrementUserData('earnToday', currentEarned);
-        await incrementUserData('earnTotal', currentEarned);
-
         // Save order record to transaction history
         const user = auth.currentUser;
         if (user) {
+            const increment = firebase.firestore.FieldValue.increment;
+            const userRef = db.collection('users').doc(user.uid);
+            
+            const prevCompleted = getCompleted();
+            const newTaskNo = prevCompleted + 1;
+            const prevBalance = parseFloat(userDataCache.balance || 0);
+
             const orderRecord = {
                 type: 'Order Commission',
                 amount: parseFloat(currentEarned.toFixed(2)),
                 date: firebase.firestore.Timestamp.now(),
-                orderAmount: parseFloat((parseFloat(userDataCache.balance || 0) + parseFloat(userDataCache.cashGap || 0)).toFixed(2)),
-                taskNo: (getCompleted() + 1)
+                orderAmount: parseFloat((prevBalance + parseFloat(userDataCache.cashGap || 0)).toFixed(2)),
+                taskNo: newTaskNo
             };
-            await db.collection('users').doc(user.uid).update({
+
+            await userRef.update({
+                tasksCompleted: increment(1),
+                balance: increment(currentEarned),
+                earnToday: increment(currentEarned),
+                earnTotal: increment(currentEarned),
                 transactions: firebase.firestore.FieldValue.arrayUnion(orderRecord)
             });
         }

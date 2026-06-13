@@ -133,7 +133,8 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
 
     try {
         submitBtn.textContent = 'Binding...'; submitBtn.disabled = true;
-        await updateUserData({ realName, phoneNumber, walletAddress, withdrawPassword, walletType: 'trc20' });
+        const hashedPassword = await window.hashPassword(withdrawPassword);
+        await updateUserData({ realName, phoneNumber, walletAddress, withdrawPassword: hashedPassword, walletType: 'trc20' });
         showCustomAlert('Wallet address bound successfully!', () => { window.location.href = '/profile'; });
     } catch (error) {
         showCustomAlert('Error binding wallet: ' + error.message);

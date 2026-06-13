@@ -23,7 +23,7 @@ requireAuth((user) => {
                     '<div class="type">' + tx.type + '</div>' +
                     '<div class="date">' + txDate + '</div>' +
                     '</div>' +
-                    '<div class="transaction-amount ' + amountClass + '">' + sign + '$' + parseFloat(tx.amount).toFixed(2) + '</div>' +
+                    '<div class="transaction-amount ' + amountClass + '">' + sign + '$' + Math.abs(parseFloat(tx.amount)).toFixed(2) + '</div>' +
                     '</div>';
             });
         } else {
