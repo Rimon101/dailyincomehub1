@@ -5,7 +5,7 @@ requireAuth((firebaseUser) => {
         if (sys.siteName) {
             document.getElementById("siteNameHeader").textContent = sys.siteName;
             document.getElementById("siteNameBalance").textContent = sys.siteName + " Balance";
-            document.title = sys.siteName + " - Universalmovies";
+            document.title = sys.siteName + " - Daily Income Hub";
         }
     });
 

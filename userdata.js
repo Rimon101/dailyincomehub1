@@ -243,7 +243,7 @@ window.showCustomConfirm = function (message, onConfirm) {
 // --- Start of Telegram Support Button ---
 if (!window.location.pathname.includes('admin')) {
     (function () {
-        var csLink = 'https://t.me/Universalmoviess22';
+        var csLink = 'https://t.me/Daily Income Hubs22';
         db.collection('globalConfig').doc('system').onSnapshot(doc => {
             if (doc.exists && doc.data().csLink) {
                 csLink = doc.data().csLink;

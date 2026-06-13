@@ -493,7 +493,7 @@ async function loadSystemSettings() {
         const doc = await db.collection('globalConfig').doc('system').get();
         if (doc.exists) {
             const config = doc.data();
-            document.getElementById('settingSiteName').value = config.siteName || "Universalmovies";
+            document.getElementById('settingSiteName').value = config.siteName || "Daily Income Hub";
             document.getElementById('settingCsLink').value = config.csLink || "#";
             document.getElementById('settingCurrency').value = config.currency || "$";
         }
