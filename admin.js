@@ -13,19 +13,19 @@ requireAuth(async (user) => {
         } else {
             // User is not Admin, deny access and redirect
             alert("Access Denied: You do not have administrative privileges.");
-            window.location.href = '../home/index.html';
+            window.location.href = '/';
         }
     } catch (error) {
         console.error("Error verifying admin status:", error);
         alert("An error occurred while verifying your status. Please try again.");
-        window.location.href = '../home/index.html';
+        window.location.href = '/';
     }
 });
 
 function logoutAdmin() {
     auth.signOut().then(() => {
         localStorage.removeItem('loggedInUser');
-        window.location.href = '../home/index.html';
+        window.location.href = '/';
     });
 }
 

@@ -68,7 +68,7 @@
                     <button class="oc-btn primary" id="startTaskBtn" onclick="startAutoTask()">Automatic order</button>
                     <button class="oc-btn secondary" onclick="showGradeInfo()">Grade Area Unlock</button>
                 </div>
-                <button class="oc-btn-outline" onclick="window.location.href='/pages/history/index.html?type=order'">
+                <button class="oc-btn-outline" onclick="window.location.href='/history?type=order'">
                     <span class="oc-icon">⏰</span> Order Record
                 </button>
             </div>
@@ -179,25 +179,27 @@
         <a href="/" class="nav-item">
             <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
         </a>
-        <a href="/pages/tasks/index.html" class="nav-item active">
+        <a href="/tasks" class="nav-item active">
             <span class="nav-icon">📋</span><span class="nav-label">Order</span>
         </a>
-        <a href="/pages/trust/index.html" class="nav-item">
+        <a href="/trust" class="nav-item">
             <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
         </a>
-        <a href="/pages/service/index.html" class="nav-item">
+        <a href="/service" class="nav-item">
             <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
         </a>
-        <a href="/pages/profile/index.html" class="nav-item">
+        <a href="/profile" class="nav-item">
             <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
         </a>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js?v=2"></script>
-    <script src="/pages/tasks/tasks.js?v=8"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js?v=2" defer></script>
+    <script src="/pages/tasks/tasks.js?v=8" defer></script>
 </body>
 
 </html>

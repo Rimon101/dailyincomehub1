@@ -10,7 +10,7 @@ requireAuth((user) => {
             // Proactive Guard: If wallet is not bound, redirect to bind-wallet
             if (!data.walletAddress || data.walletAddress.trim() === "") {
                 showCustomAlert("Please bind your withdrawal wallet address first.", () => {
-                    window.location.href = "/pages/bind-wallet/index.html";
+                    window.location.href = "/bind-wallet";
                 });
                 return;
             }
@@ -65,7 +65,7 @@ async function submitWithdrawal() {
         await updateUserData({ transactions });
 
         showCustomAlert('Withdrawal of $' + amount.toFixed(2) + ' submitted!\nWaiting for admin approval.', () => {
-            window.location.href = '/pages/home/index.html';
+            window.location.href = '/';
         });
     } catch (error) { showCustomAlert('Error: ' + error.message); resetBtn(); }
 

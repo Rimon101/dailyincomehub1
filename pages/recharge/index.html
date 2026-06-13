@@ -34,7 +34,7 @@
             <div class="qr-container">
                 <div class="section-title">Scan QR Code to Pay</div>
                 <div class="qr-image" id="qrWrapper">
-                    <img id="qrImage" src="/images/usdt_qr.jpg" alt="Scan to Pay">
+                    <img id="qrImage" src="/images/usdt_qr.jpg" alt="Scan to Pay" loading="lazy">
                 </div>
                 <div class="copy-hint" id="walletLabel">USDT (TRC20) Address</div>
                 <div class="wallet-display" id="walletAddr">TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS</div>
@@ -62,11 +62,13 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
-    <script src="/pages/recharge/recharge.js?v=2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/recharge/recharge.js?v=2" defer></script>
 </body>
 
 </html>

@@ -3,37 +3,51 @@
   "outputDirectory": ".",
   "framework": null,
   "installCommand": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/tasks", "destination": "/pages/tasks/index.html" },
+    { "source": "/profile", "destination": "/pages/profile/index.html" },
+    { "source": "/balance", "destination": "/pages/balance/index.html" },
+    { "source": "/recharge", "destination": "/pages/recharge/index.html" },
+    { "source": "/withdrawal", "destination": "/pages/withdrawal/index.html" },
+    { "source": "/login", "destination": "/pages/login/index.html" },
+    { "source": "/register", "destination": "/pages/register/index.html" },
+    { "source": "/service", "destination": "/pages/service/index.html" },
+    { "source": "/trust", "destination": "/pages/trust/index.html" },
+    { "source": "/history", "destination": "/pages/history/index.html" },
+    { "source": "/team", "destination": "/pages/team/index.html" },
+    { "source": "/admin", "destination": "/pages/admin/index.html" },
+    { "source": "/bind-wallet", "destination": "/pages/bind-wallet/index.html" },
+    { "source": "/change-password", "destination": "/pages/change-password/index.html" },
+    { "source": "/language", "destination": "/pages/language/index.html" },
+    { "source": "/edit-profile", "destination": "/pages/profile/edit-profile.html" },
+    { "source": "/withdraw-management", "destination": "/pages/profile/withdraw-management.html" }
+  ],
   "redirects": [
     { "source": "/home", "destination": "/", "statusCode": 301 },
-    { "source": "/admin.html", "destination": "/pages/admin/index.html", "statusCode": 301 },
-    { "source": "/balance.html", "destination": "/pages/balance/index.html", "statusCode": 301 },
-    { "source": "/balance", "destination": "/pages/balance/index.html", "statusCode": 301 },
-    { "source": "/bind-wallet.html", "destination": "/pages/bind-wallet/index.html", "statusCode": 301 },
-    { "source": "/bind-wallet", "destination": "/pages/bind-wallet/index.html", "statusCode": 301 },
-    { "source": "/change_password.html", "destination": "/pages/change-password/index.html", "statusCode": 301 },
-    { "source": "/change-password", "destination": "/pages/change-password/index.html", "statusCode": 301 },
-    { "source": "/history.html", "destination": "/pages/history/index.html", "statusCode": 301 },
-    { "source": "/history", "destination": "/pages/history/index.html", "statusCode": 301 },
-    { "source": "/login.html", "destination": "/pages/login/index.html", "statusCode": 301 },
-    { "source": "/profile.html", "destination": "/pages/profile/index.html", "statusCode": 301 },
-    { "source": "/profile", "destination": "/pages/profile/index.html", "statusCode": 301 },
-    { "source": "/profile/profile.html", "destination": "/pages/profile/index.html", "statusCode": 301 },
-    { "source": "/recharge.html", "destination": "/pages/recharge/index.html", "statusCode": 301 },
-    { "source": "/recharge", "destination": "/pages/recharge/index.html", "statusCode": 301 },
-    { "source": "/register.html", "destination": "/pages/register/index.html", "statusCode": 301 },
-    { "source": "/register", "destination": "/pages/register/index.html", "statusCode": 301 },
-    { "source": "/service.html", "destination": "/pages/service/index.html", "statusCode": 301 },
-    { "source": "/service", "destination": "/pages/service/index.html", "statusCode": 301 },
-    { "source": "/tasks.html", "destination": "/pages/tasks/index.html", "statusCode": 301 },
-    { "source": "/tasks", "destination": "/pages/tasks/index.html", "statusCode": 301 },
-    { "source": "/trust.html", "destination": "/pages/trust/index.html", "statusCode": 301 },
-    { "source": "/trust", "destination": "/pages/trust/index.html", "statusCode": 301 },
-    { "source": "/withdrawal.html", "destination": "/pages/withdrawal/index.html", "statusCode": 301 },
-    { "source": "/withdrawal", "destination": "/pages/withdrawal/index.html", "statusCode": 301 }
+    { "source": "/admin.html", "destination": "/admin", "statusCode": 301 },
+    { "source": "/balance.html", "destination": "/balance", "statusCode": 301 },
+    { "source": "/bind-wallet.html", "destination": "/bind-wallet", "statusCode": 301 },
+    { "source": "/change_password.html", "destination": "/change-password", "statusCode": 301 },
+    { "source": "/history.html", "destination": "/history", "statusCode": 301 },
+    { "source": "/login.html", "destination": "/login", "statusCode": 301 },
+    { "source": "/profile.html", "destination": "/profile", "statusCode": 301 },
+    { "source": "/profile/profile.html", "destination": "/profile", "statusCode": 301 },
+    { "source": "/profile/edit-profile.html", "destination": "/edit-profile", "statusCode": 301 },
+    { "source": "/profile/withdraw-management.html", "destination": "/withdraw-management", "statusCode": 301 },
+    { "source": "/edit-profile.html", "destination": "/edit-profile", "statusCode": 301 },
+    { "source": "/withdraw-management.html", "destination": "/withdraw-management", "statusCode": 301 },
+    { "source": "/recharge.html", "destination": "/recharge", "statusCode": 301 },
+    { "source": "/register.html", "destination": "/register", "statusCode": 301 },
+    { "source": "/service.html", "destination": "/service", "statusCode": 301 },
+    { "source": "/tasks.html", "destination": "/tasks", "statusCode": 301 },
+    { "source": "/trust.html", "destination": "/trust", "statusCode": 301 },
+    { "source": "/withdrawal.html", "destination": "/withdrawal", "statusCode": 301 }
   ],
   "headers": [
     {
-      "source": "/(.*)\\.html",
+      "source": "/(.*).html",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
@@ -42,13 +56,13 @@
       ]
     },
     {
-      "source": "/(.*)\\.js",
+      "source": "/(.*).js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]
     },
     {
-      "source": "/(.*)\\.css",
+      "source": "/(.*).css",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]

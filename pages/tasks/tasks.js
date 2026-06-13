@@ -96,7 +96,7 @@ async function startAutoTask() {
     const userTaskStatus = userDataCache.taskStatusOverride || 'default';
     if (userTaskStatus === 'closed' || (taskConfig.status === 'closed' && userTaskStatus !== 'open')) {
         sessionStorage.setItem('showTaskClosedNotice', 'true');
-        window.location.href = '/pages/home/index.html';
+        window.location.href = '/';
         return;
     }
 

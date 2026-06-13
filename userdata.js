@@ -43,7 +43,7 @@ function requireAuth(onAuthenticated) {
             if (onAuthenticated) onAuthenticated(user);
         } else {
             localStorage.removeItem('loggedInUser');
-            window.location.href = '/pages/login/index.html';
+            window.location.href = '/login';
         }
     });
 }
@@ -213,7 +213,7 @@ window.showCustomConfirm = function (message, onConfirm) {
 };
 
 // --- Start of Telegram Support Button ---
-if (!window.location.pathname.includes('admin.html')) {
+if (!window.location.pathname.includes('admin')) {
     (function () {
         var btn = document.createElement('div');
         btn.id = 'draggable-chat-btn';

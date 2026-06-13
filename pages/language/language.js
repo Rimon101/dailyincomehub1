@@ -14,6 +14,6 @@ function changeLanguage(langCode) {
 
     // 3. Optional: Brief delay and redirect back to profile to show it worked
     setTimeout(() => {
-        window.location.href = '/pages/profile/index.html';
+        window.location.href = '/profile';
     }, 500);
 }

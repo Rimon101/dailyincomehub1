@@ -53,7 +53,7 @@ async function handleUpdate(e) {
         await updateUserData({ fullName });
         showCustomAlert('Profile updated successfully!');
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = '/profile';
         }, 1500);
     } catch (err) {
         showCustomAlert('Error: ' + err.message);

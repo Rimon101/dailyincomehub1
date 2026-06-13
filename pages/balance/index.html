@@ -22,8 +22,8 @@
         </div>
 
         <div class="balance-actions">
-            <a href="/pages/recharge/index.html" class="btn-recharge">Recharge</a>
-            <a href="/pages/withdrawal/index.html" class="btn-withdraw">Withdrawal</a>
+            <a href="/recharge" class="btn-recharge">Recharge</a>
+            <a href="/withdrawal" class="btn-withdraw">Withdrawal</a>
         </div>
 
         <div class="section-title">Recent Transactions</div>
@@ -33,11 +33,13 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
-    <script src="/pages/balance/balance.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/balance/balance.js" defer></script>
 </body>
 
 </html>

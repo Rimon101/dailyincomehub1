@@ -134,7 +134,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     try {
         submitBtn.textContent = 'Binding...'; submitBtn.disabled = true;
         await updateUserData({ realName, phoneNumber, walletAddress, withdrawPassword, walletType: 'trc20' });
-        showCustomAlert('Wallet address bound successfully!', () => { window.location.href = '/pages/profile/index.html'; });
+        showCustomAlert('Wallet address bound successfully!', () => { window.location.href = '/profile'; });
     } catch (error) {
         showCustomAlert('Error binding wallet: ' + error.message);
         submitBtn.textContent = 'Submit'; submitBtn.disabled = false;

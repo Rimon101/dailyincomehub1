@@ -55,7 +55,7 @@ async function handleRegister(e) {
         });
 
         successMsg.textContent = 'Account created! Redirecting to login...'; successMsg.classList.add('show');
-        setTimeout(() => { window.location.href = '/pages/login/index.html'; }, 2000);
+        setTimeout(() => { window.location.href = '/login'; }, 2000);
 
     } catch (error) {
         const submitBtn = document.querySelector('.auth-submit');

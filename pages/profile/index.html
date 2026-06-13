@@ -13,7 +13,7 @@
         }
     </script>
     <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 </head>
 
 <body>
@@ -47,50 +47,50 @@
                 <div class="cp-divider"></div>
                 
                 <div class="cp-actions">
-                    <a href="/pages/recharge/index.html" class="cp-action-btn cp-recharge">Recharge</a>
+                    <a href="/recharge" class="cp-action-btn cp-recharge">Recharge</a>
                     <div class="cp-vertical-divider"></div>
-                    <a href="/pages/withdrawal/index.html" class="cp-action-btn cp-withdraw">Withdraw</a>
+                    <a href="/withdrawal" class="cp-action-btn cp-withdraw">Withdraw</a>
                 </div>
             </div>
         </div>
 
         <div class="nav-menu">
-            <a href="edit-profile.html" class="menu-item">
+            <a href="/edit-profile" class="menu-item">
                 <span class="menu-icon">👤</span>
                 <span class="menu-label">My Profile</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/team/index.html" class="menu-item">
+            <a href="/team" class="menu-item">
                 <span class="menu-icon">👥</span>
                 <span class="menu-label">My Team</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/bind-wallet/index.html" class="menu-item" id="bindWalletMenuBtn" style="display: none;">
+            <a href="/bind-wallet" class="menu-item" id="bindWalletMenuBtn" style="display: none;">
                 <span class="menu-icon">🔗</span>
                 <span class="menu-label">Bind Wallet</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="withdraw-management.html" class="menu-item" id="withdrawManagementBtn" style="display: none;">
+            <a href="/withdraw-management" class="menu-item" id="withdrawManagementBtn" style="display: none;">
                 <span class="menu-icon">💳</span>
                 <span class="menu-label">Withdraw Management</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/history/index.html" class="menu-item">
+            <a href="/history" class="menu-item">
                 <span class="menu-icon">📜</span>
                 <span class="menu-label">Transaction History</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/change-password/index.html" class="menu-item">
+            <a href="/change-password" class="menu-item">
                 <span class="menu-icon">🔒</span>
                 <span class="menu-label">Change Password</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/language/index.html" class="menu-item">
+            <a href="/language" class="menu-item">
                 <span class="menu-icon">🌐</span>
                 <span class="menu-label">Language</span>
                 <span class="menu-chevron">&rsaquo;</span>
             </a>
-            <a href="/pages/service/index.html" class="menu-item">
+            <a href="/service" class="menu-item">
                 <span class="menu-icon">🎧</span>
                 <span class="menu-label">Customer Service</span>
                 <span class="menu-chevron">&rsaquo;</span>
@@ -103,26 +103,28 @@
             <a href="/" class="nav-item">
                 <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
             </a>
-            <a href="/pages/tasks/index.html" class="nav-item">
+            <a href="/tasks" class="nav-item">
                 <span class="nav-icon">📋</span><span class="nav-label">Order</span>
             </a>
-            <a href="/pages/trust/index.html" class="nav-item">
+            <a href="/trust" class="nav-item">
                 <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
             </a>
-            <a href="/pages/service/index.html" class="nav-item">
+            <a href="/service" class="nav-item">
                 <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
             </a>
-            <a href="/pages/profile/index.html" class="nav-item active">
+            <a href="/profile" class="nav-item active">
                 <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
             </a>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js?v=2"></script>
-    <script src="/pages/profile/profile.js?v=5"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js?v=2" defer></script>
+    <script src="/pages/profile/profile.js?v=5" defer></script>
 </body>
 
 </html>

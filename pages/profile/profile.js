@@ -65,15 +65,15 @@ function handleAuthAction() {
     const user = getCurrentUser();
     if (user) {
         showCustomConfirm('Are you sure you want to log out?', () => {
-            auth.signOut().then(() => { window.location.href = '/pages/login/index.html'; });
+            auth.signOut().then(() => { window.location.href = '/login'; });
         });
     } else {
-        window.location.href = '/pages/login/index.html';
+        window.location.href = '/login';
     }
 }
 
 document.getElementById('profilePicContainer').addEventListener('click', () => {
     // In the dashboard, clicking the pic also takes you to edit profile
-    window.location.href = 'edit-profile.html';
+    window.location.href = '/edit-profile';
 });
 

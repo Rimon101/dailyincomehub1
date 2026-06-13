@@ -37,7 +37,7 @@
                     <button class="auth-submit" onclick="handleLogin(event)"
                         style="width: 100%; padding: 15px; border: none; border-radius: 30px; background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;">Login</button>
                     <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
-                        Don't have an account? <a href="/pages/register/index.html"
+                        Don't have an account? <a href="/register"
                             style="color: #e91e63; text-decoration: none; font-weight: 600;">Register now</a>
                     </p>
                 </div>
@@ -45,11 +45,13 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
-    <script src="/pages/login/login.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/login/login.js" defer></script>
 </body>
 
 </html>

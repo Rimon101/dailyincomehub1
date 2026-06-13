@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="sitePageTitle">Edit Profile - Universalmovies</title>
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="edit-profile.css">
+    <link rel="stylesheet" href="/pages/profile/edit-profile.css">
 </head>
 
 <body>
     <div class="main-wrapper">
         <div class="header">
-            <a href="index.html" class="back-btn">&lsaquo;</a>
+            <a href="/profile" class="back-btn">&lsaquo;</a>
             <h1>Edit Profile</h1>
         </div>
 
@@ -49,17 +49,19 @@
 
             <div class="info-box">
                 <p><strong>Security Tip:</strong> To change your password, please go to the <a
-                        href="/pages/change-password/index.html"
+                        href="/change-password"
                         style="color: #e91e63; text-decoration: none; font-weight: 600;">Security Settings</a>.</p>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
-    <script src="edit-profile.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/profile/edit-profile.js" defer></script>
 </body>
 
 </html>

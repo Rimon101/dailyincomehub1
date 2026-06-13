@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <a href="/pages/profile/index.html" class="back-nav">&lsaquo;</a>
+    <a href="/profile" class="back-nav">&lsaquo;</a>
 
     <div class="auth-container">
         <div class="auth-logo">
@@ -41,11 +41,13 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
-    <script src="/pages/change-password/change-password.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/change-password/change-password.js" defer></script>
 </body>
 
 </html>

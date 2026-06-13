@@ -13,11 +13,11 @@ requireAuth((firebaseUser) => {
         if (!data) return;
 
         const firstName = (data.fullName || data.username || 'User').split(' ')[0];
-        navAuth.innerHTML = '<span class="nav-user">Hi, ' + firstName + '</span><a href="/pages/profile/index.html" class="nav-login" style="padding: 4px 10px; font-size: 12px;">Profile</a><a href="#" class="nav-logout" onclick="logout()">Logout</a>';
+        navAuth.innerHTML = '<span class="nav-user">Hi, ' + firstName + '</span><a href="/profile" class="nav-login" style="padding: 4px 10px; font-size: 12px;">Profile</a><a href="#" class="nav-logout" onclick="logout()">Logout</a>';
 
         if (data.isAdmin === true && !document.getElementById('navAdminLink')) {
             const adminLink = document.createElement('a');
-            adminLink.href = '/pages/admin/index.html';
+            adminLink.href = '/admin';
             adminLink.className = 'nav-login';
             adminLink.id = 'navAdminLink';
             adminLink.style.cssText = 'padding:4px 10px;font-size:12px;background:#000;color:#fff;border-color:#000;margin-left:8px;';
@@ -46,7 +46,7 @@ requireAuth((firebaseUser) => {
 function logout() {
     auth.signOut().then(() => {
         localStorage.removeItem('loggedInUser');
-        window.location.href = '/pages/login/index.html';
+        window.location.href = '/login';
     });
 }
 

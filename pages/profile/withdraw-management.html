@@ -10,7 +10,7 @@
 <body>
     <div class="withdraw-mgmt-container">
         <div class="header">
-            <a href="/pages/profile/index.html" class="back-btn">&lsaquo;</a>
+            <a href="/profile" class="back-btn">&lsaquo;</a>
             <h1>Withdraw Management</h1>
         </div>
 
@@ -45,14 +45,16 @@
 
         <div class="alert-box">
             <span class="alert-icon">ℹ️</span>
-            <p>To protect your account security, binded wallet information cannot be changed by yourself. If you need to update it, please contact <a href="/pages/service/index.html">Customer Service</a>.</p>
+            <p>To protect your account security, binded wallet information cannot be changed by yourself. If you need to update it, please contact <a href="/service">Customer Service</a>.</p>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js?v=3"></script>
-    <script src="/pages/profile/withdraw-management.js?v=3"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js?v=3" defer></script>
+    <script src="/pages/profile/withdraw-management.js?v=3" defer></script>
 </body>
 </html>

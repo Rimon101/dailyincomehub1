@@ -24,7 +24,7 @@ async function handleLogin(e) {
             uid: userCredential.user.uid, username: userData.username,
             email: userData.email, fullName: userData.fullName, profilePic: userData.profilePic || null
         }));
-        window.location.href = '/pages/home/index.html';
+        window.location.href = '/';
 
     } catch (error) {
         const submitBtn = document.querySelector('.auth-submit');

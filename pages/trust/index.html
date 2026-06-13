@@ -46,7 +46,7 @@
                             style="font-size: 13px; font-weight: 600; color: #888; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase;">
                             Universal Movies License</div>
                         <img src="/images/license_universal.png" alt="Universal Movies License"
-                            style="width: 100%; max-width: 320px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);">
+                            style="width: 100%; max-width: 320px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);" loading="lazy">
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div
@@ -55,7 +55,7 @@
                                 style="font-size: 12px; font-weight: 600; color: #888; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase;">
                                 Web Trust</div>
                             <img src="/images/badge_web_trust.png" alt="Web Trust Badge"
-                                style="width: 100%; border-radius: 10px;">
+                                style="width: 100%; border-radius: 10px;" loading="lazy">
                         </div>
                         <div
                             style="background: #f9f9f9; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
@@ -63,7 +63,7 @@
                                 style="font-size: 12px; font-weight: 600; color: #888; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase;">
                                 AI Trust</div>
                             <img src="/images/badge_ai_trust.png" alt="AI Trust Badge"
-                                style="width: 100%; border-radius: 10px;">
+                                style="width: 100%; border-radius: 10px;" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -74,25 +74,27 @@
             <a href="/" class="nav-item">
                 <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
             </a>
-            <a href="/pages/tasks/index.html" class="nav-item">
+            <a href="/tasks" class="nav-item">
                 <span class="nav-icon">📋</span><span class="nav-label">Order</span>
             </a>
-            <a href="/pages/trust/index.html" class="nav-item active">
+            <a href="/trust" class="nav-item active">
                 <span class="nav-icon">🛡️</span><span class="nav-label">Trust</span>
             </a>
-            <a href="/pages/service/index.html" class="nav-item">
+            <a href="/service" class="nav-item">
                 <span class="nav-icon">🎧</span><span class="nav-label">Service</span>
             </a>
-            <a href="/pages/profile/index.html" class="nav-item">
+            <a href="/profile" class="nav-item">
                 <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
             </a>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="/userdata.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
 </body>
 
 </html>

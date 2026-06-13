@@ -46,7 +46,7 @@
         <div class="auth-card">
             <div class="main-wrapper">
                 <div class="header">
-                    <a href="/pages/login/index.html" class="back-btn">&lsaquo;</a>
+                    <a href="/login" class="back-btn">&lsaquo;</a>
                     <h1>Register</h1>
                 </div>
 
@@ -106,7 +106,7 @@
                             <button class="auth-submit" onclick="handleRegister(event)"
                                 style="width: 100%; padding: 15px; border: none; border-radius: 30px; background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;">Register</button>
                             <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
-                                Already have an account? <a href="/pages/login/index.html"
+                                Already have an account? <a href="/login"
                                     style="color: #e91e63; text-decoration: none; font-weight: 600;">Login here</a>
                             </p>
                         </div>
@@ -116,12 +116,14 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <script src="/userdata.js?v=2"></script>
-    <script src="/pages/register/register.js?v=2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js" defer></script>
+    <script src="/userdata.js?v=2" defer></script>
+    <script src="/pages/register/register.js?v=2" defer></script>
     <script>
         // Initialize intl-tel-input inline to ensure it runs
         document.addEventListener('DOMContentLoaded', function () {
