@@ -22,19 +22,30 @@
         </div>
     </div>
 
+    <!-- Mobile header (only visible on small screens) -->
+    <div class="admin-mobile-header" id="adminMobileHeader">
+        <span class="admin-title">SC Admin</span>
+        <button type="button" class="admin-menu-btn" id="adminMenuBtn" aria-label="Open menu" aria-controls="adminSidebar" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            Menu
+        </button>
+    </div>
+
+    <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
     <!-- Dashboard -->
-    <div class="sidebar">
+    <div class="sidebar" id="adminSidebar">
         <div class="sidebar-header">
             <h2>SC Admin</h2>
         </div>
         <div class="nav-items">
-            <div class="nav-item active" onclick="switchTab('users')">User Management</div>
-            <div class="nav-item" onclick="switchTab('financials')">Financials</div>
-            <div class="nav-item" onclick="switchTab('tasks')">Task Configs</div>
-            <div class="nav-item" onclick="switchTab('settings')">System Settings</div>
-            <div class="nav-item" onclick="switchTab('withdraw-details')">Withdraw Details</div>
-            <div class="nav-item" onclick="switchTab('wallets')">Wallet Management</div>
-            <div class="nav-item" onclick="switchTab('cashgap')">Cash Gap</div>
+            <div class="nav-item active" data-tab="users" onclick="switchTab('users')">User Management</div>
+            <div class="nav-item" data-tab="financials" onclick="switchTab('financials')">Financials</div>
+            <div class="nav-item" data-tab="tasks" onclick="switchTab('tasks')">Task Configs</div>
+            <div class="nav-item" data-tab="settings" onclick="switchTab('settings')">System Settings</div>
+            <div class="nav-item" data-tab="withdraw-details" onclick="switchTab('withdraw-details')">Withdraw Details</div>
+            <div class="nav-item" data-tab="wallets" onclick="switchTab('wallets')">Wallet Management</div>
+            <div class="nav-item" data-tab="cashgap" onclick="switchTab('cashgap')">Cash Gap</div>
         </div>
         <div style="padding: 20px;">
             <button class="btn btn-outline" style="width: 100%" onclick="logoutAdmin()">Exit Admin</button>
@@ -48,6 +59,7 @@
                 <h2>User Management</h2>
             </div>
             <div class="card">
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -62,6 +74,7 @@
                     </thead>
                     <tbody id="usersTableBody"><!-- Populated by JS --></tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -70,10 +83,11 @@
             <div class="section-header">
                 <h2>Financials &amp; Requests</h2>
             </div>
-            <div style="display: flex; gap: 20px;">
-                <div class="card" style="flex: 1;">
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="card" style="flex: 1; min-width: 320px;">
                     <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Recharge
                         Requests</h3>
+                    <div class="table-scroll">
                     <table>
                         <thead>
                             <tr>
@@ -89,10 +103,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
-                <div class="card" style="flex: 1;">
+                <div class="card" style="flex: 1; min-width: 320px;">
                     <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Withdrawal
                         Requests</h3>
+                    <div class="table-scroll">
                     <table>
                         <thead>
                             <tr>
@@ -108,6 +124,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,6 +207,7 @@
                 <h2>Withdraw Details of Customer</h2>
             </div>
             <div class="card">
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -201,6 +219,7 @@
                     </thead>
                     <tbody id="withdrawDetailsTableBody"><!-- Populated by JS --></tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -232,6 +251,7 @@
             </div>
             <div class="card">
                 <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Active Wallets</h3>
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -246,6 +266,7 @@
                         <tr><td colspan="5" style="text-align:center;">Loading wallets...</td></tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -283,6 +304,7 @@
             </div>
             <div class="card">
                 <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">All Users with Cash Gaps</h3>
+                <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
@@ -296,6 +318,7 @@
                         <tr><td colspan="4" style="text-align:center;">Loading...</td></tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>

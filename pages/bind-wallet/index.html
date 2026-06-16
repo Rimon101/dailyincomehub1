@@ -13,47 +13,67 @@
 </head>
 
 <body>
-    <div class="bind-wallet-container">
-        <div class="header">
-            <a href="/profile" class="back-btn">&lsaquo;</a>
-            <h1 id="headerTitle">Submit Address(TRC20)</h1>
-        </div>
-
-        <div class="form-group">
-            <label>Real Name</label>
-            <input type="text" id="realName" placeholder="Enter real name">
-        </div>
-
-        <div class="form-group">
-            <label>Phone number &amp; Country<span style="color:red">*</span></label>
-            <div class="phone-input-container">
-                <select id="countryCodeSelect" class="country-select">
-                    <!-- Populated by JS -->
-                </select>
-                <input type="text" id="phoneNumber" placeholder="Enter phone number">
+    <div class="main-wrapper">
+        <div class="bind-wallet-container">
+            <div class="header">
+                <a href="/profile" class="back-btn">&lsaquo;</a>
+                <h1 id="headerTitle">Submit Address(TRC20)</h1>
             </div>
+
+            <div class="form-group">
+                <label for="realName">Real Name</label>
+                <input type="text" id="realName" placeholder="Enter real name">
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone number &amp; Country<span style="color:red">*</span></label>
+                <div class="phone-input-container">
+                    <select id="countryCodeSelect" class="country-select">
+                        <!-- Populated by JS -->
+                    </select>
+                    <input type="text" id="phoneNumber" placeholder="Enter phone number">
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="walletType">Wallet Type</label>
+                <input type="text" id="walletType" value="trc20" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="walletAddress">Wallet Address</label>
+                <input type="text" id="walletAddress" placeholder="Enter TRC20 address">
+            </div>
+
+            <div class="form-group">
+                <label for="withdrawPassword">Fund Password <span style="color:red">*</span></label>
+                <input type="password" id="withdrawPassword" placeholder="Set a 6-digit withdrawal password">
+            </div>
+
+            <button id="submitBtn" class="bind-btn">Bind Wallet</button>
+            <p class="status-msg" id="statusMsg" style="display: none;">Your wallet represents where you receive payouts.
+            </p>
         </div>
 
-
-
-        <div class="form-group">
-            <label>Wallet Type</label>
-            <input type="text" id="walletType" value="trc20" readonly>
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span>
+            </a>
+            <a href="/tasks" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span><span class="nav-label">Order</span>
+            </a>
+            <a href="/trust" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/service" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span><span class="nav-label">Service</span>
+            </a>
+            <a href="/profile" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span><span class="nav-label">Profile</span>
+            </a>
         </div>
-
-        <div class="form-group">
-            <label>Wallet Address</label>
-            <input type="text" id="walletAddress" placeholder="Enter TRC20 address">
-        </div>
-
-        <div class="form-group">
-            <label>Fund Password <span style="color:red">*</span></label>
-            <input type="password" id="withdrawPassword" placeholder="Set a 6-digit withdrawal password">
-        </div>
-
-        <button id="submitBtn" class="bind-btn">Bind Wallet</button>
-        <p class="status-msg" id="statusMsg" style="display: none;">Your wallet represents where you receive payouts.
-        </p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>

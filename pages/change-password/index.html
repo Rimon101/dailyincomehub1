@@ -13,34 +13,54 @@
 </head>
 
 <body>
-    <a href="/profile" class="back-nav">&lsaquo;</a>
+    <div class="main-wrapper">
+        <a href="/profile" class="back-nav">&lsaquo;</a>
 
-    <div class="auth-container">
-        <div class="auth-logo">
-            <div class="logo-icon">🌻</div>
-            <h2>Security Settings</h2>
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="logo-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+                <h2>Security Settings</h2>
+            </div>
+
+            <div class="auth-card">
+                <h3>Change Password</h3>
+                <div class="msg-box error" id="errorMsg"></div>
+                <div class="msg-box success" id="successMsg"></div>
+
+                <form class="auth-form" onsubmit="handleChangePassword(event)">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
+                    </div>
+                    <button type="submit" class="auth-submit">Change Password</button>
+                </form>
+            </div>
         </div>
 
-        <div class="auth-card">
-            <h3>Change Password</h3>
-            <div class="msg-box error" id="errorMsg"></div>
-            <div class="msg-box success" id="successMsg"></div>
-
-            <form class="auth-form" onsubmit="handleChangePassword(event)">
-                <div class="form-group">
-                    <label>Current Password</label>
-                    <input type="password" id="currentPassword" placeholder="Enter current password" required>
-                </div>
-                <div class="form-group">
-                    <label>New Password</label>
-                    <input type="password" id="newPassword" placeholder="Enter new password" required>
-                </div>
-                <div class="form-group">
-                    <label>Confirm New Password</label>
-                    <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
-                </div>
-                <button type="submit" class="auth-submit">Change Password</button>
-            </form>
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span>
+            </a>
+            <a href="/tasks" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span><span class="nav-label">Order</span>
+            </a>
+            <a href="/trust" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/service" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span><span class="nav-label">Service</span>
+            </a>
+            <a href="/profile" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span><span class="nav-label">Profile</span>
+            </a>
         </div>
     </div>
 

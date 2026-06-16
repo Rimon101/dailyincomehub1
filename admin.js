@@ -38,16 +38,20 @@ function switchTab(tabId) {
     });
 
     // Remove active class from all nav items
-    document.querySelectorAll('.nav-item').forEach(el => {
+    document.querySelectorAll('.sidebar .nav-item').forEach(el => {
         el.classList.remove('active');
     });
 
     // Show selected section
-    document.getElementById(tabId + '-tab').classList.add('active');
+    const section = document.getElementById(tabId + '-tab');
+    if (section) section.classList.add('active');
 
-    // Highlight nav item
-    const clickedNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.textContent.toLowerCase().includes(tabId) || el.getAttribute('onclick').includes(tabId));
+    // Highlight nav item via data-tab
+    const clickedNav = document.querySelector(`.sidebar .nav-item[data-tab="${tabId}"]`);
     if (clickedNav) clickedNav.classList.add('active');
+
+    // Close mobile drawer after a tab is selected
+    if (typeof closeAdminDrawer === 'function') closeAdminDrawer();
 
     // Load data based on tab
     if (tabId === 'users') {
@@ -67,10 +71,39 @@ function switchTab(tabId) {
     }
 }
 
+// --- Mobile drawer --- //
+function openAdminDrawer() {
+    const sidebar = document.getElementById('adminSidebar');
+    const backdrop = document.getElementById('adminSidebarBackdrop');
+    const btn = document.getElementById('adminMenuBtn');
+    if (!sidebar || !backdrop) return;
+    sidebar.classList.add('open');
+    backdrop.classList.add('open');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+}
+
+function closeAdminDrawer() {
+    const sidebar = document.getElementById('adminSidebar');
+    const backdrop = document.getElementById('adminSidebarBackdrop');
+    const btn = document.getElementById('adminMenuBtn');
+    if (!sidebar || !backdrop) return;
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function bindAdminDrawer() {
+    const btn = document.getElementById('adminMenuBtn');
+    const backdrop = document.getElementById('adminSidebarBackdrop');
+    if (btn) btn.addEventListener('click', openAdminDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeAdminDrawer);
+}
+
 // --- Init --- //
 let cachedUsers = []; // Keep a memory list of user docs for easy modal editing
 
 function initAdmin() {
+    bindAdminDrawer();
     renderUsersTable();
 }
 

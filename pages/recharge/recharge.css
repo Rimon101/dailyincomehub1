@@ -69,3 +69,46 @@
     font-size: 12px;
     font-weight: 600;
 }
+
+.amount-input-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.amount-input-wrap:focus-within {
+    border-color: #e91e63;
+    background: #fff;
+}
+
+.amount-input-wrap .amount-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #555;
+    background: #f0f0f0;
+    border-right: 1px solid #eee;
+}
+
+.amount-input-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 14px;
+    font-size: 15px;
+    background: transparent;
+    color: #333;
+    min-width: 0;
+}
+
+.form-group .optional {
+    color: #999;
+    font-weight: 400;
+    font-size: 12px;
+}

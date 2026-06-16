@@ -445,6 +445,10 @@ body {
     gap: 8px;
     align-items: center;
 }
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
 
 .nav-auth a {
     font-size: 13px;
@@ -860,6 +864,23 @@ body {
 .nav-item .nav-icon {
     font-size: 20px;
     margin-bottom: 4px;
+    line-height: 0;
+}
+
+.nav-item .nav-icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nav-item .nav-icon svg.fill-icon {
+    fill: currentColor;
+    stroke: none;
 }
 
 .nav-item .nav-label {
@@ -873,6 +894,191 @@ body {
 
 .nav-item.active .nav-icon {
     transform: scale(1.1);
+}
+
+.action-btn .icon {
+    font-size: 18px;
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.action-btn .icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #e91e63;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-icon {
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    width: 22px;
+}
+
+.menu-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #e91e63;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu-icon svg.fill-icon {
+    fill: #e91e63;
+    stroke: none;
+}
+
+.tp-icon,
+.oc-icon {
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tp-icon svg,
+.oc-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.warning-icon {
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-icon,
+.alert-icon,
+.mgmt-icon,
+.edit-overlay-icon {
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-icon svg,
+.alert-icon svg,
+.mgmt-icon svg,
+.edit-overlay-icon svg,
+.logo-icon svg,
+.profile-pic-edit .logo-icon svg {
+    width: 32px;
+    height: 32px;
+    stroke: #e91e63;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.alert-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #b08500;
+    fill: #fff3e0;
+}
+
+.mgmt-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #e91e63;
+}
+
+.success-icon,
+.diamond-icon,
+.countdown-icon,
+.um-dot {
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.diamond-icon {
+    width: 12px;
+    height: 12px;
+    display: inline-flex;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.diamond-icon svg {
+    width: 12px;
+    height: 12px;
+    fill: #e91e63;
+    stroke: none;
+}
+
+.success-icon svg {
+    width: 64px;
+    height: 64px;
+    stroke: #4CAF50;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.um-dot {
+    width: 10px;
+    height: 10px;
+    background: #e91e63;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.bottom-notice .warning-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #FFC107;
+    font-size: 0;
+    color: #FFC107;
+    flex-shrink: 0;
+}
+
+.bottom-notice .warning-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: #FFC107;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.profile-pic-edit .logo-icon,
+.profile-pic-container .logo-icon {
+    font-size: 0;
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-pic-edit .logo-icon svg,
+.profile-pic-container .logo-icon svg {
+    width: 48px;
+    height: 48px;
+    stroke: #888;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 /* Adjust main content to not be hidden by tab bar */

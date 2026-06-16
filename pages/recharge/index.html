@@ -37,31 +37,60 @@
             <div class="qr-container">
                 <div class="section-title">Scan QR Code to Pay</div>
                 <div class="qr-image" id="qrWrapper">
-                    <img id="qrImage" src="/images/usdt_qr.jpg" alt="Scan to Pay" loading="lazy">
+                    <img id="qrImage" src="/images/usdt_qr.jpg" alt="USDT (TRC20) QR code" loading="lazy">
                 </div>
                 <div class="copy-hint" id="walletLabel">USDT (TRC20) Address</div>
-                <div class="wallet-display" id="walletAddr">TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS</div>
-                <button class="copy-btn-inner" onclick="copyAddress()">Copy Address</button>
-                <div class="info-box" style="margin-top: 20px;">
-                    <p style="font-size: 13px; color: #666; line-height: 1.5;">
-                        1. Open your wallet and scan the QR code or copy the address above.<br>
-                        2. Send the USDT (TRC20) amount you wish to recharge.<br>
-                        3. After successful payment, please contact customer service with your transaction ID.
-                    </p>
-                </div>
+                <div class="wallet-display" id="walletAddr" aria-live="polite">TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS</div>
+                <button type="button" class="copy-btn-inner" onclick="copyAddress()">Copy Address</button>
             </div>
 
             <div class="form-container">
-                <div class="section-title" style="margin-bottom: 8px;">Recharge Details</div>
-                <div class="detail-row"><span class="label">Processing Fee</span><span class="value">0%</span></div>
-                <div class="detail-row"><span class="label">Processing Time</span><span class="value">Instant</span>
+                <div class="section-title" style="margin-bottom: 8px;">Your Recharge</div>
+                <div class="form-group">
+                    <label for="rechargeAmount">Amount you sent</label>
+                    <div class="amount-input-wrap">
+                        <span class="amount-prefix" id="rechargeCurrency">$</span>
+                        <input type="number" id="rechargeAmount" min="1" step="0.01" inputmode="decimal"
+                            placeholder="0.00" aria-describedby="rechargeAmountHint">
+                    </div>
+                    <div class="input-note" id="rechargeAmountHint">Enter the exact amount you transferred. This helps us match your payment.</div>
                 </div>
+                <div class="form-group">
+                    <label for="rechargeTxId">Transaction ID / Hash <span class="optional">(optional)</span></label>
+                    <input type="text" id="rechargeTxId" placeholder="e.g. 0x... or txn hash from your wallet" autocomplete="off">
+                    <div class="input-note">Paste the TXID from your wallet for faster verification.</div>
+                </div>
+
+                <div class="detail-row"><span class="label">Processing Fee</span><span class="value">0%</span></div>
+                <div class="detail-row"><span class="label">Processing Time</span><span class="value">5–30 minutes</span></div>
+                <div class="detail-row"><span class="label">Status</span><span class="value" id="rechargeStatus">Awaiting payment</span></div>
+
+                <button class="submit-btn recharge" id="submitRechargeBtn" onclick="submitRecharge()">I have sent the payment</button>
+                <div class="error-msg" id="rechargeError" style="display:none;"></div>
+                <div class="success-msg" id="rechargeSuccess" style="display:none;"></div>
             </div>
 
             <div class="info-box" style="margin-top: 20px;">
-                <p><strong>Note:</strong> Recharge processing time usually takes 5-30 minutes. If your balance is not
-                    updated after 1 hour, please contact customer service.</p>
+                <p><strong>Note:</strong> After transferring, tap <em>"I have sent the payment"</em> above so we can verify and credit your balance. If your balance is not updated after 1 hour, please contact customer service with your transaction ID.</p>
             </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span>
+            </a>
+            <a href="/tasks" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span><span class="nav-label">Order</span>
+            </a>
+            <a href="/trust" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/service" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span><span class="nav-label">Service</span>
+            </a>
+            <a href="/profile" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span><span class="nav-label">Profile</span>
+            </a>
         </div>
     </div>
 

@@ -11,44 +11,64 @@
     <link rel="stylesheet" href="/pages/profile/withdraw-management.css?v=3">
 </head>
 <body>
-    <div class="withdraw-mgmt-container">
-        <div class="header">
-            <a href="/profile" class="back-btn">&lsaquo;</a>
-            <h1>Withdraw Management</h1>
+    <div class="main-wrapper">
+        <div class="withdraw-mgmt-container">
+            <div class="header">
+                <a href="/profile" class="back-btn">&lsaquo;</a>
+                <h1>Withdraw Management</h1>
+            </div>
+
+            <div class="mgmt-card">
+                <div class="mgmt-header">
+                    <span class="mgmt-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="3" y1="11" x2="21" y2="11"/></svg></span>
+                    <span class="mgmt-title">Binded Wallet</span>
+                </div>
+
+                <div class="mgmt-body">
+                    <div class="info-group">
+                        <label>Wallet Type</label>
+                        <div class="info-value" id="dispWalletType">TRC20</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label>Wallet Address</label>
+                        <div class="info-value address-field" id="dispWalletAddress">Loading...</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label>Real Name</label>
+                        <div class="info-value" id="dispRealName">Loading...</div>
+                    </div>
+
+                    <div class="info-group">
+                        <label>Phone Number</label>
+                        <div class="info-value" id="dispPhone">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <span class="alert-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg></span>
+                <p>To protect your account security, binded wallet information cannot be changed by yourself. If you need to update it, please contact <a href="/service">Customer Service</a>.</p>
+            </div>
         </div>
 
-        <div class="mgmt-card">
-            <div class="mgmt-header">
-                <span class="mgmt-icon">💳</span>
-                <span class="mgmt-title">Binded Wallet</span>
-            </div>
-            
-            <div class="mgmt-body">
-                <div class="info-group">
-                    <label>Wallet Type</label>
-                    <div class="info-value" id="dispWalletType">TRC20</div>
-                </div>
-                
-                <div class="info-group">
-                    <label>Wallet Address</label>
-                    <div class="info-value address-field" id="dispWalletAddress">Loading...</div>
-                </div>
-
-                <div class="info-group">
-                    <label>Real Name</label>
-                    <div class="info-value" id="dispRealName">Loading...</div>
-                </div>
-
-                <div class="info-group">
-                    <label>Phone Number</label>
-                    <div class="info-value" id="dispPhone">Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="alert-box">
-            <span class="alert-icon">ℹ️</span>
-            <p>To protect your account security, binded wallet information cannot be changed by yourself. If you need to update it, please contact <a href="/service">Customer Service</a>.</p>
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span>
+            </a>
+            <a href="/tasks" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span><span class="nav-label">Order</span>
+            </a>
+            <a href="/trust" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="nav-label">Trust</span>
+            </a>
+            <a href="/service" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span><span class="nav-label">Service</span>
+            </a>
+            <a href="/profile" class="nav-item active">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span><span class="nav-label">Profile</span>
+            </a>
         </div>
     </div>
 
