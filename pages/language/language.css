@@ -1,15 +1,17 @@
-body { background: #f8f9fa; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+/* ===== Language page — dark theme ===== */
+
+body { background: #050816; color: #fff; font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
 
 .language-mgmt-container { padding: 20px; max-width: 600px; margin: 0 auto; }
 
 .header { display: flex; align-items: center; margin-bottom: 25px; }
-.header h1 { font-size: 18px; font-weight: 700; margin: 0; flex: 1; text-align: center; color: #111; }
-.back-btn { font-size: 32px; color: #333; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+.header h1 { font-size: 18px; font-weight: 700; margin: 0; flex: 1; text-align: center; color: #fff; }
+.back-btn { font-size: 28px; color: #fff; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
 
 .language-list {
-    background: #fff;
+    background: #0f1430;
     border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -20,26 +22,18 @@ body { background: #f8f9fa; color: #333; font-family: -apple-system, BlinkMacSys
     align-items: center;
     padding: 18px 20px;
     border: none;
-    border-bottom: 1px solid #f0f0f0;
-    background: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
     cursor: pointer;
     text-align: left;
     width: 100%;
     transition: background 0.2s;
+    color: #fff;
+    font-family: inherit;
 }
 
 .lang-item:last-child { border-bottom: none; }
-.lang-item:active { background: #fdf2f8; }
+.lang-item:active { background: rgba(236, 72, 153, 0.1); }
 
-.lang-flag {
-    font-size: 24px;
-    margin-right: 15px;
-    width: 30px;
-    text-align: center;
-}
-
-.lang-name {
-    font-size: 15px;
-    font-weight: 500;
-    color: #333;
-}
+.lang-flag { font-size: 24px; margin-right: 15px; width: 30px; text-align: center; }
+.lang-name { font-size: 15px; font-weight: 500; color: #fff; }

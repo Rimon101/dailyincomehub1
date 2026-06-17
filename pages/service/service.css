@@ -1,9 +1,12 @@
+/* ===== Service page — dark theme ===== */
+
 .service-card {
-    background: #fff;
+    background: #0f1430;
     border-radius: 16px;
     padding: 30px 20px;
     text-align: center;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
 }
 
@@ -15,10 +18,13 @@
 .contact-btn {
     display: inline-block;
     padding: 14px 28px;
-    background: linear-gradient(135deg, #e91e63, #c2185b);
+    background: linear-gradient(90deg, #ff4d6d, #d946ef);
     color: #fff;
     border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
     margin-top: 20px;
+    transition: filter 0.2s, transform 0.2s;
 }
+
+.contact-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
