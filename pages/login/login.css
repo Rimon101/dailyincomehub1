@@ -10,10 +10,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background:
-        radial-gradient(circle at top left, #ff0080 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #0066ff 0%, transparent 30%),
-        #050816;
+    background: url('/images/crypto_bg.jpg') center/cover no-repeat, #050816;
     position: relative;
 }
 
