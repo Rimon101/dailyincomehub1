@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Income Hub - Register</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/auth.css">
     <link rel="stylesheet" href="/pages/register/register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 
@@ -16,57 +17,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        .iti { width: 100%; display: block; }
+        /* intl-tel-input overrides — scoped to our input box */
+        .auth-body .input-box .iti { width: 100%; display: block; }
 
-        .iti__flag {
+        .auth-body .input-box .iti__flag {
             background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png");
         }
 
         @media (min-resolution: 2x) {
-            .iti__flag {
+            .auth-body .input-box .iti__flag {
                 background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png");
             }
         }
 
-        #phone {
-            width: 100%;
-            padding: 16px 16px 16px 50px !important;
-            border-radius: 14px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            background: rgba(255, 255, 255, 0.04) !important;
-            color: #fff !important;
-            font-size: 15px !important;
-            font-family: 'Poppins', sans-serif !important;
+        .auth-body .input-box #phone {
+            padding: 16px 16px 16px 50px;
         }
 
-        #phone:focus {
-            border-color: #ff1493 !important;
-            box-shadow: 0 0 15px rgba(255, 20, 147, 0.3) !important;
-            outline: none !important;
+        .auth-body .input-box #phone:focus {
+            border-color: #ff1493;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
         }
 
-        .iti--separate-dial-code .iti__selected-flag {
-            background-color: transparent !important;
+        .auth-body .input-box .iti--separate-dial-code .iti__selected-flag {
+            background-color: transparent;
         }
     </style>
 </head>
 
 <body class="auth-body">
 
-    <div class="bg">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="bg" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
     </div>
 
     <div class="container">
-        <div class="glow"></div>
-        <div class="glow2"></div>
+        <div class="glow" aria-hidden="true"></div>
+        <div class="glow2" aria-hidden="true"></div>
 
         <div class="login-card">
+
+            <div class="crypto-icons" aria-hidden="true">
+                <div class="coin btc">&#8377;</div>
+                <div class="coin eth">&#926;</div>
+                <div class="coin usdt">&#8378;</div>
+            </div>
 
             <h1>
                 Join<br>
@@ -75,71 +71,71 @@
 
             <p class="subtitle">Create your secure account</p>
 
-            <form id="registerForm" onsubmit="handleRegister(event)">
+            <form id="registerForm" action="/register" method="post" novalidate onsubmit="handleRegister(event)">
 
                 <div class="input-group">
-                    <label>Full Name</label>
+                    <label for="fullName">Full Name</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-user"></i>
-                        <input type="text" id="fullName" placeholder="Enter full name" required>
+                        <i class="fa-solid fa-user" aria-hidden="true"></i>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter full name" autocomplete="name">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Email Address</label>
+                    <label for="email">Email Address</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="email" placeholder="Enter email" required>
+                        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter email" autocomplete="email">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Username</label>
+                    <label for="username">Username</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-at"></i>
-                        <input type="text" id="username" placeholder="Choose username" required>
+                        <i class="fa-solid fa-at" aria-hidden="true"></i>
+                        <input type="text" id="username" name="username" placeholder="Choose username" autocomplete="username">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Phone number &amp; Country</label>
+                    <label for="phone">Phone number &amp; Country</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-phone"></i>
-                        <input type="tel" id="phone">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Password</label>
+                    <label for="password">Password</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" placeholder="Create password" required>
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="password" name="password" placeholder="Create password" autocomplete="new-password">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Confirm Password</label>
+                    <label for="confirmPassword">Confirm Password</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" autocomplete="new-password">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Referral Code</label>
+                    <label for="referralCode">Referral Code</label>
                     <div class="input-box">
-                        <i class="fa-solid fa-gift"></i>
-                        <input type="text" id="referralCode" placeholder="Enter referral code (optional)">
+                        <i class="fa-solid fa-gift" aria-hidden="true"></i>
+                        <input type="text" id="referralCode" name="referralCode" placeholder="Enter referral code (optional)">
                     </div>
                 </div>
 
-                <div class="error-msg" id="errorMsg"></div>
-                <div class="success-msg" id="successMsg"></div>
+                <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
+                <div class="success-msg" id="successMsg" role="status" aria-live="polite"></div>
 
-                <button type="submit" class="login-btn">Register</button>
+                <button type="submit" class="auth-submit">Register</button>
             </form>
 
-            <div class="register">
+            <div class="auth-switch">
                 Already have an account?
                 <a href="/login">Login here</a>
             </div>
