@@ -7,7 +7,7 @@ async function handleLogin(e) {
     if (!username || !password) { errorMsg.textContent = 'Please fill in all fields'; errorMsg.classList.add('show'); return; }
 
     try {
-        const submitBtn = document.querySelector('.auth-submit');
+        const submitBtn = document.querySelector('.login-btn');
         submitBtn.textContent = 'Logging in...'; submitBtn.disabled = true;
 
         const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
@@ -32,7 +32,7 @@ async function handleLogin(e) {
         window.location.href = '/';
 
     } catch (error) {
-        const submitBtn = document.querySelector('.auth-submit');
+        const submitBtn = document.querySelector('.login-btn');
         submitBtn.textContent = 'Login'; submitBtn.disabled = false;
         errorMsg.textContent = (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')
             ? 'Invalid username or password' : 'Login failed: ' + error.message;

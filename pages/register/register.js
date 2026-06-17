@@ -16,7 +16,7 @@ async function handleRegister(e) {
     if (password !== confirmPassword) { errorMsg.textContent = 'Passwords do not match'; errorMsg.classList.add('show'); return; }
 
     try {
-        const submitBtn = document.querySelector('.auth-submit');
+        const submitBtn = document.querySelector('.login-btn');
         submitBtn.textContent = 'Registering...'; submitBtn.disabled = true;
 
         const usernameSnapshot = await db.collection('users').where('username', '==', username).limit(1).get();
@@ -58,7 +58,7 @@ async function handleRegister(e) {
         setTimeout(() => { window.location.href = '/login'; }, 2000);
 
     } catch (error) {
-        const submitBtn = document.querySelector('.auth-submit');
+        const submitBtn = document.querySelector('.login-btn');
         submitBtn.textContent = 'Register'; submitBtn.disabled = false;
         errorMsg.textContent = error.code === 'auth/email-already-in-use' ? 'Email already registered'
             : error.code === 'auth/weak-password' ? 'Password is too weak'

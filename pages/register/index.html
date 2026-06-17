@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Daily Income Hub</title>
+    <title>Daily Income Hub - Register</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/pages/register/register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <style>
-        .iti {
-            width: 100%;
-            display: block;
-        }
+        .iti { width: 100%; display: block; }
 
         .iti__flag {
             background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png");
@@ -29,92 +30,127 @@
 
         #phone {
             width: 100%;
-            padding-top: 14px;
-            padding-bottom: 14px;
-            padding-right: 16px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            padding: 16px 16px 16px 50px !important;
+            border-radius: 14px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+            color: #fff !important;
+            font-size: 15px !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        #phone:focus {
+            border-color: #ff1493 !important;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.3) !important;
+            outline: none !important;
+        }
+
+        .iti--separate-dial-code .iti__selected-flag {
+            background-color: transparent !important;
         }
     </style>
 </head>
 
-<body>
-    <div class="auth-container">
-        <div class="auth-logo">
-            <div class="logo-icon">🌻</div>
-            <h2>Daily Income Hub</h2>
-            <p>Create your account</p>
-        </div>
+<body class="auth-body">
 
-        <div class="auth-card">
-            <div class="main-wrapper">
-                <div class="header">
-                    <a href="/login" class="back-btn">&lsaquo;</a>
-                    <h1>Register</h1>
-                </div>
+    <div class="bg">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
-                <div class="page-content">
-                    <div class="form-container">
-                        <h2 style="margin-bottom: 24px; color: #e91e63; font-size: 24px;">Create Account</h2>
-                        <div class="error-msg" id="errorMsg"></div>
-                        <div class="success-msg" id="successMsg"></div>
+    <div class="container">
+        <div class="glow"></div>
+        <div class="glow2"></div>
 
-                        <div id="registerForm">
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Full
-                                    Name</label>
-                                <input type="text" id="fullName" placeholder="Enter full name"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Email
-                                    Address</label>
-                                <input type="email" id="email" placeholder="Enter email"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Username</label>
-                                <input type="text" id="username" placeholder="Choose username"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Phone
-                                    number &amp; Country*</label>
-                                <input type="tel" id="phone">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Password</label>
-                                <input type="password" id="password" placeholder="Create password"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Confirm
-                                    Password</label>
-                                <input type="password" id="confirmPassword" placeholder="Confirm password"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <div class="form-group" style="margin-bottom: 16px;">
-                                <label
-                                    style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 6px;">Referral
-                                    Code</label>
-                                <input type="text" id="referralCode" placeholder="Enter referral code (optional)"
-                                    style="width: 100%; padding: 14px 16px; border: 1px solid #ddd; border-radius: 10px;">
-                            </div>
-                            <button class="auth-submit" onclick="handleRegister(event)"
-                                style="width: 100%; padding: 15px; border: none; border-radius: 30px; background: linear-gradient(135deg, #e91e63, #c2185b); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;">Register</button>
-                            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
-                                Already have an account? <a href="/login"
-                                    style="color: #e91e63; text-decoration: none; font-weight: 600;">Login here</a>
-                            </p>
-                        </div>
+        <div class="login-card">
+            <div class="crypto-icons">
+                <div class="coin btc">&#8377;</div>
+                <div class="coin eth">&#926;</div>
+                <div class="coin usdt">&#8378;</div>
+            </div>
+
+            <h1>
+                Join<br>
+                <span>Daily Income Hub</span>
+            </h1>
+
+            <p class="subtitle">Create your secure account</p>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="fullName" placeholder="Enter full name" required>
                     </div>
                 </div>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Enter email" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-at"></i>
+                        <input type="text" id="username" placeholder="Choose username" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Phone number &amp; Country</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="phone">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Create password" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Referral Code</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-gift"></i>
+                        <input type="text" id="referralCode" placeholder="Enter referral code (optional)">
+                    </div>
+                </div>
+
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="success-msg" id="successMsg"></div>
+
+                <button type="submit" class="login-btn">Register</button>
+            </form>
+
+            <div class="register">
+                Already have an account?
+                <a href="/login">Login here</a>
+            </div>
+
+            <div class="footer">
+                Powered by <span>Daily Income Hub</span>
             </div>
         </div>
     </div>
@@ -126,7 +162,6 @@
     <script src="/userdata.js?v=2" defer></script>
     <script src="/pages/register/register.js?v=2" defer></script>
     <script>
-        // Initialize intl-tel-input inline to ensure it runs
         document.addEventListener('DOMContentLoaded', function () {
             var phoneInputField = document.querySelector("#phone");
             if (phoneInputField && window.intlTelInput) {
