@@ -82,25 +82,24 @@
 
 .auth-body .crypto-icons {
     text-align: center;
-    margin-bottom: 20px;
-}
-
-.auth-body .coin {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: inline-flex;
+    margin-bottom: 24px;
+    display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 8px;
-    font-size: 32px;
-    color: #fff;
-    font-weight: bold;
+    gap: 18px;
 }
 
-.auth-body .btc  { background: #f7931a; }
-.auth-body .eth  { background: #627eea; }
-.auth-body .usdt { background: #26a17b; }
+.auth-body .crypto-icons img {
+    width: 48px;
+    height: 48px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+    transition: transform 0.3s;
+}
+
+.auth-body .crypto-icons img:hover {
+    transform: translateY(-3px);
+}
 
 .auth-body h1 {
     text-align: center;
@@ -283,7 +282,7 @@
 @media (max-width: 600px) {
     .auth-body .login-card { padding: 25px; }
     .auth-body h1          { font-size: 24px; }
-    .auth-body .coin       { width: 55px; height: 55px; font-size: 24px; }
+    .auth-body .crypto-icons img { width: 40px; height: 40px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
