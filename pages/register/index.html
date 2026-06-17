@@ -30,17 +30,46 @@
             }
         }
 
-        .auth-body .input-box #phone {
-            padding: 16px 16px 16px 50px;
+        /* Make room for the flag dropdown + dial code on the left */
+        .auth-body .input-box .iti #phone,
+        .auth-body .input-box .iti input[type="tel"] {
+            padding: 16px 16px 16px 95px !important;
         }
 
-        .auth-body .input-box #phone:focus {
+        .auth-body .input-box .iti #phone:focus {
             border-color: #ff1493;
             box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
         }
 
+        /* The library draws the flag itself, so hide our overlapping icon.
+           The <i> sits BEFORE the .iti wrapper, so :has() on the parent is the right tool. */
+        .auth-body .input-box:has(.iti) > i { display: none; }
+
+        /* Style the flag dropdown to match the dark card */
         .auth-body .input-box .iti--separate-dial-code .iti__selected-flag {
             background-color: transparent;
+            padding-left: 14px;
+        }
+
+        .auth-body .input-box .iti__selected-dial-code {
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-body .input-box .iti__arrow {
+            border-top-color: #ccc;
+        }
+
+        .auth-body .input-box .iti__country-list {
+            background: #0f1430;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-body .input-box .iti__country:hover,
+        .auth-body .input-box .iti__country.iti__highlight {
+            background: rgba(255, 20, 147, 0.2);
         }
     </style>
 </head>
@@ -59,9 +88,9 @@
         <div class="login-card">
 
             <div class="crypto-icons" aria-hidden="true">
-                <img src="/images/Bitcoin.svg" alt="Bitcoin">
-                <img src="/images/eth.svg" alt="Ethereum">
-                <img src="/images/usdt.svg" alt="Tether">
+                <img src="/images/Bitcoin.svg?v=2" alt="Bitcoin">
+                <img src="/images/eth.svg?v=2" alt="Ethereum">
+                <img src="/images/usdt.svg?v=2" alt="Tether">
             </div>
 
             <h1>
