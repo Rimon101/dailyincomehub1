@@ -4,61 +4,57 @@ requireAuth((firebaseUser) => {
     });
 
     listenUserData((data) => {
-        if (data) {
-            document.getElementById('displayUsername').textContent = data.username || 'User';
-            document.getElementById('displayEmail').textContent = data.email || '';
+        if (!data) return;
 
-            if (data.profilePic) {
-                document.getElementById('defaultPic').style.display = 'none';
-                document.getElementById('profilePicPreview').src = data.profilePic;
-                document.getElementById('profilePicPreview').style.display = 'block';
-            }
-            
-            const bindBtn = document.getElementById('bindWalletMenuBtn');
-            const withdrawMgmtBtn = document.getElementById('withdrawManagementBtn');
-            const hasWallet = !!data.walletAddress;
+        // Hero — username + email
+        document.getElementById('displayUsername').textContent = data.username || 'User';
+        document.getElementById('displayEmail').textContent = data.email || '';
 
-            if (bindBtn) bindBtn.style.display = hasWallet ? 'none' : 'flex';
-            if (withdrawMgmtBtn) withdrawMgmtBtn.style.display = hasWallet ? 'flex' : 'none';
+        // Profile picture
+        if (data.profilePic) {
+            document.getElementById('defaultPic').style.display = 'none';
+            const preview = document.getElementById('profilePicPreview');
+            preview.src = data.profilePic;
+            preview.style.display = 'block';
+        }
 
-            if (document.getElementById('cpBalance')) {
-                document.getElementById('cpBalance').textContent = '$' + Number(data.balance || 0).toFixed(4);
-            }
+        // Bind wallet / withdraw management visibility based on whether a wallet is bound
+        const bindBtn = document.getElementById('bindWalletMenuBtn');
+        const withdrawMgmtBtn = document.getElementById('withdrawManagementBtn');
+        const hasWallet = !!data.walletAddress;
 
-            // --- Invitation Code Logic ---
-            const inviteCodeElem = document.getElementById('cpInviteCode');
-            if (inviteCodeElem) {
-                console.log("Current user data:", data);
-                if (data.inviteCode) {
-                    console.log("Setting invite code to:", data.inviteCode);
-                    inviteCodeElem.textContent = data.inviteCode;
-                } else {
-                    console.log("Invite code missing, generating new one...");
-                    if (window.generateInviteCode) {
-                        const newCode = window.generateInviteCode();
-                        console.log("Generated code:", newCode);
-                        updateUserData({ inviteCode: newCode }).catch(err => console.error("Update error:", err));
-                        inviteCodeElem.textContent = newCode;
-                    } else {
-                        console.error("generateInviteCode function NOT FOUND on window!");
-                    }
-                }
+        if (bindBtn) bindBtn.style.display = hasWallet ? 'none' : 'flex';
+        if (withdrawMgmtBtn) withdrawMgmtBtn.style.display = hasWallet ? 'flex' : 'none';
+
+        // Total balance (USDT card)
+        const balanceEl = document.getElementById('usdtBalance');
+        if (balanceEl) balanceEl.textContent = '$' + Number(data.balance || 0).toFixed(4);
+
+        // Invitation code — generate one if missing on this user record
+        const inviteCodeElem = document.getElementById('usdtInviteCode');
+        if (inviteCodeElem) {
+            if (data.inviteCode) {
+                inviteCodeElem.textContent = data.inviteCode;
+            } else if (window.generateInviteCode) {
+                const newCode = generateInviteCode();
+                updateUserData({ inviteCode: newCode }).catch(err => console.error("Failed to save invite code:", err));
+                inviteCodeElem.textContent = newCode;
             }
         }
     });
 });
 
 function copyInviteCode() {
-    const code = document.getElementById('cpInviteCode').textContent;
-    if (code && code !== '------') {
-        navigator.clipboard.writeText(code).then(() => {
-            if (window.showCustomAlert) {
-                showCustomAlert('Invitation code copied!');
-            } else {
-                alert('Invitation code copied!');
-            }
-        });
-    }
+    const code = document.getElementById('usdtInviteCode').textContent;
+    if (!code || code === '------') return;
+
+    navigator.clipboard.writeText(code).then(() => {
+        if (window.showCustomAlert) {
+            showCustomAlert('Invitation code copied!');
+        } else {
+            alert('Invitation code copied!');
+        }
+    });
 }
 
 function handleAuthAction() {
@@ -73,7 +69,5 @@ function handleAuthAction() {
 }
 
 document.getElementById('profilePicContainer').addEventListener('click', () => {
-    // In the dashboard, clicking the pic also takes you to edit profile
     window.location.href = '/edit-profile';
 });
-
