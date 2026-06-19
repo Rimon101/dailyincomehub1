@@ -60,11 +60,17 @@ async function handleLogin(e) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('error') !== 'frozen') return;
-
     const errorMsg = document.getElementById('errorMsg');
     if (!errorMsg) return;
 
-    errorMsg.textContent = 'Your account has been frozen. Please contact support.';
-    errorMsg.classList.add('show');
+    if (params.get('error') === 'frozen') {
+        errorMsg.textContent = 'Your account has been frozen. Please contact support.';
+        errorMsg.classList.add('show');
+        return;
+    }
+
+    if (params.get('reset') === 'success') {
+        errorMsg.textContent = 'Password updated — please log in with your new password.';
+        errorMsg.classList.add('show');
+    }
 });

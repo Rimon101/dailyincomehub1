@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - Daily Income Hub</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/auth.css">
+    <link rel="stylesheet" href="/pages/reset-password/reset-password.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body class="auth-body">
+
+    <div class="bg" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="container">
+        <div class="glow" aria-hidden="true"></div>
+        <div class="glow2" aria-hidden="true"></div>
+
+        <div class="login-card">
+
+            <div class="crypto-icons" aria-hidden="true">
+                <img src="/images/Bitcoin.svg?v=2" alt="Bitcoin">
+                <img src="/images/eth.svg?v=2" alt="Ethereum">
+                <img src="/images/usdt.svg?v=2" alt="Tether">
+            </div>
+
+            <h1>
+                Set a new<br>
+                <span>password</span>
+            </h1>
+
+            <p class="subtitle" id="statusSubtitle">Verifying your reset link…</p>
+
+            <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
+            <div class="success-msg" id="successMsg" role="status" aria-live="polite"></div>
+
+            <form id="resetForm" class="hidden" novalidate onsubmit="handleReset(event)">
+                <div class="input-group">
+                    <label for="newPassword">New password</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="newPassword" name="newPassword"
+                               placeholder="At least 6 characters" autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm new password</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword"
+                               placeholder="Type your new password again" autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit">Update password</button>
+            </form>
+
+            <div class="auth-switch" id="invalidLinkCta" style="display: none;">
+                <a href="/forgot-password">Request a new link</a>
+                <a href="/login">Back to login</a>
+            </div>
+
+            <div class="auth-switch" id="formBackLink">
+                <a href="/login">Back to login</a>
+            </div>
+
+            <div class="footer">
+                Powered by <span>Daily Income Hub</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="/userdata.js" defer></script>
+    <script src="/pages/reset-password/reset-password.js" defer></script>
+</body>
+
+</html>
