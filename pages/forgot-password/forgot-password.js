@@ -21,8 +21,14 @@ async function handleForgot(e) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
 
+    // Hardcoded production origin so reset links always point at the real
+    // domain, regardless of whether the user is on dailyincomehub.store, a
+    // Vercel preview URL, or localhost. Firebase would otherwise reject
+    // any origin that isn't in the Authorized Domains list.
+    const PRODUCTION_ORIGIN = 'https://dailyincomehub.store';
+
     const actionCodeSettings = {
-        url: window.location.origin + '/reset-password',
+        url: PRODUCTION_ORIGIN + '/reset-password',
         handleCodeInApp: true
     };
 
