@@ -1,5 +1,6 @@
 let sysConfig = null;
 let walletList = [];
+let userDataCache = null;
 
 requireAuth((user) => {
     listenSystemConfig((sys) => {
@@ -125,7 +126,7 @@ async function submitRecharge() {
     btn.textContent = 'Submitting…';
 
     try {
-        await db.collection('rechargeRequests').add({
+        await db.collection('recharges').add({
             uid: user.uid,
             username: userDataCache?.username || user.email,
             amount: amount,
@@ -133,7 +134,7 @@ async function submitRecharge() {
             walletName: wallet.name,
             walletAddress: wallet.address,
             txId: txId,
-            status: 'pending',
+            status: 'Pending',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 

@@ -245,7 +245,7 @@ async function saveUserEdits() {
             txs.push({
                 type: 'Recharge',
                 amount: diff,
-                date: new Date()
+                date: firebase.firestore.Timestamp.now()
             });
             updateData.transactions = txs;
         } else if (diff < 0) {
@@ -254,7 +254,7 @@ async function saveUserEdits() {
             txs.push({
                 type: 'System Adjustment',
                 amount: diff,
-                date: new Date()
+                date: firebase.firestore.Timestamp.now()
             });
             updateData.transactions = txs;
         }
@@ -307,7 +307,7 @@ async function submitManualRecharge() {
         txs.push({
             type: 'Manual Recharge',
             amount: amount,
-            date: new Date()
+            date: firebase.firestore.Timestamp.now()
         });
 
         await db.collection('users').doc(userId).update({
@@ -417,7 +417,7 @@ async function handleRequest(type, reqId, newStatus, username, amount) {
                 // Append to transactions array
                 const txs = userData.transactions || [];
                 const txTypeLabel = type === 'recharges' ? 'Successful Deposit' : 'Successful Withdrawal';
-                const txDate = new Date();
+                const txDate = firebase.firestore.Timestamp.now();
                 txs.push({ type: txTypeLabel, amount: parseFloat(amount), date: txDate });
                 updateData.transactions = txs;
 
@@ -433,7 +433,7 @@ async function handleRequest(type, reqId, newStatus, username, amount) {
                         let currentBalance = parseFloat(userData.balance || 0);
 
                         const txs = userData.transactions || [];
-                        txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: new Date() });
+                        txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
                         await db.collection('users').doc(userDoc.id).update({
                             balance: currentBalance + parseFloat(amount),
                             transactions: txs
