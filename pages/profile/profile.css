@@ -382,14 +382,13 @@ body { top: 0 !important; }
     .usdt-card           { padding: 26px; border-radius: 22px; }
     .usdt-balance        { font-size: 38px; }
     .usdt-action         { padding: 12px 0; font-size: 15px; }
-    .nav-menu            { margin: 22px auto; max-width: 480px; }
-    .logout-btn          { margin: 0 auto 22px; max-width: 480px; }
+    .nav-menu,
+    .logout-btn          { margin-left: auto; margin-right: auto; }
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
     .usdt-balance        { font-size: 42px; }
-    .nav-menu, .logout-btn { max-width: 560px; }
 }
 
 /* Honor card / cp-card legacy — kept for backward compat with admin.js if it queries */
