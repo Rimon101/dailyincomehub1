@@ -5,10 +5,10 @@ async function handleLogin(e) {
     const submitBtn = form.querySelector('.auth-submit');
     const errorMsg = document.getElementById('errorMsg');
 
-    const username = form.querySelector('#username').value.trim();
+    const identifier = form.querySelector('#username').value.trim();
     const password = form.querySelector('#password').value;
 
-    if (!username || !password) {
+    if (!identifier || !password) {
         errorMsg.textContent = 'Please fill in all fields';
         errorMsg.classList.add('show');
         return;
@@ -17,8 +17,13 @@ async function handleLogin(e) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Logging in...';
 
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+
     try {
-        const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
+        const userQuery = await db.collection('users')
+            .where(isEmail ? 'email' : 'username', '==', identifier)
+            .limit(1)
+            .get();
         if (userQuery.empty) {
             errorMsg.textContent = 'Invalid username or password';
             errorMsg.classList.add('show');
