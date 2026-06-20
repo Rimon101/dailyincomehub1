@@ -383,7 +383,7 @@ body { top: 0 !important; }
     .usdt-balance        { font-size: 38px; }
     .usdt-action         { padding: 12px 0; font-size: 15px; }
     .nav-menu,
-    .logout-btn          { margin-left: auto; margin-right: auto; max-width: 600px; width: 100%; box-sizing: border-box; }
+    .logout-btn          { margin-left: 16px; margin-right: 16px; box-sizing: border-box; }
     .menu-item           { padding: 16px 22px; gap: 16px; }
     .menu-icon           { width: 24px; height: 24px; }
     .menu-icon svg       { width: 24px; height: 24px; }
@@ -395,8 +395,6 @@ body { top: 0 !important; }
 /* Desktop */
 @media (min-width: 1024px) {
     .usdt-balance        { font-size: 42px; }
-    .nav-menu,
-    .logout-btn          { max-width: 640px; }
     .menu-item           { padding: 18px 24px; gap: 18px; }
     .menu-icon           { width: 26px; height: 26px; }
     .menu-icon svg       { width: 26px; height: 26px; }
