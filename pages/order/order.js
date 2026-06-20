@@ -33,6 +33,29 @@ function getCompleted() {
     return userDataCache ? parseInt(userDataCache.tasksCompleted || 0) : 0;
 }
 
+function getCurrentBalance() {
+    if (!userDataCache) return 0;
+    const balance = parseFloat(userDataCache.balance || 0);
+    return Number.isFinite(balance) ? balance : 0;
+}
+
+function getCashGapForTask(taskNo) {
+    if (!userDataCache) return 0;
+
+    if (userDataCache.cashGaps && Array.isArray(userDataCache.cashGaps) && userDataCache.cashGaps.length > 0) {
+        const match = userDataCache.cashGaps.find(g => parseInt(g.taskNum) === taskNo);
+        return match ? parseFloat(match.amount || 0) : 0;
+    }
+
+    const rawCashGap = parseFloat(userDataCache.cashGap || 0);
+    const cashGapTaskNum = parseInt(userDataCache.cashGapTaskNum || 0);
+    return (cashGapTaskNum > 0 && taskNo === cashGapTaskNum) ? rawCashGap : 0;
+}
+
+function showNoBalanceAlert() {
+    showCustomAlert("Insufficient account balance. Please recharge before submitting an order.");
+}
+
 // Returns commission % based on user's grade (balance), unless admin overrides via customCommission
 function getGradeCommission() {
     // Admin override takes priority
@@ -80,6 +103,11 @@ function updateDisplay() {
 
 async function startAutoTask() {
     if (!userDataCache) { setTimeout(startAutoTask, 100); return; }
+
+    if (getCurrentBalance() <= 0) {
+        showNoBalanceAlert();
+        return;
+    }
 
     const completed = getCompleted();
     if (completed >= TOTAL_TASKS) {
@@ -166,21 +194,15 @@ function showRandomTask(taskConfig) {
     // Use grade-based commission (admin customCommission takes priority inside getGradeCommission)
     let commPct = getGradeCommission();
 
-    let currentBal = parseFloat(userDataCache.balance || 0);
-    if (isNaN(currentBal) || currentBal <= 0) currentBal = Math.floor(Math.random() * (250 - 50 + 1)) + 50;
-    
-    // Cash gap: check new cashGaps array first, fall back to old single fields
-    let nextTaskNum = getCompleted() + 1; // The task about to be shown (1-based)
-    let cashGap = 0;
-    if (userDataCache.cashGaps && Array.isArray(userDataCache.cashGaps) && userDataCache.cashGaps.length > 0) {
-        const match = userDataCache.cashGaps.find(g => g.taskNum === nextTaskNum);
-        if (match) cashGap = parseFloat(match.amount || 0);
-    } else {
-        // Fallback to old single fields
-        let rawCashGap = parseFloat(userDataCache.cashGap || 0);
-        let cashGapTaskNum = parseInt(userDataCache.cashGapTaskNum || 0);
-        cashGap = (cashGapTaskNum > 0 && nextTaskNum === cashGapTaskNum) ? rawCashGap : 0;
+    const currentBal = getCurrentBalance();
+    if (currentBal <= 0) {
+        showNoBalanceAlert();
+        closeWidget();
+        return;
     }
+    
+    const nextTaskNum = getCompleted() + 1; // The task about to be shown (1-based)
+    const cashGap = getCashGapForTask(nextTaskNum);
     let orderAmount = currentBal + cashGap;
 
     currentEarned = orderAmount * (commPct / 100);
@@ -237,18 +259,14 @@ function showRandomTask(taskConfig) {
 }
 
 async function confirmTask() {
-    // Cash gap: check new cashGaps array first, fall back to old single fields
-    let nextTaskNum = getCompleted() + 1;
-    let cashGap = 0;
-    if (userDataCache.cashGaps && Array.isArray(userDataCache.cashGaps) && userDataCache.cashGaps.length > 0) {
-        const match = userDataCache.cashGaps.find(g => g.taskNum === nextTaskNum);
-        if (match) cashGap = parseFloat(match.amount || 0);
-    } else {
-        // Fallback to old single fields
-        let rawCashGap = parseFloat(userDataCache.cashGap || 0);
-        let cashGapTaskNum = parseInt(userDataCache.cashGapTaskNum || 0);
-        cashGap = (cashGapTaskNum > 0 && nextTaskNum === cashGapTaskNum) ? rawCashGap : 0;
+    const currentBal = getCurrentBalance();
+    if (currentBal <= 0) {
+        showNoBalanceAlert();
+        return;
     }
+
+    const nextTaskNum = getCompleted() + 1;
+    const cashGap = getCashGapForTask(nextTaskNum);
 
     if (cashGap > 0) {
         showCustomAlert("Insufficient account balance. Please recharge to clear the cash gap of $" + cashGap.toFixed(2) + " before submitting the order.");
@@ -285,7 +303,7 @@ async function confirmTask() {
                 type: 'Order Commission',
                 amount: parseFloat(currentEarned.toFixed(2)),
                 date: firebase.firestore.Timestamp.now(),
-                orderAmount: parseFloat((prevBalance + parseFloat(userDataCache.cashGap || 0)).toFixed(2)),
+                orderAmount: parseFloat((prevBalance + cashGap).toFixed(2)),
                 taskNo: newTaskNo
             };
 
