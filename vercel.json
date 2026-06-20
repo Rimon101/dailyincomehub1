@@ -8,6 +8,7 @@
   "rewrites": [
     { "source": "/stake-detail", "destination": "/pages/stake-detail/index.html" },
     { "source": "/tasks", "destination": "/pages/tasks/index.html" },
+    { "source": "/order", "destination": "/pages/order/index.html" },
     { "source": "/profile", "destination": "/pages/profile/index.html" },
     { "source": "/balance", "destination": "/pages/balance/index.html" },
     { "source": "/recharge", "destination": "/pages/recharge/index.html" },
@@ -30,6 +31,8 @@
   "redirects": [
     { "source": "/home", "destination": "/", "statusCode": 301 },
     { "source": "/pages/tasks/index.html", "destination": "/tasks", "statusCode": 301 },
+    { "source": "/pages/order/index.html", "destination": "/order", "statusCode": 301 },
+    { "source": "/order.html", "destination": "/order", "statusCode": 301 },
     { "source": "/pages/profile/index.html", "destination": "/profile", "statusCode": 301 },
     { "source": "/pages/balance/index.html", "destination": "/balance", "statusCode": 301 },
     { "source": "/pages/recharge/index.html", "destination": "/recharge", "statusCode": 301 },
