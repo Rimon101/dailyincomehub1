@@ -82,11 +82,14 @@ function listenUserData(callback, user) {
                     localStorage.setItem('cachedUserData', JSON.stringify({
                         fullName: data.fullName || '',
                         username: data.username || '',
+                        email: data.email || '',
                         balance: data.balance || 0,
                         earnToday: data.earnToday || 0,
                         earnYesterday: data.earnYesterday || 0,
                         earnTotal: data.earnTotal || 0,
-                        profilePic: data.profilePic || ''
+                        profilePic: data.profilePic || '',
+                        inviteCode: data.inviteCode || '',
+                        walletAddress: data.walletAddress || ''
                     }));
                 } catch(e) { /* localStorage full, ignore */ }
                 callback(data);

@@ -2,6 +2,15 @@ let sysConfig = null;
 let walletList = [];
 let userDataCache = null;
 
+// Show cached balance instantly
+(function() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (cached) {
+        const el = document.querySelector('.balance-card .amount');
+        if (el) el.textContent = '$' + parseFloat(cached.balance || 0).toFixed(2);
+    }
+})();
+
 requireAuth((user) => {
     listenSystemConfig((sys) => {
         sysConfig = sys;

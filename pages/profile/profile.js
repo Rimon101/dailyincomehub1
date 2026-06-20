@@ -1,3 +1,41 @@
+// Show cached data instantly (before Firebase responds)
+(function showCachedProfileData() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (!cached) return;
+
+    // Username & email
+    const usernameEl = document.getElementById('displayUsername');
+    const emailEl = document.getElementById('displayEmail');
+    if (usernameEl) usernameEl.textContent = cached.username || 'User';
+    if (emailEl) emailEl.textContent = cached.email || '';
+
+    // Balance
+    const balanceEl = document.getElementById('usdtBalance');
+    if (balanceEl) balanceEl.textContent = '$' + Number(cached.balance || 0).toFixed(4);
+
+    // Invitation code
+    const inviteCodeEl = document.getElementById('usdtInviteCode');
+    if (inviteCodeEl && cached.inviteCode) inviteCodeEl.textContent = cached.inviteCode;
+
+    // Profile picture
+    if (cached.profilePic) {
+        const defaultPic = document.getElementById('defaultPic');
+        const preview = document.getElementById('profilePicPreview');
+        if (defaultPic) defaultPic.style.display = 'none';
+        if (preview) {
+            preview.src = cached.profilePic;
+            preview.style.display = 'block';
+        }
+    }
+
+    // Wallet visibility
+    const hasWallet = !!cached.walletAddress;
+    const bindBtn = document.getElementById('bindWalletMenuBtn');
+    const withdrawMgmtBtn = document.getElementById('withdrawManagementBtn');
+    if (bindBtn) bindBtn.style.display = hasWallet ? 'none' : 'flex';
+    if (withdrawMgmtBtn) withdrawMgmtBtn.style.display = hasWallet ? 'flex' : 'none';
+})();
+
 requireAuth((firebaseUser) => {
     listenSystemConfig((sys) => {
         if (sys.siteName) document.getElementById("sitePageTitle").textContent = "Profile - " + sys.siteName;

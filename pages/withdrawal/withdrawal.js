@@ -1,6 +1,20 @@
 let currentBal = 0;
 let userDataCache = null;
 
+// Show cached data instantly
+(function() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (cached) {
+        currentBal = parseFloat(cached.balance || 0);
+        const el = document.querySelector('.balance-card .amount');
+        if (el) el.textContent = '$' + currentBal.toFixed(2);
+        if (cached.walletAddress) {
+            const wa = document.getElementById('walletAddress');
+            if (wa) wa.value = cached.walletAddress;
+        }
+    }
+})();
+
 requireAuth((user) => {
     listenSystemConfig((sys) => { if (sys.siteName) document.getElementById("sitePageTitle").textContent = "Withdrawal - " + sys.siteName; });
     listenUserData((data) => {

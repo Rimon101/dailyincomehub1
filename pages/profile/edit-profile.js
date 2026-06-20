@@ -24,54 +24,101 @@ document.getElementById('profilePicContainer').addEventListener('click', () => {
 
 document.getElementById('profilePicInput').addEventListener('change', function (e) {
     const file = e.target.files[0];
-    if (file) {
-        compressImage(file, 128, 128, 0.7).then(async (base64) => {
-            document.getElementById('defaultPic').style.display = 'none';
-            document.getElementById('profilePicPreview').src = base64;
-            document.getElementById('profilePicPreview').style.display = 'block';
-            try {
-                await updateUserData({ profilePic: base64 });
-                showCustomAlert('Profile picture updated!');
-            } catch (err) {
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        showCustomAlert('Please select a valid image file.');
+        return;
+    }
+
+    // Validate file size (max 5MB raw input)
+    if (file.size > 5 * 1024 * 1024) {
+        showCustomAlert('Image is too large. Please select an image under 5MB.');
+        return;
+    }
+
+    compressImage(file, 200, 200, 0.6).then(async (base64) => {
+        // Check compressed size — Firestore field should stay reasonable
+        const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
+        if (sizeKB > 200) {
+            showCustomAlert('Image is still too large after compression (' + sizeKB + 'KB). Please use a smaller image.');
+            return;
+        }
+
+        document.getElementById('defaultPic').style.display = 'none';
+        document.getElementById('profilePicPreview').src = base64;
+        document.getElementById('profilePicPreview').style.display = 'block';
+
+        try {
+            await updateUserData({ profilePic: base64 });
+            showCustomAlert('Profile picture updated!');
+        } catch (err) {
+            console.error('Profile pic update error:', err);
+            if (err.code === 'resource-exhausted' || (err.message && err.message.includes('exceeds the maximum'))) {
+                showCustomAlert('Your account data is too large to store a profile picture. Please contact support.');
+            } else {
                 showCustomAlert('Error updating photo: ' + err.message);
             }
-        }).catch(err => {
-            showCustomAlert('Error processing image: ' + err.message);
-        });
-    }
+        }
+    }).catch(err => {
+        console.error('Image processing error:', err);
+        showCustomAlert('Error processing image. Please try a different photo.');
+    });
+
+    // Reset input so the same file can be re-selected
+    this.value = '';
 });
 
 function compressImage(file, maxWidth, maxHeight, quality) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file);
+
+        reader.onerror = () => reject(new Error('Failed to read file'));
+
         reader.onload = event => {
             const img = new Image();
-            img.src = event.target.result;
+
+            img.onerror = () => reject(new Error('Failed to load image'));
+
             img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                if (width > height) {
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
+                try {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Scale down maintaining aspect ratio
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
                     }
-                } else {
-                    if (height > maxHeight) {
-                        width = Math.round((width * maxHeight) / height);
-                        height = maxHeight;
-                    }
+
+                    // Ensure minimum dimensions
+                    width = Math.max(1, width);
+                    height = Math.max(1, height);
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const result = canvas.toDataURL('image/jpeg', quality);
+                    resolve(result);
+                } catch (canvasErr) {
+                    reject(canvasErr);
                 }
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/jpeg', quality));
             };
-            img.onerror = error => reject(error);
+
+            img.src = event.target.result;
         };
-        img.onerror = error => reject(error);
+
+        reader.readAsDataURL(file);
     });
 }
 
