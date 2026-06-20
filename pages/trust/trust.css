@@ -1,1 +1,52 @@
-/* trust.html has no page-specific inline styles — all styles are in ../../styles.css */
+/* ===== Trust page — dark theme ===== */
+body { padding-bottom: 90px; }
+
+/* Certificate grid */
+.cert-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.cert-card {
+    background: rgba(15, 20, 48, 0.8);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cert-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.cert-img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .cert-img {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cert-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

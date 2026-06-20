@@ -29,22 +29,42 @@ body {
 @media (min-width: 768px) {
     .main-wrapper { max-width: 800px; }
     .stats-grid   { grid-template-columns: repeat(3, 1fr) !important; }
+    .page-content { padding: 24px; }
+    .form-container { padding: 28px 24px; border-radius: 20px; }
+    .balance-card { padding: 32px 24px; }
+    .balance-card .amount { font-size: 40px; }
+    .header h1 { font-size: 20px; }
+    .section-title { font-size: 18px; }
+    .submit-btn { font-size: 17px; padding: 18px; }
 }
 
 @media (min-width: 1024px) {
     .main-wrapper { max-width: 1000px; }
     .stats-grid   { grid-template-columns: repeat(3, 1fr) !important; }
+    .page-content { padding: 28px 32px; }
+    .balance-card .amount { font-size: 44px; }
+}
+
+/* Small phone adjustments */
+@media (max-width: 359px) {
+    .header { padding: 14px 12px; }
+    .header h1 { font-size: 15px; }
+    .page-content { padding: 14px 12px; }
+    .form-container { padding: 18px 14px; }
+    .balance-card .amount { font-size: 28px; }
+    .submit-btn { padding: 14px; font-size: 14px; }
 }
 
 /* ===== Header (dark) ===== */
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 20px;
     background: transparent;
     border-bottom: none;
     color: #fff;
+    position: relative;
 }
 
 .header .back-btn {

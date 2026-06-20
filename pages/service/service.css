@@ -10,6 +10,19 @@
     margin-bottom: 20px;
 }
 
+.service-card h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.service-desc {
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 .service-icon {
     font-size: 48px;
     margin-bottom: 20px;
@@ -28,3 +41,16 @@
 }
 
 .contact-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+/* Responsive */
+@media (min-width: 768px) {
+    .service-card {
+        padding: 40px 30px;
+    }
+    .service-card h3 {
+        font-size: 22px;
+    }
+    .service-desc {
+        font-size: 15px;
+    }
+}

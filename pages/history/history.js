@@ -32,7 +32,7 @@ requireAuth((user) => {
 
         if (transactions.length === 0) {
             const emptyMsg = filterType === 'order' ? 'No completed orders yet.' : 'No deposit or withdrawal records yet.';
-            historyList.innerHTML = `<div class="form-container" style="text-align:center;padding:40px 20px;"><div style="font-size:40px;margin-bottom:10px;">📋</div><p style="color:#666;">${emptyMsg}</p></div>`;
+            historyList.innerHTML = `<div class="form-container" style="text-align:center;padding:40px 20px;"><div style="font-size:40px;margin-bottom:10px;">📋</div><p style="color:rgba(255, 255, 255, 0.6);">${emptyMsg}</p></div>`;
             return;
         }
 

@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="sitePageTitle">Withdrawal - Daily Income Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css?v=3">
     <link rel="stylesheet" href="/pages/withdrawal/withdrawal.css?v=3">
 </head>
@@ -31,20 +33,16 @@
             <div class="form-container">
                 <div class="form-group">
                     <label for="withdrawAmount">Withdrawal Amount (USD)</label>
-                    <div style="display:flex;align-items:center;border:1.5px solid #e91e63;border-radius:8px;overflow:hidden;background:#fff;">
-                        <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100" step="0.01"
-                            style="flex:1;border:none;outline:none;padding:12px 14px;font-size:15px;background:transparent;">
-                        <button type="button" onclick="withdrawAll()"
-                            style="background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;font-size:12px;font-weight:700;padding:0 14px;height:100%;border:none;cursor:pointer;white-space:nowrap;border-left:1px solid #e0e0e0;min-height:46px;">
-                            Withdraw All
-                        </button>
+                    <div class="amount-input-wrap">
+                        <span class="amount-prefix">$</span>
+                        <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100" step="0.01">
+                        <button type="button" class="btn-all" onclick="withdrawAll()">Withdraw All</button>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="walletAddress">Wallet Address / Account Number</label>
-                    <input type="text" id="walletAddress" placeholder="Enter your wallet address or account number" readonly
-                        style="background-color: #f5f5f5; color: #888; cursor: not-allowed;">
+                    <input type="text" id="walletAddress" placeholder="Enter your wallet address or account number" readonly class="readonly-input">
                     <div class="input-note">Configured in Profile Settings</div>
                 </div>
                 <div class="form-group">

@@ -1,1 +1,12 @@
-/* history.html has no page-specific inline styles — all styles are in ../../styles.css */
+/* ===== History page — dark theme ===== */
+body { padding-bottom: 90px; }
+
+/* Responsive */
+@media (min-width: 768px) {
+    .page-content {
+        padding: 24px;
+    }
+    .transaction-item {
+        padding: 16px 20px;
+    }
+}

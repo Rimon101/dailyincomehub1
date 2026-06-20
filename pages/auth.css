@@ -305,3 +305,32 @@
     .auth-body .auth-submit { transition: none; }
     .auth-body .auth-submit:hover { transform: none; }
 }
+
+/* Center card vertically on tall screens */
+@media (min-height: 700px) {
+    .auth-body {
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+/* Wider card on tablets */
+@media (min-width: 768px) {
+    .auth-body .container {
+        max-width: 520px;
+    }
+    .auth-body .login-card {
+        padding: 48px;
+    }
+    .auth-body h1 {
+        font-size: 36px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .auth-body .container {
+        max-width: 540px;
+    }
+}

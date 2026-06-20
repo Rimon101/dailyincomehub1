@@ -494,3 +494,122 @@ body {
 .home .nav-item.active .nav-icon {
     transform: scale(1.1);
 }
+
+/* ===== Responsive Enhancements ===== */
+
+/* Small phones — prevent balance overflow */
+@media (max-width: 359px) {
+    .home-balance-card .balance {
+        font-size: 36px;
+    }
+    .home-balance-card .stat h2 {
+        font-size: 14px;
+    }
+    .home-balance-card {
+        padding: 18px;
+        margin: 10px;
+    }
+    .actions {
+        gap: 10px;
+        padding: 10px;
+    }
+    .btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+    .home-header .logo {
+        font-size: 22px;
+    }
+    .home-greeting h2 {
+        font-size: 18px;
+    }
+}
+
+/* Regular small phones */
+@media (max-width: 480px) and (min-width: 360px) {
+    .home-balance-card .balance {
+        font-size: 42px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+    .home .bottom-nav {
+        max-width: 800px;
+    }
+    .home-balance-card {
+        padding: 30px;
+        margin: 20px;
+    }
+    .home-balance-card .balance {
+        font-size: 52px;
+    }
+    .home-balance-card .stat h2 {
+        font-size: 20px;
+    }
+    .actions {
+        gap: 20px;
+        padding: 20px;
+    }
+    .btn {
+        padding: 20px;
+        font-size: 18px;
+        border-radius: 20px;
+    }
+    .menu-grid {
+        gap: 20px;
+        padding: 20px;
+    }
+    .menu-item .icon {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+    }
+    .menu-item span {
+        font-size: 13px;
+    }
+    .movie-section {
+        padding: 20px;
+    }
+    .movie-card {
+        min-width: 180px;
+    }
+    .movie-card img {
+        height: 260px;
+    }
+    .ai-card {
+        margin: 20px;
+        padding: 30px;
+    }
+    .vip-card {
+        margin: 20px;
+        padding: 24px;
+    }
+    .trust-icons-container {
+        gap: 40px;
+    }
+    .trust-icon {
+        width: 90px;
+        height: 45px;
+    }
+    .home-greeting h2 {
+        font-size: 26px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .home .bottom-nav {
+        max-width: 1000px;
+    }
+    .home-balance-card .balance {
+        font-size: 58px;
+    }
+    .menu-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+    }
+    .movie-card {
+        min-width: 200px;
+    }
+}
