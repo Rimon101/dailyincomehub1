@@ -66,7 +66,7 @@ requireAuth((user) => {
     populateCountrySelector();
     listenUserData((data) => {
         if (data) { userDataCache = data; populateFields(); }
-    });
+    }, user);
 });
 
 function populateCountrySelector() {

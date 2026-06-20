@@ -60,29 +60,60 @@ function requireAuth(onAuthenticated) {
 // Replaces getUserData()
 // Attaches a real-time listener to the user's document in Firestore.
 // Whenever balance or tasks update in the cloud, the callback triggers.
+// Accepts an optional `user` param to skip redundant onAuthStateChanged.
 let unsubsribeUserData = null;
-function listenUserData(callback) {
-    auth.onAuthStateChanged(user => {
-        if (!user) return;
-
+function listenUserData(callback, user) {
+    function startListening(u) {
         if (unsubsribeUserData) unsubsribeUserData(); // Clean up existing listener if any
 
-        unsubsribeUserData = db.collection('users').doc(user.uid).onSnapshot(doc => {
+        unsubsribeUserData = db.collection('users').doc(u.uid).onSnapshot(doc => {
             if (doc.exists) {
                 const data = doc.data();
                 if (data.isFrozen === true) {
                     auth.signOut().then(() => {
                         localStorage.removeItem('loggedInUser');
+                        localStorage.removeItem('cachedUserData');
                         window.location.href = '/login?error=frozen';
                     });
                     return;
                 }
+                // Cache essential fields for instant display on next load
+                try {
+                    localStorage.setItem('cachedUserData', JSON.stringify({
+                        fullName: data.fullName || '',
+                        username: data.username || '',
+                        balance: data.balance || 0,
+                        earnToday: data.earnToday || 0,
+                        earnYesterday: data.earnYesterday || 0,
+                        earnTotal: data.earnTotal || 0,
+                        profilePic: data.profilePic || ''
+                    }));
+                } catch(e) { /* localStorage full, ignore */ }
                 callback(data);
             }
         }, (error) => {
             console.error("Error listening to user data:", error);
         });
-    });
+    }
+
+    if (user) {
+        // User already known from requireAuth — skip the extra onAuthStateChanged
+        startListening(user);
+    } else {
+        // Fallback: wait for auth state (used if called standalone)
+        auth.onAuthStateChanged(u => {
+            if (!u) return;
+            startListening(u);
+        });
+    }
+}
+
+// Returns cached user data for instant UI population (before Firebase responds)
+function getCachedUserData() {
+    try {
+        const raw = localStorage.getItem('cachedUserData');
+        return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
 }
 
 // Global System Configuration Listener

@@ -18,7 +18,7 @@ requireAuth(async (user) => {
             await checkAndProcessExpiredStakes(data);
             updateDisplay();
         }
-    });
+    }, user);
 });
 
 window.selectCoin = function(coinSymbol) {

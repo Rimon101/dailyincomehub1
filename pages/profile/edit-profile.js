@@ -15,7 +15,7 @@ requireAuth((firebaseUser) => {
                 document.getElementById('profilePicPreview').style.display = 'block';
             }
         }
-    });
+    }, firebaseUser);
 });
 
 document.getElementById('profilePicContainer').addEventListener('click', () => {

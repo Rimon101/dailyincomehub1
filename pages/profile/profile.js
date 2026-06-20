@@ -41,7 +41,7 @@ requireAuth((firebaseUser) => {
                 inviteCodeElem.textContent = newCode;
             }
         }
-    });
+    }, firebaseUser);
 });
 
 function copyInviteCode() {
@@ -61,7 +61,7 @@ function handleAuthAction() {
     const user = getCurrentUser();
     if (user) {
         showCustomConfirm('Are you sure you want to log out?', () => {
-            auth.signOut().then(() => { window.location.href = '/login'; });
+            auth.signOut().then(() => { localStorage.removeItem('cachedUserData'); localStorage.removeItem('loggedInUser'); window.location.href = '/login'; });
         });
     } else {
         window.location.href = '/login';

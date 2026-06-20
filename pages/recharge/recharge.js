@@ -17,7 +17,7 @@ requireAuth((user) => {
             userDataCache = data;
             document.querySelector('.balance-card .amount').textContent = '$' + parseFloat(data.balance || 0).toFixed(2);
         }
-    });
+    }, user);
 
     // Load wallets from Firestore
     loadRechargeWallets();

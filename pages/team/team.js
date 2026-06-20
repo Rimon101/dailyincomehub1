@@ -58,5 +58,5 @@ requireAuth((user) => {
             console.error("Error loading team:", error);
             teamList.innerHTML = '<div class="empty-msg" style="color: red;">Error loading team members.</div>';
         });
-    });
+    }, user);
 });

@@ -32,5 +32,5 @@ requireAuth((user) => {
         } else {
             listEl.innerHTML = '<div class="transaction-item" style="justify-content:center;color:#bbb;font-size:14px;padding:24px;">No transactions yet</div>';
         }
-    });
+    }, user);
 });

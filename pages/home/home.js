@@ -1,3 +1,26 @@
+// Show cached data instantly (before Firebase even loads)
+(function showCachedDataImmediately() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (!cached) return;
+
+    const firstName = (cached.fullName || cached.username || 'User').split(' ')[0];
+    const greetingEl = document.getElementById('greetingName');
+    if (greetingEl) greetingEl.textContent = firstName;
+
+    const balance = parseFloat(cached.balance || 0).toFixed(2);
+    const homeBalance = document.querySelector('.home-balance-card .balance');
+    if (homeBalance) homeBalance.textContent = '$' + balance;
+
+    if (document.getElementById('earnToday'))     document.getElementById('earnToday').textContent     = '$' + parseFloat(cached.earnToday || 0).toFixed(2);
+    if (document.getElementById('earnYesterday')) document.getElementById('earnYesterday').textContent = '$' + parseFloat(cached.earnYesterday || 0).toFixed(2);
+    if (document.getElementById('earnTotal'))     document.getElementById('earnTotal').textContent     = '$' + parseFloat(cached.earnTotal || 0).toFixed(2);
+
+    const profileEl = document.getElementById('headerProfile');
+    if (profileEl && cached.profilePic) {
+        profileEl.style.backgroundImage = `url('${cached.profilePic}')`;
+    }
+})();
+
 requireAuth((firebaseUser) => {
     listenSystemConfig((sys) => {
         if (sys.siteName) {
@@ -9,6 +32,7 @@ requireAuth((firebaseUser) => {
         }
     });
 
+    // Pass firebaseUser directly — no redundant onAuthStateChanged
     listenUserData((data) => {
         if (!data) return;
 
@@ -28,7 +52,7 @@ requireAuth((firebaseUser) => {
         if (document.getElementById('earnToday'))     document.getElementById('earnToday').textContent     = '$' + parseFloat(data.earnToday || 0).toFixed(2);
         if (document.getElementById('earnYesterday')) document.getElementById('earnYesterday').textContent = '$' + parseFloat(data.earnYesterday || 0).toFixed(2);
         if (document.getElementById('earnTotal'))     document.getElementById('earnTotal').textContent     = '$' + parseFloat(data.earnTotal || 0).toFixed(2);
-    });
+    }, firebaseUser);
 
     if (sessionStorage.getItem('showTaskClosedNotice') === 'true') {
         const notice = document.getElementById('taskClosedNotice');
@@ -40,6 +64,7 @@ requireAuth((firebaseUser) => {
 function logout() {
     auth.signOut().then(() => {
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('cachedUserData');
         window.location.href = '/login';
     });
 }

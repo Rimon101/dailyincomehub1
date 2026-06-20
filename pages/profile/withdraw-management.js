@@ -9,5 +9,5 @@ requireAuth((user) => {
             // No data, maybe user not logged in or deleted
             window.location.href = '/profile';
         }
-    });
+    }, user);
 });

@@ -19,7 +19,7 @@ requireAuth((user) => {
             document.querySelector('.balance-card .amount').textContent = '$' + currentBal.toFixed(2);
             if (data.walletAddress) document.getElementById('walletAddress').value = data.walletAddress;
         }
-    });
+    }, user);
 
 });
 

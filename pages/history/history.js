@@ -86,5 +86,5 @@ requireAuth((user) => {
                 </div>`;
             historyList.appendChild(card);
         });
-    });
+    }, user);
 });
