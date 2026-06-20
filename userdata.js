@@ -16,6 +16,15 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Enable offline persistence for faster subsequent loads
+db.enablePersistence().catch(err => {
+    if (err.code === 'failed-precondition') {
+        console.warn("Firestore persistence failed-precondition: multiple tabs open.");
+    } else if (err.code === 'unimplemented') {
+        console.warn("Firestore persistence is unimplemented in this browser.");
+    }
+});
+
 // Helper to generate a unique invite code (6 characters)
 window.generateInviteCode = function() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -89,7 +98,8 @@ function listenUserData(callback, user) {
                         earnTotal: data.earnTotal || 0,
                         profilePic: data.profilePic || '',
                         inviteCode: data.inviteCode || '',
-                        walletAddress: data.walletAddress || ''
+                        walletAddress: data.walletAddress || '',
+                        stakes: data.stakes || []
                     }));
                 } catch(e) { /* localStorage full, ignore */ }
                 callback(data);

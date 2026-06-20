@@ -10,6 +10,23 @@ const COIN_CONFIG = {
 let currentStake = null;
 let userDataCache = null;
 
+// Show cached stake details instantly (before Firebase responds)
+(function showCachedStakeImmediately() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (!cached) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const stakeId = params.get('id');
+    if (!stakeId || !cached.stakes || !Array.isArray(cached.stakes)) return;
+
+    const stake = cached.stakes.find(s => s.id === stakeId);
+    if (!stake) return;
+
+    currentStake = stake;
+    // renderStakeDetails is hoisted so we can call it here
+    renderStakeDetails(stake);
+})();
+
 requireAuth((user) => {
     listenUserData((data) => {
         if (!data) return;

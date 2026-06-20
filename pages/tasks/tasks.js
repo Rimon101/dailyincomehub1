@@ -363,3 +363,14 @@ window.updateDisplay = function() {
         `;
     }).join('');
 };
+
+// Show cached data instantly (before Firebase responds)
+(function showCachedTasksImmediately() {
+    const cached = typeof getCachedUserData === 'function' ? getCachedUserData() : null;
+    if (!cached) return;
+
+    userDataCache = cached;
+    if (typeof window.updateDisplay === 'function') {
+        window.updateDisplay();
+    }
+})();
