@@ -7,201 +7,226 @@
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order - Daily Income Hub</title>
+    <title>Stake - Daily Income Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css?v=2">
-    <link rel="stylesheet" href="/pages/tasks/tasks.css?v=5">
+    <link rel="stylesheet" href="/pages/tasks/tasks.css?v=12">
 </head>
 
 <body>
     <div class="main-wrapper">
         <div class="header">
-        <a href="/" class="back-btn">&lsaquo;</a>
-        <h1>Order Acquisition</h1>
-    </div>
+            <a href="/" class="back-btn">&lsaquo;</a>
+            <h1 id="sitePageTitle">Crypto Staking Pool</h1>
+        </div>
 
-    <div class="page-content">
-        <!-- New Order Acquisition Card -->
-        <div class="order-card">
-            <div class="oc-top">
-                <div class="oc-col">
-                    <span class="oc-label">Completed Today</span>
-                    <span class="oc-val" id="taskCountVal">0</span>
+        <div class="page-content">
+            <!-- Staking Panel -->
+            <div class="staking-container">
+                <div class="staking-header">
+                    <h2>Premium Staking</h2>
+                    <p>Stake major assets & earn high daily interest yields immediately</p>
                 </div>
-                <div class="oc-col">
-                    <span class="oc-label">Available Today</span>
-                    <span class="oc-val" id="taskAvailVal">25</span>
-                </div>
-                <div class="oc-col">
-                    <span class="oc-label">Available assets</span>
-                    <span class="oc-val" id="totalTxAmount">0.00</span>
-                </div>
-            </div>
 
-            <div class="oc-mid">
-                <h4 class="oc-section-title">Commissions</h4>
-                <div class="oc-row">
-                    <div class="oc-col">
-                        <span class="oc-label">Yesterday</span>
-                        <span class="oc-val" id="yesterdayCommission">0.00</span>
+                <!-- Coin Selector Grid -->
+                <div class="coin-selector-grid">
+                    <!-- BTC -->
+                    <button class="coin-option active" onclick="selectCoin('BTC')" id="coinOpt-BTC">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+                                <path d="M22.2 14.8c.3-2.2-1.3-3.4-3.6-4.2l.7-2.9-1.8-.4-.7 2.8c-.5-.1-1-.2-1.5-.3l.7-2.9-1.8-.4-.7 2.9c-.4-.1-.7-.2-1.1-.3l-2.4-.6-.5 1.9s1.3.3 1.3.3c.7.2.9.6.8 1l-.8 3.4c.1 0 .1.1.2.1l-.2-.1-1.2 4.8c-.1.2-.3.5-.8.4 0 0-1.3-.3-1.3-.3l-.9 2.1 2.3.6c.4.1.9.2 1.3.3l-.7 3 1.8.4.7-2.9c.5.1.9.2 1.4.3l-.7 2.9 1.8.4.7-2.9c2.9.6 5.1.3 6-2.3.7-2.1-.1-3.3-1.6-4.1 1.1-.2 1.9-1 2.2-2.5zm-3.9 5.4c-.5 2.1-4 1-5.1.7l.9-3.7c1.1.3 4.7.8 4.2 3zm.5-5.5c-.5 1.9-3.4.9-4.3.7l.8-3.4c.9.2 4 .7 3.5 2.7z" fill="#FFF"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">BTC</span>
+                            <span class="coin-name">Bitcoin</span>
+                        </div>
+                        <div class="coin-rate">1.2% Daily</div>
+                    </button>
+                    
+                    <!-- ETH -->
+                    <button class="coin-option" onclick="selectCoin('ETH')" id="coinOpt-ETH">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#627EEA"/>
+                                <path d="M16 3l-.3 1v14.4l.3.3 6.6-3.9z" fill="#FFF" fill-opacity=".6"/>
+                                <path d="M16 3L9.4 14.8l6.6 3.9V3z" fill="#FFF"/>
+                                <path d="M16 19.8l-.2.2v8.7l.2.3 6.6-9.3z" fill="#FFF" fill-opacity=".6"/>
+                                <path d="M16 29v-9.2l-6.6 9.2z" fill="#FFF"/>
+                                <path d="M16 18.7l6.6-3.9-6.6-3V18.7z" fill="#FFF" fill-opacity=".2"/>
+                                <path d="M9.4 14.8l6.6 3.9v-6.9z" fill="#FFF" fill-opacity=".6"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">ETH</span>
+                            <span class="coin-name">Ethereum</span>
+                        </div>
+                        <div class="coin-rate">1.5% Daily</div>
+                    </button>
+
+                    <!-- SOL -->
+                    <button class="coin-option" onclick="selectCoin('SOL')" id="coinOpt-SOL">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <defs>
+                                    <linearGradient id="sol-grad-tasks" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#9945FF"/>
+                                        <stop offset="100%" stop-color="#14F195"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="16" cy="16" r="16" fill="url(#sol-grad-tasks)"/>
+                                <path d="M7 10h18l-3.5 3.5H7.2zM10.5 14.25h18L25 17.75H10.7zM7 22l3.5-3.5h17.8L24.8 22z" fill="#FFF"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">SOL</span>
+                            <span class="coin-name">Solana</span>
+                        </div>
+                        <div class="coin-rate">1.8% Daily</div>
+                    </button>
+
+                    <!-- BNB -->
+                    <button class="coin-option" onclick="selectCoin('BNB')" id="coinOpt-BNB">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#F3BA2F"/>
+                                <path d="M16 6.5l3.3 3.3-3.3 3.3-3.3-3.3L16 6.5zm5.7 5.7l2.5 2.5-2.5 2.5-2.5-2.5 2.5-2.5zm-11.4 0l2.5 2.5-2.5 2.5-2.5-2.5 2.5-2.5zM16 13.9l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3zm5.7 5.7l2.5 2.5-2.5 2.5-2.5-2.5 2.5-2.5zm-11.4 0l2.5 2.5-2.5 2.5-2.5-2.5 2.5-2.5zM16 21.3l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3z" fill="#FFF"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">BNB</span>
+                            <span class="coin-name">BNB</span>
+                        </div>
+                        <div class="coin-rate">1.6% Daily</div>
+                    </button>
+
+                    <!-- ADA -->
+                    <button class="coin-option" onclick="selectCoin('ADA')" id="coinOpt-ADA">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#0033AD"/>
+                                <path d="M16 7.5a1.2 1.2 0 1 1-1.2 1.2 1.2 1.2 0 0 1 1.2-1.2zm0 14.6a1.2 1.2 0 1 1-1.2 1.2 1.2 1.2 0 0 1 1.2-1.2zm-7.3-7.3a1.2 1.2 0 1 1-1.2 1.2 1.2 1.2 0 0 1 1.2-1.2zm14.6 0a1.2 1.2 0 1 1-1.2 1.2 1.2 1.2 0 0 1 1.2-1.2zm-11.4-5.2a.9.9 0 1 1-.9.9.9.9 0 0 1 .9-.9zm8.2 0a.9.9 0 1 1-.9.9.9.9 0 0 1 .9-.9zm-8.2 10.4a.9.9 0 1 1-.9.9.9.9 0 0 1 .9-.9zm8.2 0a.9.9 0 1 1-.9.9.9.9 0 0 1 .9-.9zm-11-5.2a.6.6 0 1 1-.6.6.6.6 0 0 1 .6-.6zm13.8 0a.6.6 0 1 1-.6.6.6.6 0 0 1 .6-.6z" fill="#FFF"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">ADA</span>
+                            <span class="coin-name">Cardano</span>
+                        </div>
+                        <div class="coin-rate">1.0% Daily</div>
+                    </button>
+
+                    <!-- XRP -->
+                    <button class="coin-option" onclick="selectCoin('XRP')" id="coinOpt-XRP">
+                        <div class="coin-icon-wrapper">
+                            <svg class="coin-svg" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#23292F"/>
+                                <path d="M9.1 8l6.3 6.3 6.3-6.3h4L19.4 14l6.3 6.3h-4l-6.3-6.3-6.3 6.3h-4l6.3-6.3L5.1 8z" fill="#FFF"/>
+                            </svg>
+                        </div>
+                        <div class="coin-info">
+                            <span class="coin-symbol">XRP</span>
+                            <span class="coin-name">Ripple</span>
+                        </div>
+                        <div class="coin-rate">1.1% Daily</div>
+                    </button>
+                </div>
+
+                <!-- Duration Segmented Selector -->
+                <div class="duration-selector-container">
+                    <span class="selector-label">Staking Term Duration</span>
+                    <div class="duration-options">
+                        <button class="duration-btn active" onclick="selectDuration(7)" id="durOpt-7">
+                            <span class="dur-days">7 Days</span>
+                            <span class="dur-bonus">Base Yield</span>
+                        </button>
+                        <button class="duration-btn" onclick="selectDuration(15)" id="durOpt-15">
+                            <span class="dur-days">15 Days</span>
+                            <span class="dur-bonus">+25% Bonus</span>
+                        </button>
+                        <button class="duration-btn" onclick="selectDuration(30)" id="durOpt-30">
+                            <span class="dur-days">30 Days</span>
+                            <span class="dur-bonus">+50% Bonus</span>
+                        </button>
                     </div>
-                    <div class="oc-col">
-                        <span class="oc-label">Today</span>
-                        <span class="oc-val" id="todayCommission">0.00</span>
+                </div>
+
+                <!-- Input Amount Form -->
+                <div class="stake-input-card">
+                    <div class="input-header">
+                        <span class="input-title">Staking Amount (USD)</span>
+                        <span class="balance-helper">Available: $<span id="availBalance">0.00</span></span>
                     </div>
-                    <div class="oc-col">
-                        <span class="oc-label">Total</span>
-                        <span class="oc-val" id="totalCommission">0.00</span>
+                    <div class="input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="stakeAmount" placeholder="Enter amount to stake" min="1" step="any" oninput="calculateStakedReturn()">
+                        <button class="max-btn" onclick="stakeMax()">MAX</button>
                     </div>
                 </div>
+
+                <!-- Calculation Card -->
+                <div class="calculation-summary-card">
+                    <div class="calc-row">
+                        <span class="calc-label">Asset Selected</span>
+                        <span class="calc-value" id="calcCoin">BTC</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">Daily Yield Rate</span>
+                        <span class="calc-value highlighted" id="calcRate">1.20%</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">Duration Term</span>
+                        <span class="calc-value" id="calcPeriod">7 Days</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="calc-row sub-yield">
+                        <span class="calc-label">Est. Daily Profit</span>
+                        <span class="calc-value" id="calcDailyYield">$0.00</span>
+                    </div>
+                    <div class="calc-row sub-yield">
+                        <span class="calc-label">Total Earned Interest</span>
+                        <span class="calc-value" id="calcTotalInterest">$0.00</span>
+                    </div>
+                    <div class="calc-row total-yield">
+                        <span class="calc-label">Total Expected Payout</span>
+                        <span class="calc-value" id="calcTotalReturn">$0.00</span>
+                    </div>
+                </div>
+
+                <button class="stake-submit-btn" id="stakeNowBtn" onclick="submitStake()">Stake Now</button>
             </div>
 
-            <div class="oc-bottom">
-                <!-- Removed oc-b-header -->
-                <div style="text-align:center; margin-bottom:12px;">
-                    <span id="commRateDisplay" style="
-                        font-size: 13px;
-                        font-weight: 600;
-                        color: #e91e63;
-                        background: rgba(233,30,99,0.08);
-                        border: 1px solid rgba(233,30,99,0.25);
-                        border-radius: 20px;
-                        padding: 6px 16px;
-                    ">Loading...</span>
+            <!-- Active Staking Section -->
+            <div class="active-stakes-section">
+                <h3>Active Staking Operations</h3>
+                <div id="activeStakesList">
+                    <!-- Dynamically populated -->
                 </div>
-                <div class="oc-b-buttons">
-                    <button class="oc-btn primary" id="startTaskBtn" onclick="startAutoTask()">Automatic order</button>
-                    <button class="oc-btn secondary" onclick="showGradeInfo()">Grade Area Unlock</button>
-                </div>
-                <button class="oc-btn-outline" onclick="window.location.href='/history?type=order'">
-                    <span class="oc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> Order Record
-                </button>
-            </div>
-        </div>
-
-        <div class="grade-modal" id="gradeModal">
-            <span class="close-btn" onclick="closeGradeInfo()">&times;</span>
-            <h3 class="gm-title">Grade Unlock Levels</h3>
-            <div class="gm-list">
-                <div class="gm-item gold">
-                    <div class="gm-level">Gold Level-1</div>
-                    <div class="gm-range">$20 - $499</div>
-                </div>
-                <div class="gm-item silver">
-                    <div class="gm-level">Silver Level-2</div>
-                    <div class="gm-range">$500 - $2000</div>
-                </div>
-                <div class="gm-item premium">
-                    <div class="gm-level">Premium Level-3</div>
-                    <div class="gm-range">$2000 - $5000</div>
-                </div>
-            </div>
-            <p class="gm-note">Contact customer service to upgrade your level.</p>
-        </div>
-
-        <div class="order-explanation">
-            <h3>Explanation</h3>
-            <div class="oe-box">
-                <p>1. The order profit during your task depends on your balance. The higher the balance, higher the
-                    profit</p>
-                <p>2. Each user can complete 25 orders per day, Profit depends on the order of the day, not fixed</p>
-                <p>3. Higher levels will have higher returns. If you want to upgrade the level, please click 'Grade Area
-                    Unlock' Complete payment to upgrade</p>
             </div>
         </div>
 
-        <div class="task-complete-msg" id="completeMsg">✓ Task completed successfully!</div>
-
-        <div class="ad-container" id="timerBox" style="display: none; flex-direction: column;">
-            <span class="close-btn" onclick="closeWidget()">&times;</span>
-            <div class="countdown" id="countdown" style="font-size: 64px; font-weight: 700; color: #e91e63;">3</div>
-            <div class="timer-label" id="timerLabel" style="font-size: 16px; color: #888; margin-top: 8px;">Searching
-                for high-yield task...</div>
-        </div>
-
-        <div class="task-presentation" id="taskPresentation">
-            <span class="close-btn" onclick="closeWidget()">&times;</span>
-            <h3 class="tp-title">Payment Details</h3>
-
-            <!-- Order metadata -->
-            <div class="tp-meta">
-                <div class="tp-meta-row">
-                    <span class="tp-meta-label">Match time</span>
-                    <span class="tp-meta-value" id="taskMatchTime">—</span>
-                </div>
-                <div class="tp-meta-row">
-                    <span class="tp-meta-label">Order Number</span>
-                    <span class="tp-meta-value tp-order-num" id="taskOrderNumber">—</span>
-                </div>
-            </div>
-
-            <!-- Product list -->
-            <div class="tp-products" id="taskProductList">
-                <!-- Product items will be injected by JS -->
-            </div>
-
-            <!-- Financial summary -->
-            <div class="tp-summary">
-                <div class="tp-summary-row">
-                    <span class="tp-summary-label">Total Order Amount</span>
-                    <span class="tp-summary-value" id="taskTotalAmount">$0.00</span>
-                </div>
-                <div class="tp-summary-row">
-                    <span class="tp-summary-label"><span class="diamond-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg></span> commission</span>
-                    <span class="tp-summary-value tp-highlight" id="taskCommissionAmount">$0.00</span>
-                </div>
-                <div class="tp-summary-row">
-                    <span class="tp-summary-label">expected return</span>
-                    <span class="tp-summary-value" id="taskExpectedReturn">$0.00</span>
-                </div>
-                <div class="tp-summary-row">
-                    <span class="tp-summary-label">Cash gap between task</span>
-                    <span class="tp-summary-value" id="taskCashGap">$0.00</span>
-                </div>
-            </div>
-
-            <button class="btn-confirm-task" id="confirmTaskBtn" onclick="confirmTask()">Submit Order</button>
-        </div>
-
-        <div class="ad-container" id="successBox" style="display:none; flex-direction: column;">
-            <span class="close-btn" onclick="closeWidget()">&times;</span>
-            <div class="success-icon" aria-hidden="true" style="display:block;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg></div>
-            <div class="success-text"
-                style="display:block; font-size:24px; font-weight:700; color:#4CAF50; margin-top:12px;">Success</div>
-            <div class="redirect-label" style="display:block; font-size:13px; color:#999; margin-top:8px;">Next order
-                ready in
-                <span id="countdown2">3</span>s...
-            </div>
-        </div>
-
-        <div class="ad-container" id="adSpace" style="display:none; padding: 10px;">
-            <img id="adImage" src="" alt="Ad Space"
-                style="max-width: 100%; max-height: 260px; border-radius: 12px; object-fit: contain;">
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="/" class="nav-item">
-            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
-            <span class="nav-label">Home</span>
-        </a>
-        <a href="/tasks" class="nav-item active">
-            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span>
-            <span class="nav-label">Order</span>
-        </a>
-        <a href="/trust" class="nav-item">
-            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
-            <span class="nav-label">Trust</span>
-        </a>
-        <a href="/service" class="nav-item">
-            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span>
-            <span class="nav-label">Service</span>
-        </a>
-        <a href="/profile" class="nav-item">
-            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span>
-            <span class="nav-label">Profile</span>
-        </a>
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="/tasks" class="nav-item active">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></span>
+                <span class="nav-label">Stake</span>
+            </a>
+            <a href="/trust" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <span class="nav-label">Trust</span>
+            </a>
+            <a href="/service" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2v-7h4"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H4"/></svg></span>
+                <span class="nav-label">Service</span>
+            </a>
+            <a href="/profile" class="nav-item">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg></span>
+                <span class="nav-label">Profile</span>
+            </a>
         </div>
     </div>
 
@@ -209,7 +234,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
     <script src="/userdata.js?v=2" defer></script>
-    <script src="/pages/tasks/tasks.js?v=8" defer></script>
+    <script src="/pages/tasks/tasks.js?v=12" defer></script>
 </body>
 
 </html>

@@ -1,352 +1,360 @@
+const COIN_CONFIG = {
+    BTC: { name: "Bitcoin", baseRate: 1.2, color: "#F7931A" },
+    ETH: { name: "Ethereum", baseRate: 1.5, color: "#627EEA" },
+    SOL: { name: "Solana", baseRate: 1.8, color: "#14F195" },
+    BNB: { name: "BNB", baseRate: 1.6, color: "#F3BA2F" },
+    ADA: { name: "Cardano", baseRate: 1.0, color: "#0033AD" },
+    XRP: { name: "Ripple", baseRate: 1.1, color: "#23292F" }
+};
+
 let userDataCache = null;
+let selectedCoin = "BTC";
+let selectedDuration = 7;
 
 requireAuth(async (user) => {
     listenUserData(async (data) => {
         if (data) {
-            const today = new Date().toDateString();
-            if (data.lastEarnResetDate !== today) {
-                const lastReset = data.lastEarnResetDate ? new Date(data.lastEarnResetDate) : null;
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const isConsecutiveDay = lastReset && lastReset.toDateString() === yesterday.toDateString();
-
-                try {
-                    await updateUserData({
-                        earnYesterday: isConsecutiveDay ? (data.earnToday || 0) : 0,
-                        earnToday: 0,
-                        tasksCompleted: 0,
-                        lastEarnResetDate: today
-                    });
-                } catch (e) { console.warn('Reset failed:', e); }
-                return;
-            }
             userDataCache = data;
+            await checkAndProcessExpiredStakes(data);
             updateDisplay();
         }
     });
 });
 
-const TOTAL_TASKS = 25;
-let currentEarned = 0;
-
-function getCompleted() {
-    return userDataCache ? parseInt(userDataCache.tasksCompleted || 0) : 0;
-}
-
-// Returns commission % based on user's grade (balance), unless admin overrides via customCommission
-function getGradeCommission() {
-    // Admin override takes priority
-    const custom = parseFloat(userDataCache.customCommission);
-    if (!isNaN(custom) && custom > 0) return custom;
-
-    const balance = parseFloat(userDataCache.balance || 0);
-    if (balance >= 2000) return 8;   // Grade 3 — Premium
-    if (balance >= 500)  return 5;   // Grade 2 — Silver
-    if (balance >= 20)   return 3;   // Grade 1 — Gold
-    return 3; // default
-}
-
-function updateDisplay() {
-    const completed = getCompleted();
+window.selectCoin = function(coinSymbol) {
+    selectedCoin = coinSymbol;
     
-    if (document.getElementById('taskCountVal')) document.getElementById('taskCountVal').textContent = completed;
+    // Update UI active class
+    document.querySelectorAll('.coin-option').forEach(el => {
+        el.classList.remove('active');
+    });
+    const activeBtn = document.getElementById(`coinOpt-${coinSymbol}`);
+    if (activeBtn) activeBtn.classList.add('active');
     
-    if (document.getElementById('taskAvailVal')) {
-        let available = 25 - (completed % 25);
-        if (completed >= TOTAL_TASKS) {
-            available = 0;
-        }
-        document.getElementById('taskAvailVal').textContent = available;
-    }
+    calculateStakedReturn();
+};
 
+window.selectDuration = function(days) {
+    selectedDuration = days;
+    
+    // Update UI active class
+    document.querySelectorAll('.duration-btn').forEach(el => {
+        el.classList.remove('active');
+    });
+    const activeBtn = document.getElementById(`durOpt-${days}`);
+    if (activeBtn) activeBtn.classList.add('active');
+    
+    calculateStakedReturn();
+};
+
+window.stakeMax = function() {
     if (!userDataCache) return;
-    const balance = parseFloat(userDataCache.balance || 0).toFixed(2);
-    const earnToday = parseFloat(userDataCache.earnToday || 0).toFixed(2);
-    const earnYesterday = parseFloat(userDataCache.earnYesterday || 0).toFixed(2);
-    const earnTotal = parseFloat(userDataCache.earnTotal || 0).toFixed(2);
-
-    if (document.getElementById('totalTxAmount')) document.getElementById('totalTxAmount').textContent = balance;
-    if (document.getElementById('todayCommission')) document.getElementById('todayCommission').textContent = earnToday;
-    if (document.getElementById('yesterdayCommission')) document.getElementById('yesterdayCommission').textContent = earnYesterday;
-    if (document.getElementById('totalCommission')) document.getElementById('totalCommission').textContent = earnTotal;
-
-    // Update commission rate badge
-    const commRateEl = document.getElementById('commRateDisplay');
-    if (commRateEl) {
-        const rate = getGradeCommission();
-        commRateEl.textContent = `${rate}%`;
+    const bal = parseFloat(userDataCache.balance || 0);
+    const input = document.getElementById('stakeAmount');
+    if (input) {
+        input.value = bal > 0 ? bal.toFixed(8) : ""; // Using precise decimal values
+        calculateStakedReturn();
     }
-}
+};
 
-async function startAutoTask() {
-    if (!userDataCache) { setTimeout(startAutoTask, 100); return; }
-
-    const completed = getCompleted();
-    if (completed >= TOTAL_TASKS) {
-        showCustomAlert("You have completed all 25 tasks for today. Please come back tomorrow.");
-        return;
-    }
-
-    let taskConfig = { commission: 2.5, status: 'open' };
-    try {
-        const configDoc = await db.collection('globalConfig').doc('tasks').get();
-        if (configDoc.exists) taskConfig = configDoc.data();
-    } catch (e) { console.log("Using default task config."); }
-
-    const userTaskStatus = userDataCache.taskStatusOverride || 'default';
-    if (userTaskStatus === 'closed' || (taskConfig.status === 'closed' && userTaskStatus !== 'open')) {
-        sessionStorage.setItem('showTaskClosedNotice', 'true');
-        window.location.href = '/';
-        return;
-    }
-
-    document.getElementById('timerBox').style.display = 'flex';
-    document.getElementById('adSpace').style.display = 'none';
-    document.getElementById('taskPresentation').style.display = 'none';
-    document.getElementById('successBox').style.display = 'none';
-
-    let seconds = 3;
-    const countdownEl = document.getElementById('countdown');
-    countdownEl.textContent = seconds;
-
-    if (window.taskPhaseInterval) clearInterval(window.taskPhaseInterval);
-    window.taskPhaseInterval = setInterval(() => {
-        seconds--;
-        countdownEl.textContent = seconds;
-        if (seconds <= 0) { clearInterval(window.taskPhaseInterval); showRandomTask(taskConfig); }
-    }, 1000);
-}
-
-// Fixed mapping: each image paired with its correct movie name
-const MOVIE_CATALOG = [
-    { name: "Ready or Not Here I Come 2", img: "ready_or_not_here_i_come2.png" },
-    { name: "Undertone", img: "undertone.png" },
-    { name: "You, Me & Tuscany", img: "you.me&tuscany.png" },
-    { name: "Michael", img: "michael.png" },
-    { name: "Iron Maiden", img: "iron_maiden.png" },
-    { name: "Mortal Kombat 2", img: "Mortal_kombat2.png" },
-    { name: "Finding Emily", img: "finding_emily.png" },
-    { name: "Power Ballad", img: "Power_ballad.png" },
-    { name: "Special Correspondents", img: "special_correspondents.webp" },
-    { name: "Mercy", img: "mercy.webp" },
-    { name: "Imperial Dreams", img: "imperial dreams.webp" },
-    { name: "The Ridiculous 6", img: "the_ridiculous6.webp" },
-    { name: "Barry", img: "barry.webp" },
-    { name: "The Fundamentals of Caring", img: "the_fundamentals_of_caring.webp" },
-    { name: "Sword of Destiny", img: "sword_of_destiny.webp" },
-    { name: "Pee-wee's Big Holiday", img: "pee-wee's_big_holiday.webp" },
-    { name: "ARQ", img: "arq.webp" },
-    { name: "Tallulah", img: "Tallulah.webp" }
-];
-
-function generateOrderNumber() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const mo = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    const h = String(now.getHours()).padStart(2, '0');
-    const mi = String(now.getMinutes()).padStart(2, '0');
-    const s = String(now.getSeconds()).padStart(2, '0');
-    const rand = String(Math.floor(Math.random() * 9000) + 1000);
-    return 'UB' + y + mo + d + h + mi + s + rand;
-}
-
-function formatMatchTime() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const mo = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    const h = String(now.getHours()).padStart(2, '0');
-    const mi = String(now.getMinutes()).padStart(2, '0');
-    const s = String(now.getSeconds()).padStart(2, '0');
-    return y + '-' + mo + '-' + d + ' ' + h + ':' + mi + ':' + s;
-}
-
-function showRandomTask(taskConfig) {
-    // Use grade-based commission (admin customCommission takes priority inside getGradeCommission)
-    let commPct = getGradeCommission();
-
-    let currentBal = parseFloat(userDataCache.balance || 0);
-    if (isNaN(currentBal) || currentBal <= 0) currentBal = Math.floor(Math.random() * (250 - 50 + 1)) + 50;
+window.calculateStakedReturn = function() {
+    const amountInput = document.getElementById('stakeAmount');
+    const amount = parseFloat(amountInput.value) || 0;
     
-    // Cash gap: check new cashGaps array first, fall back to old single fields
-    let nextTaskNum = getCompleted() + 1; // The task about to be shown (1-based)
-    let cashGap = 0;
-    if (userDataCache.cashGaps && Array.isArray(userDataCache.cashGaps) && userDataCache.cashGaps.length > 0) {
-        const match = userDataCache.cashGaps.find(g => g.taskNum === nextTaskNum);
-        if (match) cashGap = parseFloat(match.amount || 0);
-    } else {
-        // Fallback to old single fields
-        let rawCashGap = parseFloat(userDataCache.cashGap || 0);
-        let cashGapTaskNum = parseInt(userDataCache.cashGapTaskNum || 0);
-        cashGap = (cashGapTaskNum > 0 && nextTaskNum === cashGapTaskNum) ? rawCashGap : 0;
-    }
-    let orderAmount = currentBal + cashGap;
+    const config = COIN_CONFIG[selectedCoin];
+    let rateMultiplier = 1.0;
+    if (selectedDuration === 15) rateMultiplier = 1.25;
+    else if (selectedDuration === 30) rateMultiplier = 1.50;
+    
+    const dailyRate = config.baseRate * rateMultiplier;
+    const dailyYield = amount * (dailyRate / 100);
+    const totalInterest = dailyYield * selectedDuration;
+    const totalReturn = amount + totalInterest;
+    
+    document.getElementById('calcCoin').textContent = selectedCoin;
+    document.getElementById('calcRate').textContent = dailyRate.toFixed(2) + '%';
+    document.getElementById('calcPeriod').textContent = selectedDuration + ' Days';
+    document.getElementById('calcDailyYield').textContent = '$' + dailyYield.toFixed(2);
+    document.getElementById('calcTotalInterest').textContent = '$' + totalInterest.toFixed(2);
+    document.getElementById('calcTotalReturn').textContent = '$' + totalReturn.toFixed(2);
+};
 
-    currentEarned = orderAmount * (commPct / 100);
+let isCheckingStakes = false;
+async function checkAndProcessExpiredStakes(data) {
+    if (isCheckingStakes) return;
+    if (!data || !data.stakes || !Array.isArray(data.stakes)) return;
 
-    // Fill in match time and order number
-    document.getElementById('taskMatchTime').textContent = formatMatchTime();
-    document.getElementById('taskOrderNumber').textContent = generateOrderNumber();
+    const now = Date.now();
+    let hasExpired = false;
+    let totalReturn = 0;
+    const newTransactions = [];
 
-    // Pick 3 unique movies by shuffling and taking the first 3
-    const shuffled = [...MOVIE_CATALOG].sort(() => Math.random() - 0.5);
-    const picked = shuffled.slice(0, 3);
-
-    // Generate random price portions that sum to orderAmount
-    let portions = [];
-    let total = 0;
-    for (let i = 0; i < 3; i++) {
-        const v = Math.random() + 0.2;
-        portions.push(v);
-        total += v;
-    }
-    portions = portions.map(p => p / total);
-
-    const products = picked.map((movie, i) => ({
-        name: movie.name,
-        price: parseFloat((orderAmount * portions[i]).toFixed(2)),
-        qty: Math.floor(Math.random() * 3),
-        img: `/images/${movie.img}`
-    }));
-
-    // Build product list HTML
-    const listEl = document.getElementById('taskProductList');
-    listEl.innerHTML = products.map(p => `
-        <div class="tp-product-item">
-            <img class="tp-product-img" src="${p.img}" alt="${p.name}">
-            <div class="tp-product-info">
-                <div class="tp-product-name">${p.name}</div>
-                <div class="tp-product-price">${p.price.toFixed(2)} <span class="tp-product-qty">x ${p.qty}</span></div>
-            </div>
-        </div>
-    `).join('');
-
-    // Fill financial summary
-    document.getElementById('taskTotalAmount').textContent = '$' + orderAmount.toFixed(2);
-    document.getElementById('taskCommissionAmount').textContent = '$' + currentEarned.toFixed(2);
-    document.getElementById('taskExpectedReturn').textContent = '$' + (orderAmount + currentEarned).toFixed(2);
-    document.getElementById('taskCashGap').textContent = '$' + cashGap.toFixed(2);
-
-    // Also update ad image for fallback
-    document.getElementById('adImage').src = products[0].img;
-
-    document.getElementById('timerBox').style.display = 'none';
-    document.getElementById('adSpace').style.display = 'none';
-    document.getElementById('taskPresentation').style.display = 'block';
-}
-
-async function confirmTask() {
-    // Cash gap: check new cashGaps array first, fall back to old single fields
-    let nextTaskNum = getCompleted() + 1;
-    let cashGap = 0;
-    if (userDataCache.cashGaps && Array.isArray(userDataCache.cashGaps) && userDataCache.cashGaps.length > 0) {
-        const match = userDataCache.cashGaps.find(g => g.taskNum === nextTaskNum);
-        if (match) cashGap = parseFloat(match.amount || 0);
-    } else {
-        // Fallback to old single fields
-        let rawCashGap = parseFloat(userDataCache.cashGap || 0);
-        let cashGapTaskNum = parseInt(userDataCache.cashGapTaskNum || 0);
-        cashGap = (cashGapTaskNum > 0 && nextTaskNum === cashGapTaskNum) ? rawCashGap : 0;
-    }
-
-    if (cashGap > 0) {
-        showCustomAlert("Insufficient account balance. Please recharge to clear the cash gap of $" + cashGap.toFixed(2) + " before submitting the order.");
-        return;
-    }
-
-    const btn = document.getElementById('confirmTaskBtn');
-    btn.textContent = 'Submitting...';
-    btn.disabled = true;
-    btn.style.opacity = '0.7';
-
-    try {
-        let currentCount = getCompleted();
-        if (currentCount >= TOTAL_TASKS) {
-            showCustomAlert("You have completed all your tasks for today!");
-            document.getElementById('taskPresentation').style.display = 'none';
-            btn.textContent = 'Submit Order';
-            btn.disabled = false;
-            btn.style.opacity = '1';
-            return;
-        }
-
-        // Save order record to transaction history
-        const user = auth.currentUser;
-        if (user) {
-            const increment = firebase.firestore.FieldValue.increment;
-            const userRef = db.collection('users').doc(user.uid);
-            
-            const prevCompleted = getCompleted();
-            const newTaskNo = prevCompleted + 1;
-            const prevBalance = parseFloat(userDataCache.balance || 0);
-
-            const orderRecord = {
-                type: 'Order Commission',
-                amount: parseFloat(currentEarned.toFixed(2)),
-                date: firebase.firestore.Timestamp.now(),
-                orderAmount: parseFloat((prevBalance + parseFloat(userDataCache.cashGap || 0)).toFixed(2)),
-                taskNo: newTaskNo
-            };
-
-            await userRef.update({
-                tasksCompleted: increment(1),
-                balance: increment(currentEarned),
-                earnToday: increment(currentEarned),
-                earnTotal: increment(currentEarned),
-                transactions: firebase.firestore.FieldValue.arrayUnion(orderRecord)
-            });
-        }
-
-        document.getElementById('taskPresentation').style.display = 'none';
-        document.getElementById('successBox').style.display = 'flex';
-
-        let seconds2 = 3;
-        const countdown2El = document.getElementById('countdown2');
-        countdown2El.textContent = seconds2;
-
-        if (window.taskPhaseInterval) clearInterval(window.taskPhaseInterval);
-        window.taskPhaseInterval = setInterval(() => {
-            seconds2--;
-            countdown2El.textContent = seconds2;
-            if (seconds2 <= 0) { 
-                clearInterval(window.taskPhaseInterval); 
-                document.getElementById('successBox').style.display = 'none';
-                updateDisplay();
+    const updatedStakes = data.stakes.map(stake => {
+        if (stake.status === 'active') {
+            const endMs = stake.endDate && stake.endDate.seconds ? 
+                          (stake.endDate.seconds * 1000) : 
+                          new Date(stake.endDate || 0).getTime();
+            if (now >= endMs) {
+                hasExpired = true;
+                totalReturn += parseFloat(stake.expectedReturn || 0);
                 
-                btn.textContent = 'Submit Order';
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                
-                startAutoTask(); // Auto-start next task!
+                newTransactions.push({
+                    type: 'Staking Return',
+                    amount: parseFloat(stake.expectedReturn || 0),
+                    date: firebase.firestore.Timestamp.now(),
+                    coin: stake.coin,
+                    duration: stake.duration
+                });
+
+                return { ...stake, status: 'completed' };
             }
-        }, 1000);
-    } catch (error) {
-        showCustomAlert("Error saving task: " + error.message);
-        btn.textContent = 'Submit Order';
-        btn.disabled = false;
-        btn.style.opacity = '1';
+        }
+        return stake;
+    });
+
+    if (hasExpired) {
+        isCheckingStakes = true;
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = db.collection('users').doc(user.uid);
+                const updates = {
+                    balance: firebase.firestore.FieldValue.increment(totalReturn),
+                    stakes: updatedStakes
+                };
+                if (newTransactions.length > 0) {
+                    updates.transactions = firebase.firestore.FieldValue.arrayUnion(...newTransactions);
+                }
+                await userRef.update(updates);
+            }
+        } catch (e) {
+            console.error("Error processing expired stakes:", e);
+        } finally {
+            isCheckingStakes = false;
+        }
     }
 }
 
-window.closeWidget = function() {
-    if (window.taskPhaseInterval) clearInterval(window.taskPhaseInterval);
-    document.getElementById('timerBox').style.display = 'none';
-    document.getElementById('taskPresentation').style.display = 'none';
-    document.getElementById('successBox').style.display = 'none';
-    
-    const btn = document.getElementById('confirmTaskBtn');
-    if (btn) {
-        btn.textContent = 'Submit Order';
-        btn.disabled = false;
-        btn.style.opacity = '1';
+window.submitStake = async function() {
+    if (!userDataCache) return;
+    const amountInput = document.getElementById('stakeAmount');
+    const amount = parseFloat(amountInput.value) || 0;
+    const mainBalance = parseFloat(userDataCache.balance || 0);
+
+    if (isNaN(amount) || amount < 1) {
+        showCustomAlert("Please enter a valid amount to stake (Minimum $1.00).");
+        return;
     }
+
+    if (amount > mainBalance) {
+        showCustomAlert("Insufficient balance. Your available balance is $" + mainBalance.toFixed(2));
+        return;
+    }
+
+    const config = COIN_CONFIG[selectedCoin];
+    let rateMultiplier = 1.0;
+    if (selectedDuration === 15) rateMultiplier = 1.25;
+    else if (selectedDuration === 30) rateMultiplier = 1.50;
+    const dailyRate = config.baseRate * rateMultiplier;
+    const dailyYield = amount * (dailyRate / 100);
+    const totalInterest = dailyYield * selectedDuration;
+    const expectedReturn = amount + totalInterest;
+
+    const confirmMessage = `Are you sure you want to stake $${amount.toFixed(2)} on ${selectedCoin} for ${selectedDuration} days?\n\n` +
+                           `• Daily Yield Rate: ${dailyRate.toFixed(2)}%\n` +
+                           `• Est. Daily Yield: $${dailyYield.toFixed(2)}\n` +
+                           `• Total Profit: +$${totalInterest.toFixed(2)}\n` +
+                           `• Expected Payout: $${expectedReturn.toFixed(2)}`;
+
+    showCustomConfirm(confirmMessage, async () => {
+        const btn = document.getElementById('stakeNowBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Processing...";
+            btn.style.opacity = "0.7";
+        }
+
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = db.collection('users').doc(user.uid);
+                
+                const stakeId = "stake_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+                const startDate = firebase.firestore.Timestamp.now();
+                const durationMs = selectedDuration * 24 * 60 * 60 * 1000;
+                const endDate = firebase.firestore.Timestamp.fromMillis(startDate.toMillis() + durationMs);
+
+                const newStake = {
+                    id: stakeId,
+                    coin: selectedCoin,
+                    amount: amount,
+                    duration: selectedDuration,
+                    dailyRate: dailyRate,
+                    startDate: startDate,
+                    endDate: endDate,
+                    expectedReturn: expectedReturn,
+                    status: "active"
+                };
+
+                const newTx = {
+                    type: "Staking Deposit",
+                    amount: -amount,
+                    date: startDate,
+                    coin: selectedCoin,
+                    duration: selectedDuration
+                };
+
+                await userRef.update({
+                    balance: firebase.firestore.FieldValue.increment(-amount),
+                    stakes: firebase.firestore.FieldValue.arrayUnion(newStake),
+                    transactions: firebase.firestore.FieldValue.arrayUnion(newTx)
+                });
+
+                if (amountInput) amountInput.value = "";
+                calculateStakedReturn();
+                showCustomAlert(`Staked $${amount.toFixed(2)} on ${selectedCoin} successfully!`);
+            }
+        } catch (err) {
+            console.error("Error staking:", err);
+            showCustomAlert("Failed to complete staking operation: " + err.message);
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "Stake Now";
+                btn.style.opacity = "1";
+            }
+        }
+    });
 };
 
-window.showGradeInfo = function() {
-    document.getElementById('gradeModal').style.display = 'block';
-};
+window.updateDisplay = function() {
+    if (!userDataCache) return;
+    
+    const balance = parseFloat(userDataCache.balance || 0);
+    const availBalEl = document.getElementById('availBalance');
+    if (availBalEl) availBalEl.textContent = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    
+    calculateStakedReturn();
 
-window.closeGradeInfo = function() {
-    document.getElementById('gradeModal').style.display = 'none';
+    // Render active stakes list
+    const listEl = document.getElementById('activeStakesList');
+    if (!listEl) return;
+
+    const stakes = userDataCache.stakes || [];
+    if (stakes.length === 0) {
+        listEl.innerHTML = `
+            <div class="empty-stakes-card">
+                <div class="empty-icon">🔒</div>
+                <p>No active staking operations found.</p>
+                <span>Select an asset and terms above to start earning high-yield daily returns.</span>
+            </div>
+        `;
+        return;
+    }
+
+    // Sort: active first, then by startDate descending
+    const sortedStakes = [...stakes].sort((a, b) => {
+        if (a.status === 'active' && b.status !== 'active') return -1;
+        if (a.status !== 'active' && b.status === 'active') return 1;
+        
+        const timeA = a.startDate && a.startDate.seconds ? a.startDate.seconds : new Date(a.startDate || 0).getTime() / 1000;
+        const timeB = b.startDate && b.startDate.seconds ? b.startDate.seconds : new Date(b.startDate || 0).getTime() / 1000;
+        return timeB - timeA;
+    });
+
+    const now = Date.now();
+    
+    listEl.innerHTML = sortedStakes.map(stake => {
+        const startMs = stake.startDate && stake.startDate.seconds ? (stake.startDate.seconds * 1000) : new Date(stake.startDate || 0).getTime();
+        const endMs = stake.endDate && stake.endDate.seconds ? (stake.endDate.seconds * 1000) : new Date(stake.endDate || 0).getTime();
+        
+        let progressPercent = 0;
+        let remainingText = "";
+        
+        if (stake.status === 'active') {
+            const elapsed = now - startMs;
+            const totalDuration = endMs - startMs;
+            progressPercent = Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
+            
+            const remainingMs = endMs - now;
+            if (remainingMs <= 0) {
+                remainingText = "Ready to claim";
+                progressPercent = 100;
+            } else {
+                const remDays = Math.floor(remainingMs / (24 * 60 * 60 * 1000));
+                const remHours = Math.floor((remainingMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                if (remDays > 0) {
+                    remainingText = `${remDays}d ${remHours}h remaining`;
+                } else {
+                    const remMins = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
+                    remainingText = `${remHours}h ${remMins}m remaining`;
+                }
+            }
+        } else {
+            progressPercent = 100;
+            remainingText = "Term Completed";
+        }
+
+        const statusClass = stake.status === 'active' ? 'active-pulse' : 'completed-check';
+        const statusLabel = stake.status === 'active' ? 'ACTIVE' : 'RELEASED';
+        const coinName = COIN_CONFIG[stake.coin] ? COIN_CONFIG[stake.coin].name : stake.coin;
+        const formattedStart = new Date(startMs).toLocaleDateString();
+        const formattedEnd = new Date(endMs).toLocaleDateString();
+        
+        let svgColor = "#F7931A";
+        if (COIN_CONFIG[stake.coin]) svgColor = COIN_CONFIG[stake.coin].color;
+
+        return `
+            <div class="stake-card ${stake.status}">
+                <div class="sc-top">
+                    <div class="sc-coin">
+                        <div class="sc-coin-logo" style="background: ${svgColor}20; color: ${svgColor}">
+                            ${stake.coin.substring(0, 2)}
+                        </div>
+                        <div class="sc-coin-meta">
+                            <span class="sc-symbol">${stake.coin}</span>
+                            <span class="sc-name">${coinName}</span>
+                        </div>
+                    </div>
+                    <div class="sc-status-badge ${stake.status}">
+                        <span class="pulse-dot ${statusClass}"></span>
+                        ${statusLabel}
+                    </div>
+                </div>
+                
+                <div class="sc-details-grid">
+                    <div class="sc-detail">
+                        <span class="sc-det-label">Amount Staked</span>
+                        <span class="sc-det-val">$${parseFloat(stake.amount).toFixed(2)}</span>
+                    </div>
+                    <div class="sc-detail">
+                        <span class="sc-det-label">Daily Yield</span>
+                        <span class="sc-det-val interest-txt">${parseFloat(stake.dailyRate).toFixed(2)}%</span>
+                    </div>
+                    <div class="sc-detail">
+                        <span class="sc-det-label">Est. Profit</span>
+                        <span class="sc-det-val interest-txt">+$${(parseFloat(stake.expectedReturn) - parseFloat(stake.amount)).toFixed(2)}</span>
+                    </div>
+                    <div class="sc-detail">
+                        <span class="sc-det-label">Payout Return</span>
+                        <span class="sc-det-val payout-txt">$${parseFloat(stake.expectedReturn).toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <div class="sc-timeline">
+                    <div class="sc-time-row">
+                        <span>Start: ${formattedStart}</span>
+                        <span>End: ${formattedEnd}</span>
+                    </div>
+                    <div class="sc-progress-bar">
+                        <div class="sc-progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+                    <div class="sc-footer-row">
+                        <span class="term-badge">${stake.duration} Days Term</span>
+                        <span class="time-remaining">${remainingText}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 };

@@ -22,11 +22,11 @@ requireAuth((user) => {
             // Order Record page: show only order commission records
             transactions = transactions.filter(tx => tx.type && tx.type.toLowerCase().includes('order'));
         } else {
-            // Transaction History page (from Profile): show only deposit/recharge and withdrawal records
+            // Transaction History page (from Profile): show only deposit/recharge, withdrawal, and staking records
             transactions = transactions.filter(tx => {
                 if (!tx.type) return false;
                 const t = tx.type.toLowerCase();
-                return t.includes('recharge') || t.includes('deposit') || t.includes('withdraw');
+                return t.includes('recharge') || t.includes('deposit') || t.includes('withdraw') || t.includes('return') || t.includes('stake') || t.includes('staking');
             });
         }
 

@@ -1,310 +1,634 @@
-/* ===== Tasks page — dark theme ===== */
+/* ===== Staking Page — Premium Aesthetics ===== */
 
-.ad-container {
-    background: #0f1430;
-    border-radius: 16px;
+/* Base overrides & Content styles */
+body {
+    background-color: #050816;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.page-content {
+    padding: 20px 16px 100px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Staking Panel Wrapper */
+.staking-container {
+    background: linear-gradient(135deg, rgba(20, 27, 65, 0.7) 0%, rgba(10, 14, 38, 0.9) 100%);
+    border-radius: 24px;
     padding: 24px 20px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    margin-bottom: 24px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.staking-header {
     text-align: center;
-    min-height: 300px;
+    margin-bottom: 24px;
+}
+
+.staking-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b, #a1c4fd, #c2e9fb);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shineText 6s linear infinite;
+}
+
+.staking-header p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 6px 0 0;
+    line-height: 1.4;
+}
+
+/* Coin Selector Grid */
+.coin-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.coin-option {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.coin-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.coin-option.active {
+    background: rgba(30, 41, 99, 0.5);
+    border: 1px solid rgba(0, 242, 254, 0.5);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2), inset 0 0 10px rgba(0, 242, 254, 0.1);
+}
+
+.coin-option::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.coin-option.active::before {
+    opacity: 1;
+}
+
+.coin-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
-.ad-placeholder { color: rgba(255, 255, 255, 0.35); font-size: 15px; }
 
-.order-card {
-    background: #0f1430;
-    border-radius: 16px;
-    margin-bottom: 20px;
+.coin-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+.coin-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 6px;
+    z-index: 1;
+}
+
+.coin-symbol {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.coin-name {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.coin-rate {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00f2fe;
+    background: rgba(0, 242, 254, 0.08);
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 242, 254, 0.15);
+    z-index: 1;
+}
+
+/* Term Duration Selector */
+.duration-selector-container {
+    margin-bottom: 24px;
+}
+
+.selector-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.duration-options {
+    display: flex;
+    gap: 8px;
+}
+
+.duration-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 10px 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+
+.duration-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.duration-btn.active {
+    background: linear-gradient(135deg, #0052d4 0%, #4364f7 50%, #6fb1fc 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(67, 100, 247, 0.35);
+}
+
+.duration-btn .dur-days {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.duration-btn .dur-bonus {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+}
+
+.duration-btn.active .dur-bonus {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+}
+
+/* Staking Input Amount Card */
+.stake-input-card {
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
 }
 
-.oc-top, .oc-row { display: flex; justify-content: space-around; padding: 20px; }
-.oc-col { display: flex; flex-direction: column; align-items: center; flex: 1; }
-
-.oc-label { font-size: 11px; color: rgba(255, 255, 255, 0.55); margin-bottom: 8px; text-transform: capitalize; }
-.oc-val   { font-size: 22px; font-weight: 700; color: #fff; }
-
-.oc-mid { border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 15px; }
-.oc-section-title { text-align: center; font-size: 14px; color: #fff; margin: 0; }
-
-.oc-bottom {
-    background: linear-gradient(180deg, #0a0e25 0%, #050816 100%);
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.oc-b-header {
+.input-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.input-title {
+    font-size: 12px;
     font-weight: 500;
-    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
 }
 
-.oc-grade-bg {
-    font-size: 28px;
-    font-weight: 900;
-    font-style: italic;
-    color: rgba(255, 255, 255, 0.08);
-    position: absolute;
-    right: 15px;
-    top: 10px;
-}
-
-.oc-b-buttons { display: flex; gap: 10px; margin-bottom: 12px; }
-
-.oc-btn {
-    flex: 1;
-    padding: 12px 10px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
+.balance-helper {
+    font-size: 12px;
     font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    z-index: 2;
-    position: relative;
-    transition: filter 0.2s;
-}
-
-.oc-btn:hover { filter: brightness(1.1); }
-.oc-btn.primary   { background: linear-gradient(90deg, #0b3b85, #1e40af); }
-.oc-btn.secondary { background: linear-gradient(90deg, #e87b35, #f59e0b); }
-
-.oc-btn-outline {
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    z-index: 2;
-    position: relative;
-    transition: background 0.2s;
-}
-
-.oc-btn-outline:hover { background: rgba(255, 255, 255, 0.05); }
-
-.order-explanation { margin-bottom: 30px; }
-.order-explanation h3 { font-size: 16px; margin-bottom: 12px; color: #fff; }
-.oe-box {
-    background: #0f1430;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.oe-box p {
-    font-size: 13px;
     color: rgba(255, 255, 255, 0.7);
-    line-height: 1.6;
-    margin: 0 0 10px;
 }
-.oe-box p:last-child { margin-bottom: 0; }
 
-.task-complete-msg {
-    display: none;
-    background: rgba(76, 175, 80, 0.15);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+.balance-helper span {
+    color: #00f2fe;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    color: #81c784;
+    padding: 8px 14px;
+    transition: border-color 0.25s;
+}
+
+.input-wrapper:focus-within {
+    border-color: #00f2fe;
+    box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
+}
+
+.currency-symbol {
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-right: 8px;
+}
+
+.input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+}
+
+.input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.max-btn {
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    color: #00f2fe;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.max-btn:hover {
+    background: rgba(0, 242, 254, 0.2);
+    border-color: #00f2fe;
+}
+
+/* Calculation Panel */
+.calculation-summary-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+}
+
+.calc-label {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.calc-value {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.calc-value.highlighted {
+    color: #00f2fe;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 8px 0;
+}
+
+.sub-yield .calc-value {
+    color: #a78bfa;
+}
+
+.total-yield {
+    padding-top: 8px;
     font-size: 15px;
 }
-.task-complete-msg.show { display: block; }
 
-/* ===== Payment Details Card (modal) ===== */
-.task-presentation {
-    display: none;
-    background: #0f1430;
-    border-radius: 16px;
-    padding: 0;
-    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.7), 0 12px 40px rgba(0, 0, 0, 0.5);
-    width: 92%;
-    max-width: 380px;
-    position: fixed;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto;
-    height: fit-content;
-    max-height: 85vh;
-    overflow-y: auto;
-    z-index: 10000;
-    animation: cardSlideIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+.total-yield .calc-label {
+    color: #ffffff;
+    font-weight: 700;
 }
 
-@keyframes cardSlideIn {
-    0%   { transform: translateY(30px) scale(0.95); opacity: 0; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-.tp-title {
+.total-yield .calc-value {
+    color: #10b981;
     font-size: 17px;
     font-weight: 700;
-    color: #fff;
-    text-align: center;
-    padding: 20px 20px 0;
-    margin: 0;
-    letter-spacing: 0.3px;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
-.tp-meta { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-.tp-meta-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
-.tp-meta-label { font-size: 13px; color: rgba(255, 255, 255, 0.55); font-weight: 500; }
-.tp-meta-value { font-size: 13px; color: #fff; font-weight: 700; }
-.tp-order-num  { font-size: 11px; letter-spacing: 0.3px; word-break: break-all; }
-
-.tp-products { padding: 12px 20px; }
-.tp-product-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.tp-product-item:last-child { border-bottom: none; }
-
-.tp-product-img {
-    width: 52px;
-    height: 68px;
-    object-fit: cover;
-    border-radius: 8px;
-    background: #050816;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.tp-product-info { flex: 1; min-width: 0; }
-.tp-product-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 3px;
-}
-.tp-product-price { font-size: 12px; color: rgba(255, 255, 255, 0.55); }
-.tp-product-qty   { font-size: 12px; color: rgba(255, 255, 255, 0.55); margin-left: 6px; }
-
-.tp-summary { padding: 14px 20px 6px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
-.tp-summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.tp-summary-row:last-child { border-bottom: none; }
-.tp-summary-label { font-size: 13px; color: rgba(255, 255, 255, 0.7); font-weight: 500; }
-.tp-summary-value { font-size: 14px; font-weight: 700; color: #fff; }
-.tp-summary-value.tp-highlight { color: #ec4899; }
-
-.diamond-icon { display: inline-block; margin-right: 2px; }
-
-.task-presentation .btn-confirm-task { margin: 12px 20px 20px; width: calc(100% - 40px); }
-
-.btn-confirm-task {
+/* Submit Button */
+.stake-submit-btn {
+    width: 100%;
     padding: 14px;
-    background: linear-gradient(90deg, #ff4d6d, #d946ef);
-    color: #fff;
+    background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc);
+    background-size: 200% auto;
+    color: #ffffff;
     border: none;
     border-radius: 30px;
     font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(67, 100, 247, 0.3);
+}
+
+.stake-submit-btn:hover {
+    background-position: right center;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(67, 100, 247, 0.45);
+}
+
+.stake-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Active Stakes Section */
+.active-stakes-section {
+    margin-top: 30px;
+}
+
+.active-stakes-section h3 {
+    font-size: 16px;
     font-weight: 600;
-    cursor: pointer;
-    transition: filter 0.2s, transform 0.2s;
-    display: block;
+    color: #ffffff;
+    margin-bottom: 16px;
+    padding-left: 4px;
 }
-.btn-confirm-task:hover { filter: brightness(1.1); transform: translateY(-2px); }
-.btn-confirm-task:active { transform: translateY(0); }
 
-/* ===== Widget modals for timer and success ===== */
-#timerBox, #successBox {
-    position: fixed !important;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto; height: fit-content; z-index: 10000;
-    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.7), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-    width: 90%; max-width: 340px;
-    background: #0f1430;
-    color: #fff;
-    border-radius: 16px;
+/* Active Staking Card Styles */
+.stake-card {
+    background: rgba(20, 27, 65, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 28px;
-    color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    line-height: 1;
-    z-index: 100;
-    transition: color 0.2s;
-}
-.close-btn:hover { color: #fff; }
-
-/* ===== Grade Modal ===== */
-.grade-modal {
-    display: none;
-    background: #0f1430;
-    border-radius: 20px;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.7), 0 8px 32px rgba(0, 0, 0, 0.4);
-    width: 90%;
-    max-width: 340px;
-    position: fixed;
-    top: 0; bottom: 0; left: 0; right: 0;
-    margin: auto;
-    height: fit-content;
-    z-index: 10001;
-    animation: slideInUp 0.4s ease;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-@keyframes slideInUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
-}
-
-.gm-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 20px; }
-.gm-list  { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-
-.gm-item {
+    border-radius: 18px;
     padding: 16px;
-    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.stake-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+.stake-card.completed {
+    opacity: 0.85;
+    background: rgba(10, 15, 30, 0.6);
+}
+
+.sc-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-left: 5px solid rgba(255, 255, 255, 0.1);
-    background: #050816;
+    margin-bottom: 16px;
 }
 
-.gm-item.gold     { border-left-color: #ffd700; }
-.gm-item.silver   { border-left-color: #c0c0c0; }
-.gm-item.premium  { border-left-color: #ff4d4d; }
+.sc-coin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-.gm-level { font-weight: 700; font-size: 15px; color: #fff; }
-.gm-range { font-weight: 600; font-size: 14px; color: #ec4899; }
-.gm-note  { font-size: 12px; color: rgba(255, 255, 255, 0.5); margin: 0; }
+.sc-coin-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sc-coin-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-symbol {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.sc-name {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.sc-status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sc-status-badge.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.sc-status-badge.completed {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.pulse-dot.active-pulse {
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulse 1.8s infinite;
+}
+
+.pulse-dot.completed-check {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Details Grid */
+.sc-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.sc-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sc-det-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+
+.sc-det-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.sc-det-val.interest-txt {
+    color: #00f2fe;
+}
+
+.sc-det-val.payout-txt {
+    color: #10b981;
+}
+
+/* Timeline & Progress Bar */
+.sc-timeline {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.sc-time-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.sc-progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.sc-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+    border-radius: 10px;
+}
+
+.stake-card.completed .sc-progress-fill {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sc-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.term-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.time-remaining {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.stake-card.completed .time-remaining {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Empty Active Stakes Card */
+.empty-stakes-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 36px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.empty-stakes-card p {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: #ffffff;
+}
+
+.empty-stakes-card span {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+    display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+@keyframes shineText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

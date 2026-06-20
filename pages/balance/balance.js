@@ -10,9 +10,12 @@ requireAuth((user) => {
         if (transactions.length > 0) {
             listEl.innerHTML = '';
             [...transactions].reverse().forEach(tx => {
-                const isPositive = tx.type.includes('Deposit') || tx.type.includes('Recharge') || tx.type.includes('Commission');
-                const iconClass = (tx.type.includes('Deposit') || tx.type.includes('Recharge')) ? 'deposit' : tx.type.includes('Withdrawal') ? 'withdraw' : 'commission';
-                const iconChar = (tx.type.includes('Deposit') || tx.type.includes('Recharge')) ? '💳' : tx.type.includes('Withdrawal') ? '💸' : '💰';
+                const amount = parseFloat(tx.amount || 0);
+                const txTypeLower = (tx.type || '').toLowerCase();
+                const isWithdrawal = txTypeLower.includes('withdraw') || txTypeLower.includes('withdrawal');
+                const isPositive = !isWithdrawal && amount >= 0;
+                const iconClass = (txTypeLower.includes('deposit') || txTypeLower.includes('recharge') || txTypeLower.includes('return')) ? 'deposit' : isWithdrawal ? 'withdraw' : 'commission';
+                const iconChar = (txTypeLower.includes('deposit') || txTypeLower.includes('recharge') || txTypeLower.includes('return')) ? '💳' : txTypeLower.includes('withdrawal') ? '💸' : '💰';
                 const sign = isPositive ? '+' : '-';
                 const amountClass = isPositive ? 'positive' : 'negative';
                 const txDate = tx.date ? (tx.date.toDate ? tx.date.toDate().toLocaleString() : tx.date) : new Date().toLocaleString();
