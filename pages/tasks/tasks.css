@@ -632,3 +632,166 @@ body {
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+
+/* Detail Hint on Active Cards */
+.sc-detail-hint {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(0, 242, 254, 0.6);
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    letter-spacing: 0.3px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.stake-card.active:hover .sc-detail-hint {
+    color: #00f2fe;
+}
+
+.stake-card.active:hover {
+    border-color: rgba(0, 242, 254, 0.25);
+    box-shadow: 0 6px 24px rgba(0, 242, 254, 0.08);
+}
+
+/* ===== Responsive — Small phones (<=359px) ===== */
+@media (max-width: 359px) {
+    .page-content {
+        padding: 14px 10px 90px;
+    }
+
+    .staking-header h2 { font-size: 20px; }
+    .staking-header p { font-size: 11px; }
+
+    .coin-selector-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .coin-option { padding: 10px 6px; border-radius: 12px; }
+    .coin-icon-wrapper { width: 30px; height: 30px; margin-bottom: 5px; }
+    .coin-symbol { font-size: 12px; }
+    .coin-name { font-size: 10px; }
+    .coin-rate { font-size: 10px; padding: 2px 6px; }
+
+    .duration-options { gap: 6px; }
+    .duration-btn { padding: 8px 2px; border-radius: 10px; }
+    .duration-btn .dur-days { font-size: 12px; }
+    .duration-btn .dur-bonus { font-size: 9px; }
+
+    .stake-input-card { padding: 12px; }
+    .input-title { font-size: 10px; }
+    .balance-helper { font-size: 10px; }
+    .input-wrapper input { font-size: 16px; }
+    .currency-symbol { font-size: 16px; }
+
+    .calculation-summary-card { padding: 12px; }
+    .calc-row { font-size: 12px; }
+    .total-yield .calc-value { font-size: 15px; }
+
+    .stake-submit-btn { padding: 12px; font-size: 14px; }
+
+    .stake-card { padding: 12px; border-radius: 14px; }
+    .sc-coin-logo { width: 26px; height: 26px; font-size: 11px; }
+    .sc-symbol { font-size: 12px; }
+    .sc-status-badge { font-size: 9px; padding: 3px 6px; }
+    .sc-details-grid { gap: 8px; padding: 10px; }
+    .sc-det-label { font-size: 9px; }
+    .sc-det-val { font-size: 12px; }
+    .sc-timeline { font-size: 10px; }
+}
+
+/* ===== Responsive — Standard Mobile (360-479px) ===== */
+@media (min-width: 360px) and (max-width: 479px) {
+    .coin-selector-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
+/* ===== Responsive — Large Mobile / Small Tablet (480-767px) ===== */
+@media (min-width: 480px) and (max-width: 767px) {
+    .page-content { max-width: 520px; }
+
+    .coin-selector-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .staking-container { padding: 28px 24px; }
+}
+
+/* ===== Responsive — Tablet (768px+) ===== */
+@media (min-width: 768px) {
+    .page-content {
+        max-width: 680px;
+        padding: 24px 20px 100px;
+    }
+
+    .staking-container {
+        padding: 32px 28px;
+        border-radius: 28px;
+    }
+
+    .staking-header h2 { font-size: 28px; }
+    .staking-header p { font-size: 14px; }
+
+    .coin-selector-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .coin-option { padding: 18px; border-radius: 18px; }
+    .coin-icon-wrapper { width: 44px; height: 44px; }
+    .coin-symbol { font-size: 16px; }
+    .coin-name { font-size: 12px; }
+    .coin-rate { font-size: 13px; }
+
+    .duration-options { gap: 12px; }
+    .duration-btn { padding: 14px 8px; border-radius: 14px; }
+    .duration-btn .dur-days { font-size: 16px; }
+    .duration-btn .dur-bonus { font-size: 11px; }
+
+    .stake-input-card { padding: 20px; }
+    .input-wrapper input { font-size: 22px; }
+
+    .calculation-summary-card { padding: 20px; }
+    .calc-row { font-size: 14px; padding: 8px 0; }
+    .total-yield .calc-value { font-size: 20px; }
+
+    .stake-submit-btn {
+        padding: 16px;
+        font-size: 18px;
+        border-radius: 32px;
+    }
+
+    .active-stakes-section h3 { font-size: 18px; }
+
+    .stake-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .sc-coin-logo { width: 38px; height: 38px; font-size: 15px; }
+    .sc-symbol { font-size: 16px; }
+    .sc-details-grid { gap: 14px; padding: 16px; }
+    .sc-det-label { font-size: 11px; }
+    .sc-det-val { font-size: 16px; }
+}
+
+/* ===== Responsive — Desktop (1024px+) ===== */
+@media (min-width: 1024px) {
+    .page-content { max-width: 800px; }
+
+    .coin-selector-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+    }
+
+    .staking-container { padding: 36px 32px; }
+
+    .sc-details-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

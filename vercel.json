@@ -6,6 +6,7 @@
   "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/stake-detail", "destination": "/pages/stake-detail/index.html" },
     { "source": "/tasks", "destination": "/pages/tasks/index.html" },
     { "source": "/profile", "destination": "/pages/profile/index.html" },
     { "source": "/balance", "destination": "/pages/balance/index.html" },

@@ -304,8 +304,12 @@ window.updateDisplay = function() {
         let svgColor = "#F7931A";
         if (COIN_CONFIG[stake.coin]) svgColor = COIN_CONFIG[stake.coin].color;
 
+        const clickable = stake.status === 'active';
+        const clickAttr = clickable ? `onclick="window.location.href='/stake-detail?id=${stake.id}'" style="cursor:pointer;"` : '';
+        const detailHint = clickable ? `<div class="sc-detail-hint">Tap for details ›</div>` : '';
+
         return `
-            <div class="stake-card ${stake.status}">
+            <div class="stake-card ${stake.status}" ${clickAttr}>
                 <div class="sc-top">
                     <div class="sc-coin">
                         <div class="sc-coin-logo" style="background: ${svgColor}20; color: ${svgColor}">
@@ -354,6 +358,7 @@ window.updateDisplay = function() {
                         <span class="time-remaining">${remainingText}</span>
                     </div>
                 </div>
+                ${detailHint}
             </div>
         `;
     }).join('');
