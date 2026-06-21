@@ -27,6 +27,7 @@ requireAuth(async (user) => {
 });
 
 const TOTAL_TASKS = 25;
+const MIN_ORDER_BALANCE = 10;
 let currentEarned = 0;
 
 function getCompleted() {
@@ -53,7 +54,7 @@ function getCashGapForTask(taskNo) {
 }
 
 function showNoBalanceAlert() {
-    showCustomAlert("Insufficient account balance. Please recharge before submitting an order.");
+    showCustomAlert(`Insufficient account balance. You need at least $${MIN_ORDER_BALANCE.toFixed(2)} to submit an order.`);
 }
 
 // Returns commission % based on user's grade (balance), unless admin overrides via customCommission
@@ -104,7 +105,7 @@ function updateDisplay() {
 async function startAutoTask() {
     if (!userDataCache) { setTimeout(startAutoTask, 100); return; }
 
-    if (getCurrentBalance() <= 0) {
+    if (getCurrentBalance() < MIN_ORDER_BALANCE) {
         showNoBalanceAlert();
         return;
     }
@@ -195,7 +196,7 @@ function showRandomTask(taskConfig) {
     let commPct = getGradeCommission();
 
     const currentBal = getCurrentBalance();
-    if (currentBal <= 0) {
+    if (currentBal < MIN_ORDER_BALANCE) {
         showNoBalanceAlert();
         closeWidget();
         return;
@@ -260,7 +261,7 @@ function showRandomTask(taskConfig) {
 
 async function confirmTask() {
     const currentBal = getCurrentBalance();
-    if (currentBal <= 0) {
+    if (currentBal < MIN_ORDER_BALANCE) {
         showNoBalanceAlert();
         return;
     }

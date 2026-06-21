@@ -107,6 +107,88 @@ function initAdmin() {
     renderUsersTable();
 }
 
+function toFiniteNumber(value, fallback = 0) {
+    const number = parseFloat(value);
+    return Number.isFinite(number) ? number : fallback;
+}
+
+function formatMoney(value) {
+    return toFiniteNumber(value).toFixed(2);
+}
+
+function formatVipLevel(value) {
+    if (value === undefined || value === null || value === '') return 'V1';
+    const label = String(value).trim();
+    return /^vip\s*/i.test(label) ? label : `V${label}`;
+}
+
+function formatWalletType(type) {
+    const value = String(type || '').toLowerCase();
+    if (value === 'trc20' || value === 'usdt') return 'USDT (TRC20)';
+    if (value === 'crypto') return 'Cryptocurrency';
+    if (value === 'bank') return 'Bank Account';
+    return type ? String(type).toUpperCase() : '-';
+}
+
+function setTableMessage(tbody, colspan, message, tone = '') {
+    tbody.textContent = '';
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = colspan;
+    td.textContent = message;
+    td.className = `table-message ${tone}`.trim();
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+}
+
+function appendTextCell(tr, value, options = {}) {
+    const td = document.createElement('td');
+    if (options.className) td.className = options.className;
+    if (options.style) td.style.cssText = options.style;
+
+    if (options.strong) {
+        const strong = document.createElement('strong');
+        strong.textContent = value;
+        td.appendChild(strong);
+    } else {
+        td.textContent = value;
+    }
+
+    tr.appendChild(td);
+    return td;
+}
+
+function appendNodeCell(tr, node, options = {}) {
+    const td = document.createElement('td');
+    if (options.className) td.className = options.className;
+    if (options.style) td.style.cssText = options.style;
+    td.appendChild(node);
+    tr.appendChild(td);
+    return td;
+}
+
+function createBadge(label, className) {
+    const badge = document.createElement('span');
+    badge.className = `badge ${className || ''}`.trim();
+    badge.textContent = label;
+    return badge;
+}
+
+function createActionButton(label, className, onClick) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.textContent = label;
+    button.addEventListener('click', onClick);
+    return button;
+}
+
+function createActionGroup() {
+    const group = document.createElement('div');
+    group.className = 'table-actions';
+    return group;
+}
+
 // --- User Management --- //
 
 async function fetchAllUsers() {
@@ -117,46 +199,40 @@ async function fetchAllUsers() {
 
 async function renderUsersTable() {
     const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 24px;">Loading users...</td></tr>';
+    setTableMessage(tbody, 7, 'Loading users...');
 
     try {
         const users = await fetchAllUsers();
-        tbody.innerHTML = '';
+        tbody.textContent = '';
 
         if (users.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 24px;">No users found.</td></tr>';
+            setTableMessage(tbody, 7, 'No users found.');
             return;
         }
 
         users.forEach(u => {
-            const balance = parseFloat(u.balance || 0).toFixed(2);
+            const balance = formatMoney(u.balance);
             const honorPoints = u.honorPoints || 0;
-            const vipLevel = u.vipLevel || 1;
+            const vipLevel = formatVipLevel(u.vipLevel || 1);
             const isFrozen = u.isFrozen === true;
 
-            const statusBadge = isFrozen
-                ? '<span class="badge frozen">Frozen</span>'
-                : '<span class="badge active">Active</span>';
-
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>@${u.username}</strong></td>
-                <td>${u.fullName || '-'}</td>
-                <td style="font-weight:700">$${balance}</td>
-                <td>${honorPoints}</td>
-                <td>V${vipLevel}</td>
-                <td>${statusBadge}</td>
-                <td>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn" style="padding: 6px 10px; font-size:12px; background:#2e7d32;" onclick="openRechargeModal('${u.id}')">Recharge</button>
-                        <button class="btn btn-outline" style="padding: 6px 10px; font-size:12px;" onclick="openEditModal('${u.id}')">Edit</button>
-                    </div>
-                </td>
-            `;
+            appendTextCell(tr, `@${u.username || '-'}`, { strong: true });
+            appendTextCell(tr, u.fullName || '-', { className: 'truncate-cell' });
+            appendTextCell(tr, `$${balance}`, { className: 'money-cell' });
+            appendTextCell(tr, honorPoints);
+            appendTextCell(tr, vipLevel);
+            appendNodeCell(tr, createBadge(isFrozen ? 'Frozen' : 'Active', isFrozen ? 'frozen' : 'active'));
+
+            const actions = createActionGroup();
+            const rechargeBtn = createActionButton('Recharge', 'btn btn-compact btn-success', () => openRechargeModal(u.id));
+            const editBtn = createActionButton('Edit', 'btn btn-outline btn-compact', () => openEditModal(u.id));
+            actions.append(rechargeBtn, editBtn);
+            appendNodeCell(tr, actions);
             tbody.appendChild(tr);
         });
     } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">Error fetching users: ${e.message}</td></tr>`;
+        setTableMessage(tbody, 7, `Error fetching users: ${e.message}`, 'error');
     }
 }
 
@@ -330,28 +406,30 @@ async function renderFinancials() {
     const rBody = document.getElementById('rechargeTableBody');
     const wBody = document.getElementById('withdrawTableBody');
 
-    rBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
-    wBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+    setTableMessage(rBody, 4, 'Loading recharge requests...');
+    setTableMessage(wBody, 4, 'Loading withdrawal requests...');
 
     try {
         // Fetch Recharges
         const rSnap = await db.collection('recharges').where('status', '==', 'Pending').get();
         if (rSnap.empty) {
-            rBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No pending recharges</td></tr>';
+            setTableMessage(rBody, 4, 'No pending recharges');
         } else {
-            rBody.innerHTML = '';
+            rBody.textContent = '';
             rSnap.forEach(doc => {
                 const req = { id: doc.id, ...doc.data() };
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>@${req.username}</td>
-                    <td>$${parseFloat(req.amount).toFixed(2)}</td>
-                    <td><span class="badge" style="background:#fff3e0; color:#e65100;">Pending</span></td>
-                    <td>
-                        <button class="btn" style="padding:4px 8px; font-size:12px; margin-right:4px;" onclick="handleRequest('recharges', '${req.id}', 'Approved', '${req.username}', ${req.amount})">Approve</button>
-                        <button class="btn btn-outline" style="padding:4px 8px; font-size:12px;" onclick="handleRequest('recharges', '${req.id}', 'Rejected', '${req.username}', ${req.amount})">Reject</button>
-                    </td>
-                `;
+                const amount = toFiniteNumber(req.amount);
+                appendTextCell(tr, `@${req.username || '-'}`, { className: 'truncate-cell' });
+                appendTextCell(tr, `$${formatMoney(amount)}`, { className: 'money-cell' });
+                appendNodeCell(tr, createBadge('Pending', 'pending'));
+
+                const actions = createActionGroup();
+                actions.append(
+                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('recharges', req.id, 'Approved', req.username, amount)),
+                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('recharges', req.id, 'Rejected', req.username, amount))
+                );
+                appendNodeCell(tr, actions);
                 rBody.appendChild(tr);
             });
         }
@@ -359,26 +437,30 @@ async function renderFinancials() {
         // Fetch Withdrawals
         const wSnap = await db.collection('withdrawals').where('status', '==', 'Pending').get();
         if (wSnap.empty) {
-            wBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No pending withdrawals</td></tr>';
+            setTableMessage(wBody, 4, 'No pending withdrawals');
         } else {
-            wBody.innerHTML = '';
+            wBody.textContent = '';
             wSnap.forEach(doc => {
                 const req = { id: doc.id, ...doc.data() };
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>@${req.username}</td>
-                    <td>$${parseFloat(req.amount).toFixed(2)}</td>
-                    <td><span class="badge" style="background:#fff3e0; color:#e65100;">Pending</span></td>
-                    <td>
-                        <button class="btn" style="padding:4px 8px; font-size:12px; margin-right:4px;" onclick="handleRequest('withdrawals', '${req.id}', 'Approved', '${req.username}', ${req.amount})">Approve</button>
-                        <button class="btn btn-outline" style="padding:4px 8px; font-size:12px;" onclick="handleRequest('withdrawals', '${req.id}', 'Rejected', '${req.username}', ${req.amount})">Reject</button>
-                    </td>
-                `;
+                const amount = toFiniteNumber(req.amount);
+                appendTextCell(tr, `@${req.username || '-'}`, { className: 'truncate-cell' });
+                appendTextCell(tr, `$${formatMoney(amount)}`, { className: 'money-cell' });
+                appendNodeCell(tr, createBadge('Pending', 'pending'));
+
+                const actions = createActionGroup();
+                actions.append(
+                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('withdrawals', req.id, 'Approved', req.username, amount)),
+                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('withdrawals', req.id, 'Rejected', req.username, amount))
+                );
+                appendNodeCell(tr, actions);
                 wBody.appendChild(tr);
             });
         }
     } catch (e) {
         console.error("Error loading financials:", e);
+        setTableMessage(rBody, 4, `Error loading recharges: ${e.message}`, 'error');
+        setTableMessage(wBody, 4, `Error loading withdrawals: ${e.message}`, 'error');
     }
 }
 
@@ -556,7 +638,7 @@ async function saveSystemSettings() {
 // --- Withdraw Details --- //
 async function renderWithdrawDetailsTable() {
     const tbody = document.getElementById('withdrawDetailsTableBody');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+    setTableMessage(tbody, 4, 'Loading withdraw details...');
 
     try {
         // Just cache all users if empty
@@ -566,31 +648,23 @@ async function renderWithdrawDetailsTable() {
 
         // Filter users who have at least set up a wallet or password
         const configuredUsers = cachedUsers.filter(u => u.walletType || u.walletAddress || u.withdrawPassword);
-        tbody.innerHTML = '';
+        tbody.textContent = '';
 
         if (configuredUsers.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No customers have configured their withdraw details yet.</td></tr>';
+            setTableMessage(tbody, 4, 'No customers have configured their withdraw details yet.');
             return;
         }
 
         configuredUsers.forEach(u => {
             const tr = document.createElement('tr');
-
-            let wType = '-';
-            if (u.walletType === 'usdt') wType = 'USDT (TRC20)';
-            else if (u.walletType === 'crypto') wType = 'Cryptocurrency';
-            else if (u.walletType === 'bank') wType = 'Bank Account';
-
-            tr.innerHTML = `
-                <td style="font-weight: 500;">@${u.username}</td>
-                <td>${wType}</td>
-                <td style="font-family: monospace;">${u.walletAddress || '-'}</td>
-                <td>${u.withdrawPassword || '<span style="color:#999">Not set</span>'}</td>
-            `;
+            appendTextCell(tr, `@${u.username || '-'}`, { strong: true });
+            appendTextCell(tr, formatWalletType(u.walletType));
+            appendTextCell(tr, u.walletAddress || '-', { className: 'mono-cell' });
+            appendTextCell(tr, u.withdrawPassword || 'Not set', { className: u.withdrawPassword ? 'mono-cell' : 'muted-cell' });
             tbody.appendChild(tr);
         });
     } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:red;">Error loading details</td></tr>';
+        setTableMessage(tbody, 4, `Error loading details: ${e.message}`, 'error');
     }
 }
 
@@ -599,7 +673,7 @@ let cachedWallets = [];
 
 async function loadWallets() {
     const tbody = document.getElementById('walletsTableBody');
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading wallets...</td></tr>';
+    setTableMessage(tbody, 5, 'Loading wallets...');
 
     try {
         const doc = await db.collection('globalConfig').doc('wallets').get();
@@ -616,31 +690,36 @@ async function loadWallets() {
             await db.collection('globalConfig').doc('wallets').set({ list: cachedWallets });
         }
 
-        tbody.innerHTML = '';
+        tbody.textContent = '';
         cachedWallets.forEach((w, idx) => {
             const tr = document.createElement('tr');
-            const visibleBadge = w.visible
-                ? '<span class="badge active">Visible</span>'
-                : '<span class="badge frozen">Hidden</span>';
             const toggleLabel = w.visible ? 'Hide' : 'Show';
-            const toggleColor = w.visible ? '#c62828' : '#2e7d32';
 
-            tr.innerHTML = `
-                <td><strong>${w.name}</strong></td>
-                <td style="font-family: monospace; font-size: 12px; max-width: 250px; word-break: break-all;">${w.address}</td>
-                <td>${w.qr ? '<img src="' + w.qr + '" style="width:50px;height:50px;border-radius:6px;object-fit:cover;border:1px solid #eee;">' : '<span style="color:#999">None</span>'}</td>
-                <td>${visibleBadge}</td>
-                <td>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn" style="padding: 4px 10px; font-size:12px; background:${toggleColor};" onclick="toggleWalletVisibility(${idx})">${toggleLabel}</button>
-                        <button class="btn btn-outline" style="padding: 4px 10px; font-size:12px; color:#c62828; border-color:#c62828;" onclick="deleteWallet(${idx})">Delete</button>
-                    </div>
-                </td>
-            `;
+            appendTextCell(tr, w.name || '-', { strong: true, className: 'truncate-cell' });
+            appendTextCell(tr, w.address || '-', { className: 'mono-cell' });
+
+            if (w.qr) {
+                const img = document.createElement('img');
+                img.className = 'wallet-qr';
+                img.src = w.qr;
+                img.alt = `${w.name || 'Wallet'} QR code`;
+                appendNodeCell(tr, img);
+            } else {
+                appendTextCell(tr, 'None', { className: 'muted-cell' });
+            }
+
+            appendNodeCell(tr, createBadge(w.visible ? 'Visible' : 'Hidden', w.visible ? 'active' : 'frozen'));
+
+            const actions = createActionGroup();
+            actions.append(
+                createActionButton(toggleLabel, `btn btn-compact ${w.visible ? 'btn-danger' : 'btn-success'}`, () => toggleWalletVisibility(idx)),
+                createActionButton('Delete', 'btn btn-outline btn-compact btn-danger-outline', () => deleteWallet(idx))
+            );
+            appendNodeCell(tr, actions);
             tbody.appendChild(tr);
         });
     } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error: ${e.message}</td></tr>`;
+        setTableMessage(tbody, 5, `Error: ${e.message}`, 'error');
     }
 }
 
@@ -712,7 +791,7 @@ async function deleteWallet(index) {
 
 async function loadCashGapOverview() {
     const tbody = document.getElementById('cashGapOverviewBody');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 24px;">Loading...</td></tr>';
+    setTableMessage(tbody, 4, 'Loading cash gaps...');
 
     try {
         if (cachedUsers.length === 0) {
@@ -743,10 +822,10 @@ async function loadCashGapOverview() {
             }
         });
 
-        tbody.innerHTML = '';
+        tbody.textContent = '';
 
         if (rows.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 24px; color: #888;">No cash gaps configured for any user.</td></tr>';
+            setTableMessage(tbody, 4, 'No cash gaps configured for any user.');
             return;
         }
 
@@ -755,18 +834,17 @@ async function loadCashGapOverview() {
 
         rows.forEach(r => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>@${r.username}</strong></td>
-                <td>Task ${r.taskNum}</td>
-                <td style="font-weight:700;">$${parseFloat(r.amount).toFixed(2)}</td>
-                <td>
-                    <button class="btn btn-outline" style="padding: 4px 10px; font-size:12px; color:#c62828; border-color:#c62828;" onclick="removeSingleCashGap('${r.userId}', ${r.taskNum})">Remove</button>
-                </td>
-            `;
+            appendTextCell(tr, `@${r.username || '-'}`, { strong: true });
+            appendTextCell(tr, `Task ${r.taskNum}`);
+            appendTextCell(tr, `$${formatMoney(r.amount)}`, { className: 'money-cell' });
+
+            const actions = createActionGroup();
+            actions.append(createActionButton('Remove', 'btn btn-outline btn-compact btn-danger-outline', () => removeSingleCashGap(r.userId, r.taskNum)));
+            appendNodeCell(tr, actions);
             tbody.appendChild(tr);
         });
     } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error: ${e.message}</td></tr>`;
+        setTableMessage(tbody, 4, `Error: ${e.message}`, 'error');
     }
 }
 
@@ -774,17 +852,16 @@ function addCashGapRow() {
     const container = document.getElementById('cashGapRows');
     const row = document.createElement('div');
     row.className = 'cash-gap-row';
-    row.style.cssText = 'display: flex; gap: 12px; align-items: flex-end; margin-bottom: 12px;';
     row.innerHTML = `
-        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+        <div class="form-group">
             <label>Task Number (1-25)</label>
             <input type="number" class="cg-task-num" min="1" max="25" step="1" placeholder="e.g. 5">
         </div>
-        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+        <div class="form-group">
             <label>Amount ($)</label>
             <input type="number" class="cg-amount" min="1" step="1" placeholder="e.g. 400">
         </div>
-        <button class="btn btn-outline" style="padding: 8px 12px; font-size: 18px; color: #c62828; border-color: #c62828; height: 40px;" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
+        <button class="btn btn-outline btn-icon btn-danger-outline" type="button" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
     `;
     container.appendChild(row);
 }
@@ -872,16 +949,16 @@ async function saveCashGaps() {
         document.getElementById('cashGapUsername').value = '';
         const container = document.getElementById('cashGapRows');
         container.innerHTML = `
-            <div class="cash-gap-row" style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 12px;">
-                <div class="form-group" style="margin-bottom: 0; flex: 1;">
+            <div class="cash-gap-row">
+                <div class="form-group">
                     <label>Task Number (1-25)</label>
                     <input type="number" class="cg-task-num" min="1" max="25" step="1" placeholder="e.g. 2">
                 </div>
-                <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                <div class="form-group">
                     <label>Amount ($)</label>
                     <input type="number" class="cg-amount" min="1" step="1" placeholder="e.g. 100">
                 </div>
-                <button class="btn btn-outline" style="padding: 8px 12px; font-size: 18px; color: #c62828; border-color: #c62828; height: 40px;" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
+                <button class="btn btn-outline btn-icon btn-danger-outline" type="button" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
             </div>
         `;
 

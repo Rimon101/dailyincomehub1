@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Daily Income Hub</title>
+    <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/pages/admin/admin.css">
 </head>
 
@@ -83,8 +84,8 @@
             <div class="section-header">
                 <h2>Financials &amp; Requests</h2>
             </div>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                <div class="card" style="flex: 1; min-width: 320px;">
+            <div class="admin-grid two-col">
+                <div class="card">
                     <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Recharge
                         Requests</h3>
                     <div class="table-scroll">
@@ -105,7 +106,7 @@
                     </table>
                     </div>
                 </div>
-                <div class="card" style="flex: 1; min-width: 320px;">
+                <div class="card">
                     <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Withdrawal
                         Requests</h3>
                     <div class="table-scroll">
@@ -161,13 +162,13 @@
                 <div style="padding: 24px;">
                     <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">Manually lock a specific
                         user out of tasks.</p>
-                    <div style="display: flex; gap: 12px; align-items: flex-end;">
-                        <div class="form-group" style="margin-bottom: 0; flex: 1;"><label>Username</label><input
+                    <div class="admin-form-grid override-grid">
+                        <div class="form-group"><label>Username</label><input
                                 type="text" id="overrideUsername" placeholder="e.g. john"></div>
-                        <div class="form-group" style="margin-bottom: 0; flex: 1;"><label>Custom Commission
+                        <div class="form-group"><label>Custom Commission
                                 (%)</label><input type="number" id="overrideCommission"
                                 placeholder="Leave empty for default" step="0.1"></div>
-                        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                        <div class="form-group">
                             <label>Task Status</label>
                             <select id="overrideTaskStatus">
                                 <option value="closed">Closed (Locked)</option>
@@ -231,20 +232,20 @@
             <div class="card" style="margin-bottom: 24px;">
                 <h3 style="padding: 16px; border-bottom: 1px solid var(--border); font-size: 16px;">Add New Wallet</h3>
                 <div style="padding: 24px;">
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
-                        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                    <div class="admin-form-grid wallet-form-grid">
+                        <div class="form-group">
                             <label>Wallet Name</label>
                             <input type="text" id="newWalletName" placeholder="e.g. USDT (TRC20)">
                         </div>
-                        <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 250px;">
+                        <div class="form-group">
                             <label>Wallet Address</label>
                             <input type="text" id="newWalletAddress" placeholder="e.g. TH1bpx...">
                         </div>
-                        <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 250px;">
+                        <div class="form-group">
                             <label>QR Code Image URL</label>
                             <input type="text" id="newWalletQR" placeholder="e.g. /images/usdt_qr.jpg or https://...">
                         </div>
-                        <button class="btn" onclick="addNewWallet()" style="height: 40px;">Add Wallet</button>
+                        <button class="btn" onclick="addNewWallet()">Add Wallet</button>
                     </div>
                     <p style="font-size: 12px; color: #888; margin-top: 12px;">QR image can be a local path (e.g. /images/qr.jpg) or a full URL.</p>
                 </div>
@@ -283,21 +284,21 @@
                         <input type="text" id="cashGapUsername" placeholder="e.g. john">
                     </div>
                     <div id="cashGapRows">
-                        <div class="cash-gap-row" style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 12px;">
-                            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                        <div class="cash-gap-row">
+                            <div class="form-group">
                                 <label>Task Number (1-25)</label>
                                 <input type="number" class="cg-task-num" min="1" max="25" step="1" placeholder="e.g. 2">
                             </div>
-                            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                            <div class="form-group">
                                 <label>Amount ($)</label>
                                 <input type="number" class="cg-amount" min="1" step="1" placeholder="e.g. 100">
                             </div>
-                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 18px; color: #c62828; border-color: #c62828; height: 40px;" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
+                            <button class="btn btn-outline btn-icon btn-danger-outline" type="button" onclick="this.closest('.cash-gap-row').remove()" title="Remove row">&times;</button>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 12px; margin-top: 8px;">
-                        <button class="btn btn-outline" style="padding: 8px 16px; font-size: 13px;" onclick="addCashGapRow()">+ Add Another</button>
-                        <button class="btn" style="padding: 8px 20px;" onclick="saveCashGaps()">Save Cash Gaps</button>
+                    <div class="form-actions-inline">
+                        <button class="btn btn-outline" onclick="addCashGapRow()">+ Add Another</button>
+                        <button class="btn" onclick="saveCashGaps()">Save Cash Gaps</button>
                     </div>
                     <p style="font-size: 12px; color: #888; margin-top: 12px;">This will merge with existing cash gaps. If a task number already exists, its amount will be updated.</p>
                 </div>
