@@ -284,7 +284,7 @@ window.showCustomConfirm = function (message, onConfirm) {
     setTimeout(() => overlay.classList.add('show'), 10);
 };
 
-// --- Start of Telegram Support Button ---
+// --- Customer Service link sync (applies admin-configured csLink to the /service page) ---
 if (!window.location.pathname.includes('admin')) {
     (function () {
         var csLink = 'https://t.me/Daily Income Hubs22';
@@ -295,93 +295,5 @@ if (!window.location.pathname.includes('admin')) {
                 if (contactBtn) contactBtn.href = csLink;
             }
         });
-
-        var btn = document.createElement('div');
-        btn.id = 'draggable-chat-btn';
-        btn.innerHTML = '💬';
-        btn.title = 'Chat on Telegram';
-
-        var saved = JSON.parse(localStorage.getItem('chatBtnPos') || 'null');
-        Object.assign(btn.style, {
-            position: 'fixed',
-            bottom: (saved ? 'auto' : '24px'),
-            right:   (saved ? 'auto' : '20px'),
-            left:    (saved ? saved.left + 'px' : 'auto'),
-            top:     (saved ? saved.top  + 'px' : 'auto'),
-            width: '52px', height: '52px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #0088cc, #0077b5)',
-            color: '#fff', fontSize: '24px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(0,136,204,0.45)',
-            cursor: 'grab', zIndex: '99999',
-            userSelect: 'none', transition: 'box-shadow 0.2s',
-        });
-
-        document.body.appendChild(btn);
-
-        var dragging = false, moved = false, ox = 0, oy = 0;
-
-        btn.addEventListener('mousedown', function (e) {
-            dragging = true; moved = false;
-            ox = e.clientX - btn.getBoundingClientRect().left;
-            oy = e.clientY - btn.getBoundingClientRect().top;
-            btn.style.cursor = 'grabbing';
-            btn.style.transition = 'none';
-            e.preventDefault();
-        });
-
-        btn.addEventListener('touchstart', function (e) {
-            dragging = true; moved = false;
-            var t = e.touches[0];
-            ox = t.clientX - btn.getBoundingClientRect().left;
-            oy = t.clientY - btn.getBoundingClientRect().top;
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('mousemove', function (e) {
-            if (!dragging) return;
-            moved = true;
-            btn.style.left = (e.clientX - ox) + 'px';
-            btn.style.top  = (e.clientY - oy) + 'px';
-            btn.style.right = 'auto'; btn.style.bottom = 'auto';
-        });
-
-        document.addEventListener('touchmove', function (e) {
-            if (!dragging) return;
-            moved = true;
-            var t = e.touches[0];
-            btn.style.left = (t.clientX - ox) + 'px';
-            btn.style.top  = (t.clientY - oy) + 'px';
-            btn.style.right = 'auto'; btn.style.bottom = 'auto';
-        }, { passive: false });
-
-        function stopDrag() {
-            if (!dragging) return;
-            dragging = false;
-            btn.style.cursor = 'grab';
-            btn.style.transition = 'box-shadow 0.2s';
-            if (moved) {
-                localStorage.setItem('chatBtnPos', JSON.stringify({
-                    left: parseInt(btn.style.left),
-                    top:  parseInt(btn.style.top)
-                }));
-            }
-        }
-
-        document.addEventListener('mouseup', function () {
-            if (dragging && !moved) {
-                window.open(csLink, '_blank');
-            }
-            stopDrag();
-        });
-
-        document.addEventListener('touchend', function () {
-            if (dragging && !moved) {
-                window.open(csLink, '_blank');
-            }
-            stopDrag();
-        });
     })();
 }
-// --- End of Telegram Support Button ---
