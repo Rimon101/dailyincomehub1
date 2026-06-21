@@ -85,3 +85,22 @@ async function handleRegister(e) {
         submitBtn.disabled = false;
     }
 }
+
+function initPasswordToggles() {
+    document.querySelectorAll('.password-toggle').forEach((toggle) => {
+        const input = toggle.closest('.input-box')?.querySelector('input');
+        const icon = toggle.querySelector('i');
+        if (!input || !icon) return;
+
+        toggle.addEventListener('click', () => {
+            const shouldShow = input.type === 'password';
+            input.type = shouldShow ? 'text' : 'password';
+            toggle.setAttribute('aria-label', shouldShow ? 'Hide password' : 'Show password');
+            toggle.setAttribute('aria-pressed', shouldShow ? 'true' : 'false');
+            icon.classList.toggle('fa-eye', !shouldShow);
+            icon.classList.toggle('fa-eye-slash', shouldShow);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initPasswordToggles);

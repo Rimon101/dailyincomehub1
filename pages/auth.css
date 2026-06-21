@@ -172,6 +172,10 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.auth-body .input-box.has-password-toggle input {
+    padding-right: 58px;
+}
+
 .auth-body .input-box input::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
@@ -179,6 +183,37 @@
 .auth-body .input-box input:focus {
     border-color: #ff1493;
     box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
+}
+
+.auth-body .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    transition: background-color 0.2s, color 0.2s;
+    z-index: 3;
+}
+
+.auth-body .password-toggle:hover,
+.auth-body .password-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    outline: none;
+}
+
+.auth-body .password-toggle i {
+    font-size: 16px;
+    pointer-events: none;
 }
 
 .auth-body .forgot {
