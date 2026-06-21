@@ -111,6 +111,7 @@ body {
 .nav-item {
     padding: 12px 20px;
     display: block;
+    height: auto;
     color: var(--text-main);
     text-decoration: none;
     cursor: pointer;
