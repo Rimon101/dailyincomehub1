@@ -677,10 +677,11 @@ async function loadWallets() {
 
     try {
         const doc = await db.collection('globalConfig').doc('wallets').get();
-        cachedWallets = doc.exists && doc.data().list ? doc.data().list : [];
+        const walletConfigExists = doc.exists && Array.isArray(doc.data().list);
+        cachedWallets = walletConfigExists ? doc.data().list : [];
 
-        // Auto-seed with existing wallets if Firestore is empty
-        if (cachedWallets.length === 0) {
+        // Auto-seed defaults only before the admin has configured wallets.
+        if (!walletConfigExists) {
             cachedWallets = [
                 { name: 'USDT (TRC20)', address: 'TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS', qr: '/images/usdt_qr.jpg', visible: true },
                 { name: 'USDT (TRC20) 2', address: 'TYvxcH6mEcCtuQgd6L6igWrtrBtEwQs9Zh', qr: '/images/usdtqr2.jpg', visible: true },
@@ -691,6 +692,11 @@ async function loadWallets() {
         }
 
         tbody.textContent = '';
+        if (cachedWallets.length === 0) {
+            setTableMessage(tbody, 5, 'No wallets configured. Add a wallet above to enable recharge payments.');
+            return;
+        }
+
         cachedWallets.forEach((w, idx) => {
             const tr = document.createElement('tr');
             const toggleLabel = w.visible ? 'Hide' : 'Show';

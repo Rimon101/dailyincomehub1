@@ -33,9 +33,11 @@ requireAuth((user) => {
 });
 
 async function loadRechargeWallets() {
+    let hasWalletConfig = false;
     try {
         const doc = await db.collection('globalConfig').doc('wallets').get();
-        if (doc.exists && doc.data().list) {
+        if (doc.exists && Array.isArray(doc.data().list)) {
+            hasWalletConfig = true;
             // Only show visible wallets
             walletList = doc.data().list.filter(w => w.visible === true);
         }
@@ -43,8 +45,8 @@ async function loadRechargeWallets() {
         console.warn('Could not load wallets from Firestore, using defaults.', e);
     }
 
-    // Fallback to defaults if no wallets configured
-    if (walletList.length === 0) {
+    // Fallback to defaults only before the admin has configured wallets.
+    if (!hasWalletConfig) {
         walletList = [
             { name: 'USDT (TRC20)', address: 'TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS', qr: '/images/usdt_qr.jpg' },
             { name: 'USDT (TRC20) 2', address: 'TYvxcH6mEcCtuQgd6L6igWrtrBtEwQs9Zh', qr: '/images/usdtqr2.jpg' },
@@ -56,6 +58,15 @@ async function loadRechargeWallets() {
     // Build the dropdown
     const select = document.getElementById('paymentMethod');
     select.innerHTML = '';
+    if (walletList.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = 'No payment wallet available';
+        select.appendChild(opt);
+        updateWalletInfo();
+        return;
+    }
+
     walletList.forEach((w, i) => {
         const opt = document.createElement('option');
         opt.value = i;
@@ -70,14 +81,23 @@ async function loadRechargeWallets() {
 function updateWalletInfo() {
     const idx = parseInt(document.getElementById('paymentMethod').value);
     const wallet = walletList[idx];
-    if (!wallet) return;
-
     const addrElem = document.getElementById('walletAddr');
     const qrElem = document.getElementById('qrImage');
     const labelElem = document.getElementById('walletLabel');
+    const submitBtn = document.getElementById('submitRechargeBtn');
+
+    if (!wallet) {
+        labelElem.textContent = 'Payment wallet unavailable';
+        addrElem.textContent = 'Please contact customer service.';
+        qrElem.removeAttribute('src');
+        qrElem.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = true;
+        return;
+    }
 
     labelElem.textContent = wallet.name + ' Address';
     addrElem.textContent = wallet.address;
+    if (submitBtn) submitBtn.disabled = false;
     if (wallet.qr) {
         qrElem.src = wallet.qr;
         qrElem.style.display = 'block';
