@@ -1,0 +1,58 @@
+/* ===== Terms / Privacy — dark theme ===== */
+
+.legal-card {
+    background: #0f1430;
+    border-radius: 16px;
+    padding: 30px 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin: 20px 15px 120px;
+}
+
+.legal-updated {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 16px;
+}
+
+.legal-lead {
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 16px;
+}
+
+.legal-note {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 24px;
+}
+
+.legal-contact-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(90deg, #ec4899, #d946ef);
+    color: #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: filter 0.2s, transform 0.2s;
+}
+
+.legal-contact-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+    .legal-card {
+        padding: 40px 30px;
+    }
+    .legal-lead {
+        font-size: 16px;
+    }
+}

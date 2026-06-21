@@ -18,6 +18,8 @@
     { "source": "/forgot-password", "destination": "/pages/forgot-password/index.html" },
     { "source": "/reset-password", "destination": "/pages/reset-password/index.html" },
     { "source": "/service", "destination": "/pages/service/index.html" },
+    { "source": "/terms", "destination": "/pages/terms/index.html" },
+    { "source": "/privacy", "destination": "/pages/privacy/index.html" },
     { "source": "/trust", "destination": "/pages/trust/index.html" },
     { "source": "/history", "destination": "/pages/history/index.html" },
     { "source": "/team", "destination": "/pages/team/index.html" },
