@@ -48,10 +48,10 @@ async function loadRechargeWallets() {
     // Fallback to defaults only before the admin has configured wallets.
     if (!hasWalletConfig) {
         walletList = [
-            { name: 'USDT (TRC20)', address: 'TH1bpxgFfMFYV1mpKYuwPGmwxJPNcUd8fS', qr: '/images/usdt_qr.jpg' },
-            { name: 'USDT (TRC20) 2', address: 'TYvxcH6mEcCtuQgd6L6igWrtrBtEwQs9Zh', qr: '/images/usdtqr2.jpg' },
-            { name: 'BTC', address: '13vu7bkBABq5914M7RsyNxP81GSyRqk59c', qr: '/images/btc_qr.jpg' },
-            { name: 'BTC 2', address: 'bc1q5f848r66248ymjen6wgsa4unrl77hsd7ck4n3e', qr: '/images/usdt_qr2.jpg' }
+            { name: 'TRON (TRC20)', address: 'THPmUqNpmeASTyydeKfbiXtrLjiykfX4t5', qr: '/images/TRC20qr.jpg' },
+            { name: 'Ethereum (ERC20)', address: '0x3EC1C382b996Ed3794e806366c4a5a92Ee1494D4', qr: '/images/erc20qr.jpg' },
+            //{ name: 'BTC', address: '13vu7bkBABq5914M7RsyNxP81GSyRqk59c', qr: '/images/btc_qr.jpg' },
+            //{ name: 'BTC 2', address: 'bc1q5f848r66248ymjen6wgsa4unrl77hsd7ck4n3e', qr: '/images/usdt_qr2.jpg' }
         ];
     }
 
