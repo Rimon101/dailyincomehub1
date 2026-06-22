@@ -250,16 +250,34 @@ body {
     .menu-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* ===== Upcoming Movies Section ===== */
-.movie-section {
+/* ===== Featured Product Sections (Alibaba / AliExpress / Amazon) ===== */
+.product-section {
     padding: 15px;
+    margin-bottom: 6px;
 }
 
-.movie-section h2 {
+.product-section .ps-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.product-section .ps-head h2 {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 15px;
     color: #fff;
+    margin: 0;
+}
+
+.product-section .ps-brand {
+    height: 32px;
+    width: auto;
+    max-width: 100px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #111827;
+    padding: 4px 8px;
 }
 
 .movie-row {
@@ -701,11 +719,18 @@ body {
     .movie-section {
         padding: 20px;
     }
+    .product-section {
+        padding: 20px;
+    }
     .movie-card {
         min-width: 180px;
     }
     .movie-card img {
         height: 260px;
+    }
+    .product-section .ps-brand {
+        height: 38px;
+        max-width: 120px;
     }
     .ai-card {
         margin: 20px;

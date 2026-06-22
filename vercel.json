@@ -27,6 +27,7 @@
     { "source": "/bind-wallet", "destination": "/pages/bind-wallet/index.html" },
     { "source": "/change-password", "destination": "/pages/change-password/index.html" },
     { "source": "/language", "destination": "/pages/language/index.html" },
+    { "source": "/grade-model", "destination": "/pages/grade-model/index.html" },
     { "source": "/edit-profile", "destination": "/pages/profile/edit-profile.html" },
     { "source": "/withdraw-management", "destination": "/pages/profile/withdraw-management.html" }
   ],
@@ -51,6 +52,8 @@
     { "source": "/pages/bind-wallet/index.html", "destination": "/bind-wallet", "statusCode": 301 },
     { "source": "/pages/change-password/index.html", "destination": "/change-password", "statusCode": 301 },
     { "source": "/pages/language/index.html", "destination": "/language", "statusCode": 301 },
+    { "source": "/pages/grade-model/index.html", "destination": "/grade-model", "statusCode": 301 },
+    { "source": "/grade-model.html", "destination": "/grade-model", "statusCode": 301 },
     { "source": "/admin.html", "destination": "/admin", "statusCode": 301 },
     { "source": "/balance.html", "destination": "/balance", "statusCode": 301 },
     { "source": "/bind-wallet.html", "destination": "/bind-wallet", "statusCode": 301 },
