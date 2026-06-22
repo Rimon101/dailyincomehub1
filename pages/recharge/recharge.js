@@ -38,8 +38,8 @@ async function loadRechargeWallets() {
         const doc = await db.collection('globalConfig').doc('wallets').get();
         if (doc.exists && Array.isArray(doc.data().list)) {
             hasWalletConfig = true;
-            // Only show visible wallets
-            walletList = doc.data().list.filter(w => w.visible === true);
+            // Older wallet records may not have a visible flag yet.
+            walletList = doc.data().list.filter(w => w && w.visible !== false);
         }
     } catch (e) {
         console.warn('Could not load wallets from Firestore, using defaults.', e);
@@ -85,6 +85,7 @@ function updateWalletInfo() {
     const qrElem = document.getElementById('qrImage');
     const labelElem = document.getElementById('walletLabel');
     const submitBtn = document.getElementById('submitRechargeBtn');
+    const copyBtn = document.querySelector('.copy-btn-inner');
 
     if (!wallet) {
         labelElem.textContent = 'Payment wallet unavailable';
@@ -92,14 +93,17 @@ function updateWalletInfo() {
         qrElem.removeAttribute('src');
         qrElem.style.display = 'none';
         if (submitBtn) submitBtn.disabled = true;
+        if (copyBtn) copyBtn.disabled = true;
         return;
     }
 
     labelElem.textContent = wallet.name + ' Address';
     addrElem.textContent = wallet.address;
     if (submitBtn) submitBtn.disabled = false;
+    if (copyBtn) copyBtn.disabled = false;
     if (wallet.qr) {
         qrElem.src = wallet.qr;
+        qrElem.alt = wallet.name + ' QR code';
         qrElem.style.display = 'block';
     } else {
         qrElem.style.display = 'none';
@@ -107,8 +111,10 @@ function updateWalletInfo() {
 }
 
 function copyAddress() {
-    const addr = document.getElementById('walletAddr').textContent;
-    if (addr === '---') return;
+    const idx = parseInt(document.getElementById('paymentMethod').value, 10);
+    const wallet = walletList[idx];
+    if (!wallet || !wallet.address) return;
+    const addr = wallet.address;
     navigator.clipboard.writeText(addr).then(() => {
         showCustomAlert('Wallet address copied to clipboard!');
     }).catch(() => {
