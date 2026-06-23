@@ -426,8 +426,8 @@ async function renderFinancials() {
 
                 const actions = createActionGroup();
                 actions.append(
-                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('recharges', req.id, 'Approved', req.username, amount)),
-                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('recharges', req.id, 'Rejected', req.username, amount))
+                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('recharges', req.id, 'Approved', req.uid, req.username, amount)),
+                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('recharges', req.id, 'Rejected', req.uid, req.username, amount))
                 );
                 appendNodeCell(tr, actions);
                 rBody.appendChild(tr);
@@ -450,8 +450,8 @@ async function renderFinancials() {
 
                 const actions = createActionGroup();
                 actions.append(
-                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('withdrawals', req.id, 'Approved', req.username, amount)),
-                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('withdrawals', req.id, 'Rejected', req.username, amount))
+                    createActionButton('Approve', 'btn btn-compact btn-success', () => handleRequest('withdrawals', req.id, 'Approved', req.uid, req.username, amount)),
+                    createActionButton('Reject', 'btn btn-outline btn-compact btn-danger-outline', () => handleRequest('withdrawals', req.id, 'Rejected', req.uid, req.username, amount))
                 );
                 appendNodeCell(tr, actions);
                 wBody.appendChild(tr);
@@ -464,20 +464,37 @@ async function renderFinancials() {
     }
 }
 
-async function handleRequest(type, reqId, newStatus, username, amount) {
+async function handleRequest(type, reqId, newStatus, uid, username, amount) {
     showCustomConfirm(`Are you sure you want to ${newStatus} this ${type} request for $${amount}?`, async function () {
         try {
-            // 1. Update Request Status in global table
-            await db.collection(type).doc(reqId).update({ status: newStatus });
+            // Find User Document by uid (or fallback to username)
+            let userDoc = null;
+            if (uid) {
+                const docSnap = await db.collection('users').doc(uid).get();
+                if (docSnap.exists) {
+                    userDoc = docSnap;
+                }
+            }
+            if (!userDoc && username) {
+                const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
+                if (!userQuery.empty) {
+                    userDoc = userQuery.docs[0];
+                }
+            }
+
+            if (!userDoc) {
+                throw new Error("User not found in database.");
+            }
+
+            const userData = userDoc.data();
+            const batch = db.batch();
+            const requestRef = db.collection(type).doc(reqId);
+            const userRef = db.collection('users').doc(userDoc.id);
+
+            // 1. Update Request Status
+            batch.update(requestRef, { status: newStatus });
 
             if (newStatus === 'Approved') {
-                // Find User Document by username to update balance
-                const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
-                if (userQuery.empty) throw new Error("User not found in database.");
-
-                const userDoc = userQuery.docs[0];
-                const userData = userDoc.data();
-
                 let currentBalance = parseFloat(userData.balance || 0);
                 let updateData = {};
 
@@ -503,26 +520,26 @@ async function handleRequest(type, reqId, newStatus, username, amount) {
                 txs.push({ type: txTypeLabel, amount: parseFloat(amount), date: txDate });
                 updateData.transactions = txs;
 
-                // Execute User Cloud Update
-                await db.collection('users').doc(userDoc.id).update(updateData);
+                // Queue User Cloud Update in Batch
+                batch.update(userRef, updateData);
+
             } else if (newStatus === 'Rejected') {
                 if (type === 'withdrawals') {
                     // Refund the user balance if withdrawal is rejected
-                    const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
-                    if (!userQuery.empty) {
-                        const userDoc = userQuery.docs[0];
-                        const userData = userDoc.data();
-                        let currentBalance = parseFloat(userData.balance || 0);
-
-                        const txs = userData.transactions || [];
-                        txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
-                        await db.collection('users').doc(userDoc.id).update({
-                            balance: currentBalance + parseFloat(amount),
-                            transactions: txs
-                        });
-                    }
+                    let currentBalance = parseFloat(userData.balance || 0);
+                    const txs = userData.transactions || [];
+                    txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
+                    
+                    // Queue User Cloud Update in Batch
+                    batch.update(userRef, {
+                        balance: currentBalance + parseFloat(amount),
+                        transactions: txs
+                    });
                 }
             }
+
+            // Execute Batch transactionally
+            await batch.commit();
 
             renderFinancials();
         } catch (error) {

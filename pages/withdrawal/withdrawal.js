@@ -69,7 +69,11 @@ async function submitWithdrawal() {
     }
 
     try {
-        await db.collection('withdrawals').add({
+        const batch = db.batch();
+        const withdrawalRef = db.collection('withdrawals').doc();
+        const userRef = db.collection('users').doc(firebase.auth().currentUser.uid);
+
+        batch.set(withdrawalRef, {
             uid: firebase.auth().currentUser.uid,
             username: userDataCache.username, amount: parseFloat(amount),
             status: 'Pending', method: 'trc20', wallet: address,
@@ -80,7 +84,13 @@ async function submitWithdrawal() {
         const newBalance = currentBal - parseFloat(amount);
         const transactions = userDataCache.transactions || [];
         transactions.push({ type: 'Withdrawal Request (Pending)', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
-        await updateUserData({ balance: newBalance, transactions });
+        
+        batch.update(userRef, {
+            balance: newBalance,
+            transactions: transactions
+        });
+
+        await batch.commit();
 
         showCustomAlert('Withdrawal of $' + amount.toFixed(2) + ' submitted!\nWaiting for admin approval.', () => {
             window.location.href = '/';
