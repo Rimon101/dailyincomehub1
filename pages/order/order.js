@@ -3,6 +3,9 @@ let userDataCache = null;
 requireAuth(async (user) => {
     listenUserData(async (data) => {
         if (data) {
+            // Daily rollover for commission display only.
+            // NOTE: tasksCompleted is NOT reset here — it is a lifetime counter
+            // gated by the user's VIP level (see getTotalTaskCap).
             const today = new Date().toDateString();
             if (data.lastEarnResetDate !== today) {
                 const lastReset = data.lastEarnResetDate ? new Date(data.lastEarnResetDate) : null;
@@ -14,7 +17,6 @@ requireAuth(async (user) => {
                     await updateUserData({
                         earnYesterday: isConsecutiveDay ? (data.earnToday || 0) : 0,
                         earnToday: 0,
-                        tasksCompleted: 0,
                         lastEarnResetDate: today
                     });
                 } catch (e) { console.warn('Reset failed:', e); }
@@ -26,9 +28,22 @@ requireAuth(async (user) => {
     });
 });
 
-const TOTAL_TASKS = 25;
+const TASKS_PER_VIP = 25;
+const MAX_VIP = 7;
 const MIN_ORDER_BALANCE = 10;
 let currentEarned = 0;
+
+// VIP level controls how many orders a user can complete in total (lifetime).
+// Each level grants 25 more orders: VIP 1 = 25, VIP 2 = 50, ... VIP 7 = 175.
+// Tolerates both string ('VIP 1') and integer storage; clamped to 1–7.
+function getVipLevel() {
+    const raw = parseInt(String((userDataCache && userDataCache.vipLevel) ?? 1).replace(/[^0-9]/g, '')) || 1;
+    return Math.min(Math.max(raw, 1), MAX_VIP);
+}
+
+function getTotalTaskCap() {
+    return getVipLevel() * TASKS_PER_VIP;
+}
 
 function getCompleted() {
     return userDataCache ? parseInt(userDataCache.tasksCompleted || 0) : 0;
@@ -72,14 +87,13 @@ function getGradeCommission() {
 
 function updateDisplay() {
     const completed = getCompleted();
-    
+    const totalCap = getTotalTaskCap();
+
     if (document.getElementById('taskCountVal')) document.getElementById('taskCountVal').textContent = completed;
-    
+
     if (document.getElementById('taskAvailVal')) {
-        let available = 25 - (completed % 25);
-        if (completed >= TOTAL_TASKS) {
-            available = 0;
-        }
+        let available = totalCap - completed;
+        if (available < 0) available = 0;
         document.getElementById('taskAvailVal').textContent = available;
     }
 
@@ -111,8 +125,9 @@ async function startAutoTask() {
     }
 
     const completed = getCompleted();
-    if (completed >= TOTAL_TASKS) {
-        showCustomAlert("You have completed all 25 tasks for today. Please come back tomorrow.");
+    const totalCap = getTotalTaskCap();
+    if (completed >= totalCap) {
+        showCustomAlert(`You have completed all ${totalCap} orders for your VIP ${getVipLevel()} level. Please contact customer service to upgrade your VIP for more orders.`);
         return;
     }
 
@@ -314,8 +329,8 @@ async function confirmTask() {
 
     try {
         let currentCount = getCompleted();
-        if (currentCount >= TOTAL_TASKS) {
-            showCustomAlert("You have completed all your tasks for today!");
+        if (currentCount >= getTotalTaskCap()) {
+            showCustomAlert(`You have completed all ${getTotalTaskCap()} orders for your VIP ${getVipLevel()} level. Please contact customer service to upgrade your VIP for more orders.`);
             document.getElementById('taskPresentation').style.display = 'none';
             btn.textContent = 'Submit Order';
             btn.disabled = false;

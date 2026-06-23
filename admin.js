@@ -281,7 +281,7 @@ async function saveUserEdits() {
 
     const newBalance = parseFloat(document.getElementById('editBalance').value || 0);
     const newHonorPts = parseInt(document.getElementById('editHonorPoints').value || 0);
-    const newVip = parseInt(document.getElementById('editVipLevel').value || 1);
+    const newVip = Math.min(Math.max(parseInt(document.getElementById('editVipLevel').value || 1) || 1, 1), 7);
     const newEarnToday = parseFloat(document.getElementById('editEarnToday').value || 0);
     const newEarnYesterday = parseFloat(document.getElementById('editEarnYesterday').value || 0);
     const newCashGap = parseFloat(document.getElementById('editCashGap').value || 0);
