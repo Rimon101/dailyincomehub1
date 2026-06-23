@@ -467,79 +467,91 @@ async function renderFinancials() {
 async function handleRequest(type, reqId, newStatus, uid, username, amount) {
     showCustomConfirm(`Are you sure you want to ${newStatus} this ${type} request for $${amount}?`, async function () {
         try {
-            // Find User Document by uid (or fallback to username)
-            let userDoc = null;
-            if (uid) {
-                const docSnap = await db.collection('users').doc(uid).get();
-                if (docSnap.exists) {
-                    userDoc = docSnap;
+            await db.runTransaction(async (transaction) => {
+                const requestRef = db.collection(type).doc(reqId);
+                const requestSnap = await transaction.get(requestRef);
+
+                if (!requestSnap.exists) {
+                    throw new Error("Request not found.");
                 }
-            }
-            if (!userDoc && username) {
-                const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
-                if (!userQuery.empty) {
-                    userDoc = userQuery.docs[0];
+
+                const requestData = requestSnap.data();
+                if (requestData.status !== 'Pending') {
+                    throw new Error("This request has already been processed.");
                 }
-            }
 
-            if (!userDoc) {
-                throw new Error("User not found in database.");
-            }
+                // Find User Document by uid (or fallback to username)
+                let userRef = null;
+                let userData = null;
 
-            const userData = userDoc.data();
-            const batch = db.batch();
-            const requestRef = db.collection(type).doc(reqId);
-            const userRef = db.collection('users').doc(userDoc.id);
-
-            // 1. Update Request Status
-            batch.update(requestRef, { status: newStatus });
-
-            if (newStatus === 'Approved') {
-                let currentBalance = parseFloat(userData.balance || 0);
-                let updateData = {};
-
-                // Process depending on type
-                if (type === 'recharges') {
-                    updateData.balance = currentBalance + parseFloat(amount);
-
-                    if (!userData.firstRechargeDone) {
-                        const amt = parseFloat(amount);
-                        let newPoints = 1;
-                        if (amt >= 1000 && amt <= 9999) newPoints = 2;
-                        else if (amt >= 10000) newPoints = 3;
-
-                        updateData.honorPoints = newPoints;
-                        updateData.firstRechargeDone = true;
+                if (uid) {
+                    const tempRef = db.collection('users').doc(uid);
+                    const tempSnap = await transaction.get(tempRef);
+                    if (tempSnap.exists) {
+                        userRef = tempRef;
+                        userData = tempSnap.data();
                     }
                 }
 
-                // Append to transactions array
-                const txs = userData.transactions || [];
-                const txTypeLabel = type === 'recharges' ? 'Successful Deposit' : 'Successful Withdrawal';
-                const txDate = firebase.firestore.Timestamp.now();
-                txs.push({ type: txTypeLabel, amount: parseFloat(amount), date: txDate });
-                updateData.transactions = txs;
-
-                // Queue User Cloud Update in Batch
-                batch.update(userRef, updateData);
-
-            } else if (newStatus === 'Rejected') {
-                if (type === 'withdrawals') {
-                    // Refund the user balance if withdrawal is rejected
-                    let currentBalance = parseFloat(userData.balance || 0);
-                    const txs = userData.transactions || [];
-                    txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
-                    
-                    // Queue User Cloud Update in Batch
-                    batch.update(userRef, {
-                        balance: currentBalance + parseFloat(amount),
-                        transactions: txs
-                    });
+                if (!userRef && username) {
+                    const userQuery = await db.collection('users').where('username', '==', username).limit(1).get();
+                    if (!userQuery.empty) {
+                        const tempDoc = userQuery.docs[0];
+                        userRef = db.collection('users').doc(tempDoc.id);
+                        const tempSnap = await transaction.get(userRef);
+                        userData = tempSnap.data();
+                    }
                 }
-            }
 
-            // Execute Batch transactionally
-            await batch.commit();
+                if (!userRef || !userData) {
+                    throw new Error("User not found in database.");
+                }
+
+                // Prepare updates
+                const requestUpdates = { status: newStatus };
+                let userUpdates = null;
+
+                if (newStatus === 'Approved') {
+                    let currentBalance = parseFloat(userData.balance || 0);
+                    userUpdates = {};
+
+                    if (type === 'recharges') {
+                        userUpdates.balance = currentBalance + parseFloat(amount);
+
+                        if (!userData.firstRechargeDone) {
+                            const amt = parseFloat(amount);
+                            let newPoints = 1;
+                            if (amt >= 1000 && amt <= 9999) newPoints = 2;
+                            else if (amt >= 10000) newPoints = 3;
+
+                            userUpdates.honorPoints = newPoints;
+                            userUpdates.firstRechargeDone = true;
+                        }
+                    }
+
+                    const txs = userData.transactions || [];
+                    const txTypeLabel = type === 'recharges' ? 'Successful Deposit' : 'Successful Withdrawal';
+                    txs.push({ type: txTypeLabel, amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
+                    userUpdates.transactions = txs;
+
+                } else if (newStatus === 'Rejected') {
+                    if (type === 'withdrawals') {
+                        let currentBalance = parseFloat(userData.balance || 0);
+                        const txs = userData.transactions || [];
+                        txs.push({ type: 'Rejected Withdrawal Refund', amount: parseFloat(amount), date: firebase.firestore.Timestamp.now() });
+                        userUpdates = {
+                            balance: currentBalance + parseFloat(amount),
+                            transactions: txs
+                        };
+                    }
+                }
+
+                // Perform writes inside the transaction
+                transaction.update(requestRef, requestUpdates);
+                if (userUpdates) {
+                    transaction.update(userRef, userUpdates);
+                }
+            });
 
             renderFinancials();
         } catch (error) {
