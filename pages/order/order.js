@@ -116,6 +116,9 @@ async function startAutoTask() {
         return;
     }
 
+    // Ensure product images are loaded so the task can show real product photos
+    await loadProductImages();
+
     let taskConfig = { commission: 2.5, status: 'open' };
     try {
         const configDoc = await db.collection('globalConfig').doc('tasks').get();
@@ -146,27 +149,58 @@ async function startAutoTask() {
     }, 1000);
 }
 
-// Fixed mapping: each image paired with its correct movie name
-const MOVIE_CATALOG = [
-    { name: "Ready or Not Here I Come 2", img: "ready_or_not_here_i_come2.png" },
-    { name: "Undertone", img: "undertone.png" },
-    { name: "You, Me & Tuscany", img: "you.me&tuscany.png" },
-    { name: "Michael", img: "michael.png" },
-    { name: "Iron Maiden", img: "iron_maiden.png" },
-    { name: "Mortal Kombat 2", img: "Mortal_kombat2.png" },
-    { name: "Finding Emily", img: "finding_emily.png" },
-    { name: "Power Ballad", img: "Power_ballad.png" },
-    { name: "Special Correspondents", img: "special_correspondents.webp" },
-    { name: "Mercy", img: "mercy.webp" },
-    { name: "Imperial Dreams", img: "imperial dreams.webp" },
-    { name: "The Ridiculous 6", img: "the_ridiculous6.webp" },
-    { name: "Barry", img: "barry.webp" },
-    { name: "The Fundamentals of Caring", img: "the_fundamentals_of_caring.webp" },
-    { name: "Sword of Destiny", img: "sword_of_destiny.webp" },
-    { name: "Pee-wee's Big Holiday", img: "pee-wee's_big_holiday.webp" },
-    { name: "ARQ", img: "arq.webp" },
-    { name: "Tallulah", img: "Tallulah.webp" }
-];
+// Product images served from /images/product images/WEBP IMAGE/.
+// The manifest lists all available filenames (URL-encoded at render time).
+let PRODUCT_IMAGES = [];
+let productImagesPromise = null;
+
+const PRODUCT_IMAGE_BASE = '/images/' + encodeURIComponent('product images') + '/' + encodeURIComponent('WEBP IMAGE') + '/';
+
+// Friendly display names derived from the raw filename.
+function productDisplayName(fileName) {
+    return fileName
+        .replace(/\.webp$/i, '')
+        .replace(/[_+]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 60) || 'Product';
+}
+
+function loadProductImages() {
+    if (productImagesPromise) return productImagesPromise;
+    productImagesPromise = fetch('/images/product-manifest.json?v=1', { cache: 'force-cache' })
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(data => {
+            PRODUCT_IMAGES = Array.isArray(data.files) ? data.files : [];
+            return PRODUCT_IMAGES;
+        })
+        .catch(() => { PRODUCT_IMAGES = []; return PRODUCT_IMAGES; });
+    return productImagesPromise;
+}
+
+// Pick N unique random products; falls back to movies if none loaded.
+function pickRandomProducts(n) {
+    if (PRODUCT_IMAGES.length === 0) {
+        return Array.from({ length: n }, (_, i) => ({
+            name: 'Product ' + (i + 1),
+            img: '/images/amz-earbuds.webp'
+        }));
+    }
+    const pool = [...PRODUCT_IMAGES];
+    const picked = [];
+    while (picked.length < n && pool.length > 0) {
+        const idx = Math.floor(Math.random() * pool.length);
+        const fileName = pool.splice(idx, 1)[0];
+        picked.push({
+            name: productDisplayName(fileName),
+            img: PRODUCT_IMAGE_BASE + encodeURIComponent(fileName)
+        });
+    }
+    return picked;
+}
+
+// Kick off loading as soon as the script runs so it's ready when a task opens.
+loadProductImages();
 
 function generateOrderNumber() {
     const now = new Date();
@@ -212,25 +246,24 @@ function showRandomTask(taskConfig) {
     document.getElementById('taskMatchTime').textContent = formatMatchTime();
     document.getElementById('taskOrderNumber').textContent = generateOrderNumber();
 
-    // Pick 3 unique movies by shuffling and taking the first 3
-    const shuffled = [...MOVIE_CATALOG].sort(() => Math.random() - 0.5);
-    const picked = shuffled.slice(0, 3);
+    // Pick 3 unique products at random (loaded from the product image manifest)
+    const picked = pickRandomProducts(3);
 
     // Generate random price portions that sum to orderAmount
     let portions = [];
     let total = 0;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < picked.length; i++) {
         const v = Math.random() + 0.2;
         portions.push(v);
         total += v;
     }
     portions = portions.map(p => p / total);
 
-    const products = picked.map((movie, i) => ({
-        name: movie.name,
+    const products = picked.map((product, i) => ({
+        name: product.name,
         price: parseFloat((orderAmount * portions[i]).toFixed(2)),
         qty: Math.floor(Math.random() * 3),
-        img: `/images/${movie.img}`
+        img: product.img
     }));
 
     // Build product list HTML
