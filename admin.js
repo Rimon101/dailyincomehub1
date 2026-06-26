@@ -386,10 +386,17 @@ async function submitManualRecharge() {
             date: firebase.firestore.Timestamp.now()
         });
 
-        await db.collection('users').doc(userId).update({
+        const updates = {
             balance: newBalance,
             transactions: txs
-        });
+        };
+
+        if (!userData.firstRechargeDone) {
+            updates.firstRechargeDone = true;
+            updates.firstRechargeAmount = amount;
+        }
+
+        await db.collection('users').doc(userId).update(updates);
 
         closeRechargeModal();
         await renderUsersTable();
@@ -526,6 +533,7 @@ async function handleRequest(type, reqId, newStatus, uid, username, amount) {
 
                             userUpdates.honorPoints = newPoints;
                             userUpdates.firstRechargeDone = true;
+                            userUpdates.firstRechargeAmount = amt;
                         }
                     }
 

@@ -32,7 +32,7 @@ service cloud.firestore {
       // Allow updates to personal profile or Admin full control, preventing normal users from modifying sensitive admin-only fields
       allow update: if request.auth != null && (
         (request.auth.uid == userId && 
-         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isAdmin', 'vipLevel', 'username', 'email', 'createdAt', 'referredBy', 'referralCodeEntered', 'firstRechargeDone'])) || 
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isAdmin', 'vipLevel', 'username', 'email', 'createdAt', 'referredBy', 'referralCodeEntered', 'firstRechargeDone', 'firstRechargeAmount'])) || 
         isAdmin()
       );
     }

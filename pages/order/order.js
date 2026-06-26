@@ -90,10 +90,10 @@ function getGradeCommission() {
     const custom = parseFloat(userDataCache && userDataCache.customCommission);
     if (!isNaN(custom) && custom > 0) return custom;
 
-    const balance = parseFloat(userDataCache && userDataCache.balance || 0);
-    if (balance >= 2000) return 6;   // Grade 3 — Premium (Amazon)
-    if (balance >= 500)  return 4;   // Grade 2 — Silver (AliExpress)
-    if (balance >= 20)   return 2;   // Grade 1 — Gold (Alibaba)
+    const firstRecharge = parseFloat(userDataCache && userDataCache.firstRechargeAmount || 0);
+    if (firstRecharge >= 2000) return 6;   // Grade 3 — Premium (Amazon)
+    if (firstRecharge >= 500)  return 4;   // Grade 2 — Silver (AliExpress)
+    if (firstRecharge >= 20)   return 2;   // Grade 1 — Gold (Alibaba)
 
     // Fallback to global task settings commission if configured, otherwise default to 2
     const globalComm = parseFloat(taskConfigCache && taskConfigCache.commission);
