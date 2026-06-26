@@ -12,9 +12,7 @@ requireAuth(async (user) => {
 
     listenUserData(async (data) => {
         if (data) {
-            // Daily rollover for commission display only.
-            // NOTE: tasksCompleted is NOT reset here — it is a lifetime counter
-            // gated by the user's VIP level (see getTotalTaskCap).
+            // Daily rollover for commission and task counts.
             const today = new Date().toDateString();
             if (data.lastEarnResetDate !== today) {
                 const lastReset = data.lastEarnResetDate ? new Date(data.lastEarnResetDate) : null;
@@ -23,11 +21,16 @@ requireAuth(async (user) => {
                 const isConsecutiveDay = lastReset && lastReset.toDateString() === yesterday.toDateString();
 
                 try {
-                    await updateUserData({
+                    const updates = {
                         earnYesterday: isConsecutiveDay ? (data.earnToday || 0) : 0,
                         earnToday: 0,
+                        tasksCompleted: 0,
                         lastEarnResetDate: today
-                    });
+                    };
+                    if (data.pendingCashGapOrder) {
+                        updates.pendingCashGapOrder = firebase.firestore.FieldValue.delete();
+                    }
+                    await updateUserData(updates);
                 } catch (e) { console.warn('Reset failed:', e); }
                 return;
             }
