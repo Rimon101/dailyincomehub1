@@ -177,12 +177,12 @@ async function startAutoTask() {
     }, 1000);
 }
 
-// Product images served from /images/product images/WEBP IMAGE/.
+// Product images served from /images/product images/Product/.
 // The manifest lists all available filenames (URL-encoded at render time).
 let PRODUCT_IMAGES = [];
 let productImagesPromise = null;
 
-const PRODUCT_IMAGE_BASE = '/images/' + encodeURIComponent('product images') + '/' + encodeURIComponent('WEBP IMAGE') + '/';
+const PRODUCT_IMAGE_BASE = '/images/' + encodeURIComponent('product images') + '/Product/';
 
 // Friendly display names derived from the raw filename.
 function productDisplayName(fileName) {
@@ -196,7 +196,7 @@ function productDisplayName(fileName) {
 
 function loadProductImages() {
     if (productImagesPromise) return productImagesPromise;
-    productImagesPromise = fetch('/images/product-manifest.json?v=1', { cache: 'force-cache' })
+    productImagesPromise = fetch('/images/product-manifest-product.json?v=1', { cache: 'force-cache' })
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(data => {
             PRODUCT_IMAGES = Array.isArray(data.files) ? data.files : [];
@@ -294,8 +294,9 @@ function showRandomTask(taskConfig) {
     document.getElementById('taskMatchTime').textContent = formatMatchTime();
     document.getElementById('taskOrderNumber').textContent = generateOrderNumber();
 
-    // Pick 3 unique products at random (loaded from the product image manifest)
-    const picked = pickRandomProducts(3);
+    // Pick a random number of products between 3 and 5 (inclusive)
+    const productCount = Math.floor(Math.random() * 3) + 3;
+    const picked = pickRandomProducts(productCount);
 
     // Generate random price portions that sum to orderAmount
     let portions = [];
