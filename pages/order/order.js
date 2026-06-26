@@ -1,6 +1,15 @@
 let userDataCache = null;
+let taskConfigCache = null;
 
 requireAuth(async (user) => {
+    // Listen to global task config
+    db.collection('globalConfig').doc('tasks').onSnapshot(doc => {
+        if (doc.exists) {
+            taskConfigCache = doc.data();
+            updateDisplay();
+        }
+    });
+
     listenUserData(async (data) => {
         if (data) {
             // Daily rollover for commission display only.
@@ -75,14 +84,17 @@ function showNoBalanceAlert() {
 // Returns commission % based on user's grade (balance), unless admin overrides via customCommission
 function getGradeCommission() {
     // Admin override takes priority
-    const custom = parseFloat(userDataCache.customCommission);
+    const custom = parseFloat(userDataCache && userDataCache.customCommission);
     if (!isNaN(custom) && custom > 0) return custom;
 
-    const balance = parseFloat(userDataCache.balance || 0);
+    const balance = parseFloat(userDataCache && userDataCache.balance || 0);
     if (balance >= 2000) return 8;   // Grade 3 — Premium
     if (balance >= 500)  return 5;   // Grade 2 — Silver
     if (balance >= 20)   return 3;   // Grade 1 — Gold
-    return 3; // default
+
+    // Fallback to global task settings commission if configured, otherwise default to 3
+    const globalComm = parseFloat(taskConfigCache && taskConfigCache.commission);
+    return (!isNaN(globalComm) && globalComm > 0) ? globalComm : 3;
 }
 
 function updateDisplay() {
@@ -92,8 +104,10 @@ function updateDisplay() {
     if (document.getElementById('taskCountVal')) document.getElementById('taskCountVal').textContent = completed;
 
     if (document.getElementById('taskAvailVal')) {
-        let available = totalCap - completed;
-        if (available < 0) available = 0;
+        let available = 0;
+        if (completed < totalCap) {
+            available = 25 - (completed % 25);
+        }
         document.getElementById('taskAvailVal').textContent = available;
     }
 
@@ -134,11 +148,7 @@ async function startAutoTask() {
     // Ensure product images are loaded so the task can show real product photos
     await loadProductImages();
 
-    let taskConfig = { commission: 2.5, status: 'open' };
-    try {
-        const configDoc = await db.collection('globalConfig').doc('tasks').get();
-        if (configDoc.exists) taskConfig = configDoc.data();
-    } catch (e) { console.log("Using default task config."); }
+    const taskConfig = taskConfigCache || { commission: 2.5, status: 'open' };
 
     const userTaskStatus = userDataCache.taskStatusOverride || 'default';
     if (userTaskStatus === 'closed' || (taskConfig.status === 'closed' && userTaskStatus !== 'open')) {
@@ -252,10 +262,30 @@ function showRandomTask(taskConfig) {
     }
     
     const nextTaskNum = getCompleted() + 1; // The task about to be shown (1-based)
-    const cashGap = getCashGapForTask(nextTaskNum);
-    let orderAmount = currentBal + cashGap;
+    const staticCashGap = getCashGapForTask(nextTaskNum);
+    let orderAmount = currentBal;
+    let remainingGap = 0;
 
-    currentEarned = orderAmount * (commPct / 100);
+    if (staticCashGap > 0) {
+        const pending = userDataCache.pendingCashGapOrder;
+        if (pending && parseInt(pending.taskNum) === nextTaskNum) {
+            orderAmount = parseFloat(pending.orderAmount || 0);
+        } else {
+            orderAmount = currentBal + staticCashGap;
+            const user = auth.currentUser;
+            if (user) {
+                db.collection('users').doc(user.uid).update({
+                    pendingCashGapOrder: {
+                        taskNum: nextTaskNum,
+                        orderAmount: parseFloat(orderAmount.toFixed(2))
+                    }
+                }).catch(e => console.warn("Failed to save pending cash gap order:", e));
+            }
+        }
+        remainingGap = Math.max(0, orderAmount - currentBal);
+    }
+
+    currentEarned = parseFloat((orderAmount * (commPct / 100)).toFixed(2));
 
     // Fill in match time and order number
     document.getElementById('taskMatchTime').textContent = formatMatchTime();
@@ -277,7 +307,7 @@ function showRandomTask(taskConfig) {
     const products = picked.map((product, i) => ({
         name: product.name,
         price: parseFloat((orderAmount * portions[i]).toFixed(2)),
-        qty: Math.floor(Math.random() * 3),
+        qty: 1,
         img: product.img
     }));
 
@@ -297,7 +327,7 @@ function showRandomTask(taskConfig) {
     document.getElementById('taskTotalAmount').textContent = '$' + orderAmount.toFixed(2);
     document.getElementById('taskCommissionAmount').textContent = '$' + currentEarned.toFixed(2);
     document.getElementById('taskExpectedReturn').textContent = '$' + (orderAmount + currentEarned).toFixed(2);
-    document.getElementById('taskCashGap').textContent = '$' + cashGap.toFixed(2);
+    document.getElementById('taskCashGap').textContent = '$' + remainingGap.toFixed(2);
 
     // Also update ad image for fallback
     document.getElementById('adImage').src = products[0].img;
@@ -315,10 +345,22 @@ async function confirmTask() {
     }
 
     const nextTaskNum = getCompleted() + 1;
-    const cashGap = getCashGapForTask(nextTaskNum);
+    const staticCashGap = getCashGapForTask(nextTaskNum);
+    let remainingGap = 0;
+    let orderAmount = currentBal;
 
-    if (cashGap > 0) {
-        showCustomAlert("Insufficient account balance. Please recharge to clear the cash gap of $" + cashGap.toFixed(2) + " before submitting the order.");
+    if (staticCashGap > 0) {
+        const pending = userDataCache.pendingCashGapOrder;
+        if (pending && parseInt(pending.taskNum) === nextTaskNum) {
+            orderAmount = parseFloat(pending.orderAmount || 0);
+        } else {
+            orderAmount = currentBal + staticCashGap;
+        }
+        remainingGap = Math.max(0, orderAmount - currentBal);
+    }
+
+    if (remainingGap > 0) {
+        showCustomAlert("Insufficient account balance. Please recharge to clear the cash gap of $" + remainingGap.toFixed(2) + " before submitting the order.");
         return;
     }
 
@@ -348,21 +390,41 @@ async function confirmTask() {
             const newTaskNo = prevCompleted + 1;
             const prevBalance = parseFloat(userDataCache.balance || 0);
 
+            // Redefining currentEarned based on final orderAmount to ensure absolute accuracy
+            const commPct = getGradeCommission();
+            const earned = orderAmount * (commPct / 100);
+            const earnedFixed = parseFloat(earned.toFixed(2));
+
             const orderRecord = {
                 type: 'Order Commission',
-                amount: parseFloat(currentEarned.toFixed(2)),
+                amount: earnedFixed,
                 date: firebase.firestore.Timestamp.now(),
-                orderAmount: parseFloat((prevBalance + cashGap).toFixed(2)),
+                orderAmount: parseFloat(orderAmount.toFixed(2)),
                 taskNo: newTaskNo
             };
 
-            await userRef.update({
+            const updates = {
                 tasksCompleted: increment(1),
-                balance: increment(currentEarned),
-                earnToday: increment(currentEarned),
-                earnTotal: increment(currentEarned),
+                balance: increment(earnedFixed),
+                earnToday: increment(earnedFixed),
+                earnTotal: increment(earnedFixed),
                 transactions: firebase.firestore.FieldValue.arrayUnion(orderRecord)
-            });
+            };
+
+            // If a cash gap was active and is now cleared, consume it from user document
+            if (staticCashGap > 0) {
+                const updatedGaps = (userDataCache.cashGaps || []).filter(g => parseInt(g.taskNum) !== newTaskNo);
+                updates.cashGaps = updatedGaps;
+
+                if (parseInt(userDataCache.cashGapTaskNum) === newTaskNo) {
+                    updates.cashGap = 0;
+                    updates.cashGapTaskNum = 0;
+                }
+
+                updates.pendingCashGapOrder = firebase.firestore.FieldValue.delete();
+            }
+
+            await userRef.update(updates);
         }
 
         document.getElementById('taskPresentation').style.display = 'none';
