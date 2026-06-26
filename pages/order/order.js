@@ -91,13 +91,13 @@ function getGradeCommission() {
     if (!isNaN(custom) && custom > 0) return custom;
 
     const balance = parseFloat(userDataCache && userDataCache.balance || 0);
-    if (balance >= 2000) return 8;   // Grade 3 — Premium
-    if (balance >= 500)  return 5;   // Grade 2 — Silver
-    if (balance >= 20)   return 3;   // Grade 1 — Gold
+    if (balance >= 2000) return 6;   // Grade 3 — Premium (Amazon)
+    if (balance >= 500)  return 4;   // Grade 2 — Silver (AliExpress)
+    if (balance >= 20)   return 2;   // Grade 1 — Gold (Alibaba)
 
-    // Fallback to global task settings commission if configured, otherwise default to 3
+    // Fallback to global task settings commission if configured, otherwise default to 2
     const globalComm = parseFloat(taskConfigCache && taskConfigCache.commission);
-    return (!isNaN(globalComm) && globalComm > 0) ? globalComm : 3;
+    return (!isNaN(globalComm) && globalComm > 0) ? globalComm : 2;
 }
 
 function updateDisplay() {
