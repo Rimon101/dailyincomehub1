@@ -164,35 +164,13 @@ window.cancelStake = async function() {
             btn.textContent = 'Cancelling...';
 
             try {
-                const user = auth.currentUser;
-                if (!user) return;
-
-                const userRef = db.collection('users').doc(user.uid);
-
-                // Update the stake status to 'cancelled' in the array
-                const updatedStakes = userDataCache.stakes.map(s => {
-                    if (s.id === currentStake.id) {
-                        return { ...s, status: 'cancelled' };
-                    }
-                    return s;
-                });
-
-                // Refund the original staked amount to balance
+                // Refund + stake-status change happen server-side. The client
+                // sends only the stake id; the function refunds the original
+                // principal (interest forfeited). Balance/stakes are no longer
+                // client-writable.
                 const refundAmount = parseFloat(currentStake.amount);
-
-                const cancelTx = {
-                    type: 'Stake Cancelled (Refund)',
-                    amount: refundAmount,
-                    date: firebase.firestore.Timestamp.now(),
-                    coin: currentStake.coin,
-                    stakeId: currentStake.id
-                };
-
-                await userRef.update({
-                    balance: firebase.firestore.FieldValue.increment(refundAmount),
-                    stakes: updatedStakes,
-                    transactions: firebase.firestore.FieldValue.arrayUnion(cancelTx)
-                });
+                const cancelFn = functions.httpsCallable('cancelStake');
+                await cancelFn({ stakeId: currentStake.id });
 
                 showCustomAlert('Stake cancelled successfully!\\n$' + refundAmount.toFixed(2) + ' has been refunded to your balance.', () => {
                     window.location.href = '/tasks';

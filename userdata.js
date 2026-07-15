@@ -15,6 +15,8 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth();
 const db = firebase.firestore();
+// Callable Cloud Functions handle (only present on pages that load functions-compat)
+const functions = (typeof firebase.functions === 'function') ? firebase.functions() : null;
 
 // Enable offline persistence for faster subsequent loads
 db.enablePersistence().catch(err => {

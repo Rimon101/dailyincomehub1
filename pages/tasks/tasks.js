@@ -80,58 +80,34 @@ window.calculateStakedReturn = function() {
 };
 
 let isCheckingStakes = false;
+// Matured-stake payouts are credited server-side. The client only detects that
+// at least one active stake has passed its end date, then asks the Cloud
+// Function to verify (against server time) and credit. Balance/stakes are no
+// longer client-writable.
 async function checkAndProcessExpiredStakes(data) {
     if (isCheckingStakes) return;
     if (!data || !data.stakes || !Array.isArray(data.stakes)) return;
+    if (!functions) return;
 
     const now = Date.now();
-    let hasExpired = false;
-    let totalReturn = 0;
-    const newTransactions = [];
-
-    const updatedStakes = data.stakes.map(stake => {
-        if (stake.status === 'active') {
-            const endMs = stake.endDate && stake.endDate.seconds ? 
-                          (stake.endDate.seconds * 1000) : 
-                          new Date(stake.endDate || 0).getTime();
-            if (now >= endMs) {
-                hasExpired = true;
-                totalReturn += parseFloat(stake.expectedReturn || 0);
-                
-                newTransactions.push({
-                    type: 'Staking Return',
-                    amount: parseFloat(stake.expectedReturn || 0),
-                    date: firebase.firestore.Timestamp.now(),
-                    coin: stake.coin,
-                    duration: stake.duration
-                });
-
-                return { ...stake, status: 'completed' };
-            }
-        }
-        return stake;
+    const hasExpired = data.stakes.some(stake => {
+        if (stake.status !== 'active') return false;
+        const endMs = stake.endDate && stake.endDate.seconds ?
+                      (stake.endDate.seconds * 1000) :
+                      new Date(stake.endDate || 0).getTime();
+        return now >= endMs;
     });
 
-    if (hasExpired) {
-        isCheckingStakes = true;
-        try {
-            const user = auth.currentUser;
-            if (user) {
-                const userRef = db.collection('users').doc(user.uid);
-                const updates = {
-                    balance: firebase.firestore.FieldValue.increment(totalReturn),
-                    stakes: updatedStakes
-                };
-                if (newTransactions.length > 0) {
-                    updates.transactions = firebase.firestore.FieldValue.arrayUnion(...newTransactions);
-                }
-                await userRef.update(updates);
-            }
-        } catch (e) {
-            console.error("Error processing expired stakes:", e);
-        } finally {
-            isCheckingStakes = false;
-        }
+    if (!hasExpired) return;
+
+    isCheckingStakes = true;
+    try {
+        await functions.httpsCallable('claimMaturedStakes')();
+        // The onSnapshot listener will push the credited balance automatically.
+    } catch (e) {
+        console.error("Error claiming matured stakes:", e);
+    } finally {
+        isCheckingStakes = false;
     }
 }
 
@@ -175,48 +151,22 @@ window.submitStake = async function() {
         }
 
         try {
-            const user = auth.currentUser;
-            if (user) {
-                const userRef = db.collection('users').doc(user.uid);
-                
-                const stakeId = "stake_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-                const startDate = firebase.firestore.Timestamp.now();
-                const durationMs = selectedDuration * 24 * 60 * 60 * 1000;
-                const endDate = firebase.firestore.Timestamp.fromMillis(startDate.toMillis() + durationMs);
+            // Balance debit + stake creation happen server-side. The client only
+            // sends the request; the function recomputes all payout numbers so a
+            // tampered client cannot inflate returns.
+            const submitStakeFn = functions.httpsCallable('submitStake');
+            await submitStakeFn({
+                coin: selectedCoin,
+                duration: selectedDuration,
+                amount: amount
+            });
 
-                const newStake = {
-                    id: stakeId,
-                    coin: selectedCoin,
-                    amount: amount,
-                    duration: selectedDuration,
-                    dailyRate: dailyRate,
-                    startDate: startDate,
-                    endDate: endDate,
-                    expectedReturn: expectedReturn,
-                    status: "active"
-                };
-
-                const newTx = {
-                    type: "Staking Deposit",
-                    amount: -amount,
-                    date: startDate,
-                    coin: selectedCoin,
-                    duration: selectedDuration
-                };
-
-                await userRef.update({
-                    balance: firebase.firestore.FieldValue.increment(-amount),
-                    stakes: firebase.firestore.FieldValue.arrayUnion(newStake),
-                    transactions: firebase.firestore.FieldValue.arrayUnion(newTx)
-                });
-
-                if (amountInput) amountInput.value = "";
-                calculateStakedReturn();
-                showCustomAlert(`Staked $${amount.toFixed(2)} on ${selectedCoin} successfully!`);
-            }
+            if (amountInput) amountInput.value = "";
+            calculateStakedReturn();
+            showCustomAlert(`Staked $${amount.toFixed(2)} on ${selectedCoin} successfully!`);
         } catch (err) {
             console.error("Error staking:", err);
-            showCustomAlert("Failed to complete staking operation: " + err.message);
+            showCustomAlert("Failed to complete staking operation: " + (err.message || "Please try again."));
         } finally {
             if (btn) {
                 btn.disabled = false;
