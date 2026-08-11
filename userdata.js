@@ -181,7 +181,9 @@ function escapeHTML(str) {
 }
 
 // Global Custom Alert Function (Animated Overlay)
-window.showCustomAlert = function (message, callback) {
+// `type` is 'success' (default) or 'error' — controls the icon/colour so a
+// failure message no longer shows a success checkmark.
+window.showCustomAlert = function (message, callback, type) {
     if (document.querySelector('.custom-alert-overlay')) {
         document.querySelector('.custom-alert-overlay').remove();
     }
@@ -192,9 +194,10 @@ window.showCustomAlert = function (message, callback) {
     const box = document.createElement('div');
     box.className = 'custom-alert-box';
 
+    const isError = type === 'error';
     const icon = document.createElement('div');
-    icon.className = 'custom-alert-icon';
-    icon.innerHTML = '✓'; // Using a simple checkmark
+    icon.className = 'custom-alert-icon' + (isError ? ' error' : '');
+    icon.innerHTML = isError ? '!' : '✓';
 
     const msg = document.createElement('div');
     msg.className = 'custom-alert-message';

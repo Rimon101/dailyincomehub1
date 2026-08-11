@@ -118,12 +118,12 @@ window.submitStake = async function() {
     const mainBalance = parseFloat(userDataCache.balance || 0);
 
     if (isNaN(amount) || amount < 1) {
-        showCustomAlert("Please enter a valid amount to stake (Minimum $1.00).");
+        showCustomAlert("Please enter a valid amount to stake (Minimum $1.00).", null, 'error');
         return;
     }
 
     if (amount > mainBalance) {
-        showCustomAlert("Insufficient balance. Your available balance is $" + mainBalance.toFixed(2));
+        showCustomAlert("Insufficient balance. Your available balance is $" + mainBalance.toFixed(2), null, 'error');
         return;
     }
 
@@ -166,7 +166,7 @@ window.submitStake = async function() {
             showCustomAlert(`Staked $${amount.toFixed(2)} on ${selectedCoin} successfully!`);
         } catch (err) {
             console.error("Error staking:", err);
-            showCustomAlert("Failed to complete staking operation: " + (err.message || "Please try again."));
+            showCustomAlert("Failed to complete staking operation: " + (err.message || "Please try again."), null, 'error');
         } finally {
             if (btn) {
                 btn.disabled = false;
