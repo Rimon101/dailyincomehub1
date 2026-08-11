@@ -164,13 +164,31 @@ window.cancelStake = async function() {
             btn.textContent = 'Cancelling...';
 
             try {
-                // Refund + stake-status change happen server-side. The client
-                // sends only the stake id; the function refunds the original
-                // principal (interest forfeited). Balance/stakes are no longer
-                // client-writable.
+                // Refund + stake-status change happen client-side, written
+                // directly to Firestore. Refunds the original principal only
+                // (interest forfeited).
                 const refundAmount = parseFloat(currentStake.amount);
-                const cancelFn = functions.httpsCallable('cancelStake');
-                await cancelFn({ stakeId: currentStake.id });
+                const user = auth.currentUser;
+                if (!user) throw new Error('You must be signed in.');
+
+                const stakes = Array.isArray(userDataCache.stakes) ? userDataCache.stakes : [];
+                const updatedStakes = stakes.map(s =>
+                    s.id === currentStake.id ? { ...s, status: 'cancelled' } : s
+                );
+
+                const cancelTx = {
+                    type: 'Stake Cancelled (Refund)',
+                    amount: refundAmount,
+                    date: firebase.firestore.Timestamp.now(),
+                    coin: currentStake.coin,
+                    stakeId: currentStake.id
+                };
+
+                await db.collection('users').doc(user.uid).update({
+                    balance: firebase.firestore.FieldValue.increment(refundAmount),
+                    stakes: updatedStakes,
+                    transactions: firebase.firestore.FieldValue.arrayUnion(cancelTx)
+                });
 
                 showCustomAlert('Stake cancelled successfully!\\n$' + refundAmount.toFixed(2) + ' has been refunded to your balance.', () => {
                     window.location.href = '/tasks';
@@ -178,7 +196,7 @@ window.cancelStake = async function() {
 
             } catch (err) {
                 console.error('Error cancelling stake:', err);
-                showCustomAlert('Failed to cancel stake: ' + err.message);
+                showCustomAlert('Failed to cancel stake: ' + err.message, null, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Cancel Stake Order';
             }
